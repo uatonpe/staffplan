@@ -3,683 +3,558 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>दैनंदिन नियोजन व प्रत्यक्ष कार्य | Anik Digital Field System</title>
+  <title>Daily Staff Work Tracker</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root{
       --primary:#0b63ce;
-      --primary2:#0f8bff;
-      --secondary:#0b2545;
-      --accent:#ffb703;
+      --primary2:#1492ff;
+      --navy:#092756;
+      --bg:#f4f8ff;
+      --card:#ffffff;
+      --text:#13213a;
+      --muted:#667085;
+      --border:#e3ebf6;
+      --soft:#edf6ff;
       --success:#16a34a;
       --danger:#ef4444;
       --warning:#f59e0b;
-      --info:#06b6d4;
-      --bg:#f5f8ff;
-      --card:#ffffff;
-      --text:#172033;
-      --muted:#667085;
-      --border:#e6ecf5;
-      --soft:#eef6ff;
-      --shadow:0 18px 55px rgba(15, 35, 80, .12);
-      --shadow2:0 10px 25px rgba(15, 35, 80, .08);
+      --purple:#7c3aed;
+      --shadow:0 10px 28px rgba(13,42,89,.08);
+      --shadow2:0 18px 55px rgba(13,42,89,.12);
       --radius:22px;
     }
-
     *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{
       margin:0;
-      background:
-        radial-gradient(circle at top left, rgba(11,99,206,.13), transparent 34%),
-        radial-gradient(circle at top right, rgba(255,183,3,.16), transparent 30%),
-        linear-gradient(180deg, #f7fbff 0%, #eef5ff 100%);
+      background:linear-gradient(180deg,#f8fbff 0%,#eef5ff 100%);
       color:var(--text);
       font-family:"Noto Sans Devanagari","Poppins",sans-serif;
       min-height:100vh;
     }
-
-    .app-shell{
-      display:grid;
-      grid-template-columns: 285px minmax(0, 1fr);
-      min-height:100vh;
-    }
-
+    .shell{display:grid;grid-template-columns:255px minmax(0,1fr);min-height:100vh}
     .sidebar{
-      background:linear-gradient(180deg, #082a59 0%, #0b3f87 58%, #0b63ce 100%);
+      background:linear-gradient(180deg,#082653,#0c4da2);
       color:#fff;
-      padding:24px 18px;
+      padding:18px 14px;
       position:sticky;
       top:0;
       height:100vh;
       overflow:auto;
-      box-shadow:15px 0 45px rgba(4,26,64,.16);
     }
-
     .brand{
-      padding:16px 14px 22px;
       border-radius:24px;
-      background:rgba(255,255,255,.11);
-      border:1px solid rgba(255,255,255,.16);
-      backdrop-filter: blur(10px);
-      margin-bottom:18px;
-    }
-    .brand .logo{
-      width:54px;height:54px;border-radius:18px;
-      display:grid;place-items:center;
-      background:#fff;color:var(--primary);
-      font-weight:900;font-size:24px;
-      box-shadow:0 10px 25px rgba(0,0,0,.16);
-      margin-bottom:12px;
-    }
-    .brand h1{font-size:18px;line-height:1.25;margin:0 0 6px;font-weight:900}
-    .brand p{font-size:12px;opacity:.82;margin:0;line-height:1.45}
-
-    .nav-btn{
-      width:100%;
-      border:none;
-      color:#fff;
-      background:transparent;
-      padding:13px 14px;
-      border-radius:16px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-family:inherit;
-      cursor:pointer;
-      font-size:15px;
-      font-weight:800;
-      text-align:left;
-      transition:.18s;
-      margin:6px 0;
-    }
-    .nav-btn:hover,.nav-btn.active{
-      background:rgba(255,255,255,.17);
-      transform:translateX(3px);
-    }
-    .side-card{
-      margin-top:20px;
       padding:16px;
-      border-radius:20px;
-      background:rgba(255,255,255,.1);
-      border:1px solid rgba(255,255,255,.14);
-      font-size:13px;
-      line-height:1.55;
-      opacity:.92;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+      margin-bottom:14px;
     }
-
-    main{padding:26px;overflow:hidden}
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:18px;
-      margin-bottom:22px;
+    .logo{
+      width:54px;height:54px;border-radius:18px;background:#fff;color:var(--primary);
+      display:grid;place-items:center;font-weight:900;font-size:24px;margin-bottom:12px;
     }
-    .title-block h2{
-      margin:0;
-      font-size:28px;
-      line-height:1.2;
-      font-weight:900;
-      letter-spacing:-.4px;
-      color:#10213d;
+    .brand h1{margin:0 0 5px;font-size:18px;line-height:1.25;font-weight:900}
+    .brand p{margin:0;font-size:12px;line-height:1.45;opacity:.85}
+    .nav{
+      width:100%;border:0;background:transparent;color:#fff;
+      display:flex;align-items:center;gap:10px;
+      padding:13px 14px;border-radius:16px;margin:5px 0;
+      font-family:inherit;font-size:15px;font-weight:900;text-align:left;cursor:pointer;
     }
-    .title-block p{margin:6px 0 0;color:var(--muted);font-weight:600}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:999px;
-      padding:10px 14px;
-      box-shadow:var(--shadow2);
-      font-weight:800;
-      color:#18345d;
-      white-space:nowrap;
+    .nav.active,.nav:hover{background:rgba(255,255,255,.17)}
+    .side-note{
+      margin-top:16px;border-radius:20px;padding:14px;
+      background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);
+      font-size:12px;line-height:1.55;font-weight:600;
     }
-
-    .grid{display:grid;gap:18px}
-    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .card{
-      background:rgba(255,255,255,.92);
-      border:1px solid rgba(221,231,246,.9);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow2);
-      padding:20px;
-      backdrop-filter: blur(12px);
+    main{padding:22px;overflow:hidden}
+    .top{
+      display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px
+    }
+    h2{margin:0;font-size:27px;font-weight:900;letter-spacing:-.3px}
+    .sub{margin:4px 0 0;color:var(--muted);font-weight:700}
+    .date-pill{
+      display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);
+      border-radius:999px;padding:10px 14px;font-weight:900;box-shadow:var(--shadow);white-space:nowrap;
     }
     .hero{
-      padding:24px;
-      background:
-        linear-gradient(135deg, rgba(11,99,206,.98), rgba(15,139,255,.88)),
-        url("https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1600&auto=format&fit=crop");
-      background-size:cover;
-      background-blend-mode:multiply;
-      color:#fff;
-      border-radius:28px;
-      box-shadow:var(--shadow);
-      margin-bottom:18px;
+      background:linear-gradient(135deg,#0b3f87,#1492ff);
+      color:#fff;border-radius:28px;padding:22px 24px;margin-bottom:18px;box-shadow:var(--shadow2);
     }
-    .hero h3{margin:0 0 8px;font-size:25px;font-weight:900}
-    .hero p{margin:0;opacity:.92;line-height:1.55}
+    .hero h3{margin:0 0 8px;font-size:24px;font-weight:900}
+    .hero p{margin:0;opacity:.94;font-weight:600;line-height:1.55}
 
-    label{font-weight:900;color:#263b5f;margin-bottom:8px;display:block}
+    .grid{display:grid;gap:16px}
+    .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .card{
+      background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:18px;box-shadow:var(--shadow);
+    }
+    .section{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:15px;
+    }
+    .section h3{margin:0;font-size:18px;font-weight:900}
+    .tag{
+      background:var(--soft);color:var(--primary);padding:7px 10px;border-radius:999px;font-size:12px;font-weight:900;
+    }
+    label{display:block;margin-bottom:7px;font-weight:900;color:#263b5f}
     input,select,textarea{
-      width:100%;
-      border:1px solid #dce7f6;
-      background:#fff;
-      border-radius:16px;
-      padding:13px 14px;
-      font-family:inherit;
-      font-size:15px;
-      outline:none;
-      transition:.15s;
+      width:100%;border:1px solid #dce7f6;border-radius:15px;background:#fff;
+      padding:12px 13px;font-family:inherit;font-size:15px;outline:none;
     }
     textarea{min-height:92px;resize:vertical}
-    input:focus,select:focus,textarea:focus{
-      border-color:var(--primary2);
-      box-shadow:0 0 0 4px rgba(15,139,255,.12);
-    }
-    .field{margin-bottom:14px}
-    .section-title{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      border-bottom:1px solid var(--border);
-      padding-bottom:12px;
-      margin-bottom:16px;
-    }
-    .section-title h3{margin:0;font-size:19px;font-weight:900;color:#10213d}
-    .tag{
-      padding:7px 11px;border-radius:999px;
-      font-size:12px;font-weight:900;
-      background:var(--soft);color:var(--primary);
-    }
-
-    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+    input:focus,select:focus,textarea:focus{border-color:var(--primary2);box-shadow:0 0 0 4px rgba(20,146,255,.12)}
+    .field{margin-bottom:13px}
+    .btns{display:flex;gap:10px;flex-wrap:wrap}
     .btn{
-      border:0;
-      border-radius:16px;
-      padding:13px 18px;
-      font-family:inherit;
-      font-weight:900;
-      cursor:pointer;
-      transition:.16s;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      text-decoration:none;
+      border:0;border-radius:15px;padding:12px 16px;font-family:inherit;font-weight:900;cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
     }
-    .btn:hover{transform:translateY(-2px)}
-    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 12px 24px rgba(11,99,206,.25)}
-    .btn-soft{background:#eaf4ff;color:var(--primary)}
-    .btn-success{background:#e9f9ef;color:#087a31}
-    .btn-danger{background:#fff0f0;color:#c62828}
+    .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;box-shadow:0 10px 22px rgba(11,99,206,.22)}
+    .btn-soft{background:#edf6ff;color:var(--primary)}
+    .btn-green{background:#e8fff0;color:#087a31}
+    .hidden{display:none!important}
+    .muted{color:var(--muted);font-weight:650}
+    .danger{color:var(--danger);font-weight:900}
+    .success{color:var(--success);font-weight:900}
 
     .stat{
-      padding:20px;border-radius:22px;background:#fff;border:1px solid var(--border);
-      box-shadow:var(--shadow2);position:relative;overflow:hidden;
+      background:#fff;border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;
     }
-    .stat:before{
-      content:"";position:absolute;right:-25px;top:-25px;width:100px;height:100px;
-      border-radius:999px;background:rgba(11,99,206,.09);
-    }
-    .stat .num{font-size:30px;font-weight:900;margin:8px 0 2px;color:#10213d}
-    .stat .label{font-weight:900;color:var(--muted);font-size:13px}
-    .stat .emoji{font-size:28px}
+    .stat:after{content:"";position:absolute;right:-28px;top:-28px;width:96px;height:96px;border-radius:999px;background:rgba(11,99,206,.08)}
+    .stat .icon{font-size:25px}
+    .stat .num{font-size:30px;font-weight:900;margin:6px 0 0}
+    .stat .lbl{font-size:12px;color:var(--muted);font-weight:900;margin-top:2px}
     .stat.good .num{color:var(--success)}
-    .stat.bad .num{color:var(--danger)}
     .stat.warn .num{color:var(--warning)}
+    .stat.bad .num{color:var(--danger)}
+    .stat.purple .num{color:var(--purple)}
 
-    table{width:100%;border-collapse:separate;border-spacing:0 10px}
-    th{font-size:12px;color:#667085;text-align:left;padding:0 12px;font-weight:900}
+    table{width:100%;border-collapse:separate;border-spacing:0 9px}
+    th{font-size:12px;text-align:left;padding:0 10px;color:#667085;font-weight:900}
     td{
-      background:#fff;
-      border-top:1px solid var(--border);
-      border-bottom:1px solid var(--border);
-      padding:13px 12px;
-      font-weight:700;
+      background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+      padding:12px 10px;font-weight:750;vertical-align:middle;
     }
     td:first-child{border-left:1px solid var(--border);border-radius:14px 0 0 14px}
     td:last-child{border-right:1px solid var(--border);border-radius:0 14px 14px 0}
-    .status{
-      padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;display:inline-block;
+    .staff-link{
+      border:0;background:transparent;color:var(--primary);font-family:inherit;font-weight:950;
+      cursor:pointer;text-align:left;padding:0;text-decoration:underline;text-underline-offset:3px;
     }
-    .status.done{background:#e8fff0;color:#097a34}
-    .status.pending{background:#fff7df;color:#9a5f00}
-    .status.missing{background:#fff0f0;color:#b42318}
+    .status{padding:6px 9px;border-radius:999px;font-size:12px;font-weight:900;display:inline-block}
+    .done{background:#e8fff0;color:#087a31}
+    .pending{background:#fff7df;color:#9a5f00}
+    .missing{background:#fff0f0;color:#b42318}
+    .check{background:#f1edff;color:#5b21b6}
 
-    .plan-box{
-      background:linear-gradient(180deg,#f8fbff,#ffffff);
-      border:1px dashed #b7cff0;
-      border-radius:18px;
-      padding:14px;
-      margin-bottom:14px;
+    .compare-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .mini-card{border:1px solid var(--border);border-radius:18px;background:#fbfdff;padding:14px}
+    .mini-card h4{margin:0 0 10px;font-size:16px;font-weight:900}
+    .kv{
+      border-bottom:1px dashed #d9e6f5;padding:9px 0;
     }
-    .plan-box b{color:#10213d}
-    .plan-box p{margin:5px 0 0;color:#53657e;font-weight:700;white-space:pre-wrap}
+    .kv:last-child{border-bottom:none}
+    .kv b{display:block;color:#223653;font-size:13px}
+    .kv span{display:block;margin-top:4px;color:#46556c;font-weight:750;white-space:pre-wrap}
+    .gap-box{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px
+    }
+    .gap{
+      border-radius:18px;padding:14px;background:#fff;border:1px solid var(--border)
+    }
+    .gap b{display:block;font-size:12px;color:var(--muted)}
+    .gap span{display:block;font-size:22px;font-weight:950;margin-top:4px}
+    .copybox{
+      width:100%;min-height:240px;background:#071a33;color:#f5fbff;border:0;border-radius:22px;
+      padding:18px;line-height:1.6;font-family:"Noto Sans Devanagari",sans-serif;
+    }
 
-    .hidden{display:none!important}
     .loader{
-      position:fixed;inset:0;background:rgba(245,248,255,.78);
-      backdrop-filter: blur(8px);
-      display:none;place-items:center;z-index:9999;
+      position:fixed;inset:0;display:none;place-items:center;background:rgba(244,248,255,.72);backdrop-filter:blur(7px);z-index:9999
     }
     .loader.active{display:grid}
-    .spin{
-      width:62px;height:62px;border-radius:999px;
-      border:6px solid #d7e9ff;border-top-color:var(--primary);
-      animation:spin .8s linear infinite;
-    }
+    .spin{width:58px;height:58px;border-radius:999px;border:6px solid #d9eaff;border-top-color:var(--primary);animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .toast{
-      position:fixed;right:22px;bottom:22px;background:#10213d;color:#fff;
-      padding:14px 18px;border-radius:16px;box-shadow:var(--shadow);
-      font-weight:800;display:none;z-index:10000;max-width:420px;
+      position:fixed;right:20px;bottom:20px;display:none;z-index:10000;
+      background:#10213d;color:#fff;padding:13px 16px;border-radius:15px;box-shadow:var(--shadow2);font-weight:800;max-width:420px
     }
     .toast.show{display:block}
-    .muted{color:var(--muted)}
-    .danger-text{color:var(--danger);font-weight:900}
-    .success-text{color:var(--success);font-weight:900}
-    .copybox{
-      width:100%;
-      min-height:240px;
-      background:#071a33;
-      color:#f5fbff;
-      border-radius:22px;
-      border:none;
-      padding:18px;
-      font-family:"Noto Sans Devanagari",sans-serif;
-      line-height:1.6;
-    }
 
     @media(max-width:980px){
-      .app-shell{grid-template-columns:1fr}
+      .shell{grid-template-columns:1fr}
       .sidebar{position:relative;height:auto}
-      main{padding:16px}
-      .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
-      .topbar{align-items:flex-start;flex-direction:column}
+      main{padding:14px}
+      .g2,.g3,.g4,.compare-wrap,.gap-box{grid-template-columns:1fr}
+      .top{flex-direction:column;align-items:flex-start}
+      .hero h3{font-size:21px}
     }
   </style>
 </head>
 
 <body>
-  <div class="loader" id="loader"><div class="spin"></div></div>
-  <div class="toast" id="toast"></div>
+<div class="loader" id="loader"><div class="spin"></div></div>
+<div class="toast" id="toast"></div>
 
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="logo">A</div>
-        <h1>Daily Planning & Actual Work System</h1>
-        <p>सकाळचे नियोजन • सायंकाळची प्रत्यक्ष कामगिरी • लाईव्ह डॅशबोर्ड</p>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">A</div>
+      <h1>Daily Staff Work System</h1>
+      <p>Planning • Actual • Staff Performance • Monthly Tracking</p>
+    </div>
+    <button class="nav active" data-page="entry">📝 Daily Entry</button>
+    <button class="nav" data-page="dashboard">📊 Dashboard</button>
+    <button class="nav" data-page="share">📤 Share Text</button>
+    <button class="nav" data-page="settings">⚙️ Setup</button>
+    <div class="side-note">
+      Staff नावावर click केल्यावर त्या staff ने दिवसभरात काय plan केले आणि actual काय केले हे detail मध्ये दिसेल.
+    </div>
+  </aside>
+
+  <main>
+    <div class="top">
+      <div>
+        <h2>दैनंदिन नियोजन व प्रत्यक्ष कार्य</h2>
+        <p class="sub">Staff-wise daily work, actual achievement आणि monthly performance tracker</p>
       </div>
+      <div class="date-pill">📅 <span id="todayText"></span></div>
+    </div>
 
-      <button class="nav-btn active" data-page="entry">📝 Daily Entry</button>
-      <button class="nav-btn" data-page="dashboard">📊 Dashboard</button>
-      <button class="nav-btn" data-page="share">📤 Share Text</button>
-      <button class="nav-btn" data-page="settings">⚙️ Setup Guide</button>
+    <div class="hero">
+      <h3>Staff-wise exact daily work monitoring</h3>
+      <p>सकाळचे नियोजन, सायंकाळचे प्रत्यक्ष काम, gap analysis आणि monthly performance एकाच dashboard वर.</p>
+    </div>
 
-      <div class="side-card">
-        <b>सिस्टीमचा उद्देश</b><br>
-        कोण staff कमी planning टाकतो, कोण actual मध्ये मागे आहे, branch-wise performance काय आहे हे dashboard वर लगेच दिसेल.
-      </div>
-    </aside>
-
-    <main>
-      <div class="topbar">
-        <div class="title-block">
-          <h2>दैनंदिन नियोजन व प्रत्यक्ष कार्य</h2>
-          <p>Google Sheet आधारित professional monitoring system</p>
-        </div>
-        <div class="pill">📅 <span id="todayText"></span></div>
-      </div>
-
-      <section class="hero">
-        <h3>काम टाळाटाळ ओळखण्यासाठी smart daily tracker</h3>
-        <p>Morning planning आणि Evening actual दोन्ही entry झाल्यावरच पूर्ण काम मानले जाईल. Dashboard वर staff, branch, role आणि target-vs-actual लगेच दिसेल.</p>
-      </section>
-
-      <section id="page-entry" class="page">
-        <div class="grid grid-2">
-          <div class="card">
-            <div class="section-title">
-              <h3>👤 Staff Details</h3>
-              <span class="tag">Auto from Staff Master</span>
-            </div>
-
-            <div class="grid grid-2">
-              <div class="field">
-                <label>दिनांक</label>
-                <input type="date" id="entryDate">
-              </div>
-              <div class="field">
-                <label>Entry Type</label>
-                <select id="shift">
-                  <option value="morning">🌅 सकाळचे नियोजन</option>
-                  <option value="evening">🌙 सायंकाळची प्रत्यक्ष कामगिरी</option>
-                </select>
-              </div>
-            </div>
-
+    <!-- ENTRY PAGE -->
+    <section id="page-entry" class="page">
+      <div class="grid g2">
+        <div class="card">
+          <div class="section"><h3>👤 Staff Details</h3><span class="tag">Auto from StaffMaster</span></div>
+          <div class="grid g2">
+            <div class="field"><label>दिनांक</label><input type="date" id="entryDate"></div>
             <div class="field">
-              <label>कर्मचारी नाव</label>
-              <select id="staffSelect">
-                <option value="">कर्मचारी निवडा</option>
+              <label>Entry Type</label>
+              <select id="shift">
+                <option value="morning">🌅 सकाळचे नियोजन</option>
+                <option value="evening">🌙 सायंकाळची प्रत्यक्ष कामगिरी</option>
               </select>
             </div>
-
-            <div class="grid grid-2">
-              <div class="field">
-                <label>पद</label>
-                <input id="role" readonly placeholder="पद auto येईल">
-              </div>
-              <div class="field">
-                <label>शाखा</label>
-                <input id="branch" readonly placeholder="शाखा auto येईल">
-              </div>
-            </div>
-
-            <div id="morningPreview" class="hidden">
-              <div class="section-title" style="margin-top:10px">
-                <h3>🌅 सकाळचे नियोजन समोर</h3>
-                <span class="tag">Evening comparison</span>
-              </div>
-              <div id="morningPlanBox"></div>
-            </div>
           </div>
-
-          <div class="card">
-            <div class="section-title">
-              <h3 id="dynamicTitle">🎯 आजचे नियोजन</h3>
-              <span class="tag" id="questionCount">0 प्रश्न</span>
-            </div>
-            <div id="dynamicForm">
-              <p class="muted">कृपया कर्मचारी निवडा. पदानुसार प्रश्न आपोआप लोड होतील.</p>
-            </div>
-
-            <div class="btn-row" style="margin-top:18px">
-              <button class="btn btn-primary" id="submitBtn">✅ Save Entry</button>
-              <button class="btn btn-soft" id="resetBtn">🔄 Reset</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="page-dashboard" class="page hidden">
-        <div class="card" style="margin-bottom:18px">
-          <div class="section-title">
-            <h3>📊 Live Dashboard</h3>
-            <span class="tag">Today / Selected Date</span>
-          </div>
-          <div class="grid grid-4">
-            <div class="field">
-              <label>दिनांक</label>
-              <input type="date" id="dashDate">
-            </div>
-            <div class="field">
-              <label>Branch Filter</label>
-              <select id="branchFilter"><option value="">All Branches</option></select>
-            </div>
-            <div class="field">
-              <label>Role Filter</label>
-              <select id="roleFilter"><option value="">All Roles</option></select>
-            </div>
-            <div class="field" style="display:flex;align-items:end">
-              <button class="btn btn-primary" id="refreshDash" style="width:100%">🔎 Refresh</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-4" style="margin-bottom:18px">
-          <div class="stat"><div class="emoji">👥</div><div class="num" id="stTotal">0</div><div class="label">Total Staff</div></div>
-          <div class="stat good"><div class="emoji">🌅</div><div class="num" id="stMorning">0</div><div class="label">Morning Planning Done</div></div>
-          <div class="stat warn"><div class="emoji">🌙</div><div class="num" id="stEvening">0</div><div class="label">Evening Actual Done</div></div>
-          <div class="stat bad"><div class="emoji">⚠️</div><div class="num" id="stPending">0</div><div class="label">Pending / Missing</div></div>
-        </div>
-
-        <div class="grid grid-2" style="margin-bottom:18px">
-          <div class="card">
-            <div class="section-title"><h3>Branch-wise Completion</h3><span class="tag">Morning + Evening</span></div>
-            <canvas id="branchChart" height="130"></canvas>
-          </div>
-          <div class="card">
-            <div class="section-title"><h3>Role-wise Entries</h3><span class="tag">Work Monitoring</span></div>
-            <canvas id="roleChart" height="130"></canvas>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="section-title">
-            <h3>Staff-wise Daily Status</h3>
-            <span class="tag">काम टाळाटाळ लगेच दिसेल</span>
-          </div>
-          <div style="overflow:auto">
-            <table>
-              <thead>
-                <tr>
-                  <th>Staff</th><th>Role</th><th>Branch</th><th>Morning</th><th>Evening</th><th>Status</th><th>Remark</th>
-                </tr>
-              </thead>
-              <tbody id="statusTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section id="page-share" class="page hidden">
-        <div class="card">
-          <div class="section-title">
-            <h3>📤 WhatsApp / Text Share</h3>
-            <span class="tag">Auto generated</span>
-          </div>
-          <p class="muted">Entry save झाल्यावर इथे text तयार होईल. Copy करून WhatsApp group मध्ये share करा किंवा WhatsApp बटन वापरा.</p>
-          <textarea id="shareText" class="copybox" readonly placeholder="Save entry first..."></textarea>
-          <div class="btn-row" style="margin-top:14px">
-            <button class="btn btn-primary" id="copyShare">📋 Copy Text</button>
-            <a class="btn btn-success" id="waShare" target="_blank" href="#">🟢 Open WhatsApp</a>
-          </div>
-        </div>
-      </section>
-
-      <section id="page-settings" class="page hidden">
-        <div class="card">
-          <div class="section-title">
-            <h3>⚙️ Setup Guide</h3>
-            <span class="tag">One-time setup</span>
-          </div>
-          <h3>1) Google Sheet tabs तयार करा</h3>
-          <p class="muted">StaffMaster, FormQuestions, Entries हे 3 tabs हवेत. README.md मध्ये exact columns दिले आहेत.</p>
-
-          <h3>2) Apps Script deploy करा</h3>
-          <p class="muted">Apps Script मध्ये Code.gs paste करा. Deploy → New deployment → Web app → Anyone with link.</p>
-
-          <h3>3) API URL इथे paste करा</h3>
           <div class="field">
-            <label>Google Apps Script Web App URL</label>
-            <input id="apiUrlInput" placeholder="https://script.google.com/macros/s/AKfycbwD4sc83dj8c9FGolZ_iW1MJyoTdswZw6DGu-O75EM0SX51G-0mnuJJmdbsd95xgp4/exec">
+            <label>कर्मचारी नाव</label>
+            <select id="staffSelect"><option value="">कर्मचारी निवडा</option></select>
           </div>
-          <div class="btn-row">
-            <button class="btn btn-primary" id="saveApiUrl">💾 Save API URL</button>
-            <button class="btn btn-soft" id="testApi">🧪 Test Connection</button>
+          <div class="grid g2">
+            <div class="field"><label>पद</label><input id="role" readonly placeholder="पद auto येईल"></div>
+            <div class="field"><label>शाखा</label><input id="branch" readonly placeholder="शाखा auto येईल"></div>
           </div>
 
-          <h3 style="margin-top:22px">4) GitHub Hosting</h3>
-          <p class="muted">हा index.html GitHub repo मध्ये upload करा आणि Settings → Pages मधून site live करा.</p>
+          <div id="morningPreview" class="hidden">
+            <div class="section" style="margin-top:10px"><h3>🌅 सकाळचे नियोजन</h3><span class="tag">Evening reference</span></div>
+            <div id="morningPlanBox"></div>
+          </div>
         </div>
-      </section>
-    </main>
-  </div>
+
+        <div class="card">
+          <div class="section"><h3 id="dynamicTitle">🎯 आजचे नियोजन</h3><span class="tag" id="questionCount">0 प्रश्न</span></div>
+          <div id="dynamicForm"><p class="muted">कृपया कर्मचारी निवडा.</p></div>
+          <div class="btns" style="margin-top:16px">
+            <button class="btn btn-primary" id="submitBtn">✅ Save Entry</button>
+            <button class="btn btn-soft" id="resetBtn">🔄 Reset</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD PAGE -->
+    <section id="page-dashboard" class="page hidden">
+      <div class="card" style="margin-bottom:16px">
+        <div class="section"><h3>📊 Live Dashboard</h3><span class="tag">Fast Staff Monitoring</span></div>
+        <div class="grid g4">
+          <div class="field"><label>दिनांक</label><input type="date" id="dashDate"></div>
+          <div class="field"><label>Branch Filter</label><select id="branchFilter"><option value="">All Branches</option></select></div>
+          <div class="field"><label>Role Filter</label><select id="roleFilter"><option value="">All Roles</option></select></div>
+          <div class="field" style="display:flex;align-items:end"><button class="btn btn-primary" id="refreshDash" style="width:100%">🔎 Refresh</button></div>
+        </div>
+      </div>
+
+      <div class="grid g4" style="margin-bottom:16px">
+        <div class="stat"><div class="icon">👥</div><div class="num" id="stTotal">0</div><div class="lbl">Total Staff</div></div>
+        <div class="stat good"><div class="icon">🌅</div><div class="num" id="stMorning">0</div><div class="lbl">Planning Done</div></div>
+        <div class="stat warn"><div class="icon">🌙</div><div class="num" id="stEvening">0</div><div class="lbl">Actual Done</div></div>
+        <div class="stat bad"><div class="icon">📌</div><div class="num" id="stPending">0</div><div class="lbl">Pending / Missing</div></div>
+      </div>
+
+      <div class="grid g2" style="margin-bottom:16px">
+        <div class="card">
+          <div class="section"><h3>Branch-wise Completion</h3><span class="tag">Morning + Evening</span></div>
+          <canvas id="branchChart" height="130"></canvas>
+        </div>
+        <div class="card">
+          <div class="section"><h3>Role-wise Entries</h3><span class="tag">Work Summary</span></div>
+          <canvas id="roleChart" height="130"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="section"><h3>Staff-wise Daily Status</h3><span class="tag">Click on staff name</span></div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Staff</th><th>Role</th><th>Branch</th><th>Planning</th><th>Actual</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody id="statusTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="staffDetail" class="hidden">
+        <div class="card" style="margin-bottom:16px">
+          <div class="section">
+            <h3 id="detailTitle">Staff Detail</h3>
+            <span class="tag" id="detailTag">Plan vs Actual</span>
+          </div>
+
+          <div class="grid g3" style="margin-bottom:14px">
+            <div class="stat good"><div class="icon">✅</div><div class="num" id="detailPlanCount">0</div><div class="lbl">Planning Fields Filled</div></div>
+            <div class="stat purple"><div class="icon">📌</div><div class="num" id="detailActualCount">0</div><div class="lbl">Actual Fields Filled</div></div>
+            <div class="stat warn"><div class="icon">📈</div><div class="num" id="detailScore">0%</div><div class="lbl">Daily Completion Score</div></div>
+          </div>
+
+          <div class="compare-wrap">
+            <div class="mini-card">
+              <h4>🌅 सकाळचे नियोजन</h4>
+              <div id="planList"></div>
+            </div>
+            <div class="mini-card">
+              <h4>🌙 सायंकाळची प्रत्यक्ष कामगिरी</h4>
+              <div id="actualList"></div>
+            </div>
+          </div>
+
+          <div class="gap-box">
+            <div class="gap"><b>Planning Status</b><span id="planStatusText">-</span></div>
+            <div class="gap"><b>Actual Status</b><span id="actualStatusText">-</span></div>
+            <div class="gap"><b>Overall Status</b><span id="overallStatusText">-</span></div>
+          </div>
+        </div>
+
+        <div class="grid g2">
+          <div class="card">
+            <div class="section">
+              <h3>Daily Plan vs Actual Chart</h3><span class="tag">Selected Date</span>
+            </div>
+            <canvas id="staffDailyChart" height="130"></canvas>
+          </div>
+          <div class="card">
+            <div class="section">
+              <h3>Monthly Performance</h3>
+              <span class="tag" id="monthTag">This Month</span>
+            </div>
+            <canvas id="staffMonthlyChart" height="130"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHARE PAGE -->
+    <section id="page-share" class="page hidden">
+      <div class="card">
+        <div class="section"><h3>📤 WhatsApp / Text Share</h3><span class="tag">Auto generated</span></div>
+        <textarea id="shareText" class="copybox" readonly placeholder="Save entry first..."></textarea>
+        <div class="btns" style="margin-top:14px">
+          <button class="btn btn-primary" id="copyShare">📋 Copy Text</button>
+          <a class="btn btn-green" id="waShare" target="_blank" href="#">🟢 Open WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETUP PAGE -->
+    <section id="page-settings" class="page hidden">
+      <div class="card">
+        <div class="section"><h3>⚙️ Setup</h3><span class="tag">API</span></div>
+        <div class="field">
+          <label>Google Apps Script Web App URL</label>
+          <input id="apiUrlInput" placeholder="https://script.google.com/macros/s/....../exec">
+        </div>
+        <div class="btns">
+          <button class="btn btn-primary" id="saveApiUrl">💾 Save API URL</button>
+          <button class="btn btn-soft" id="testApi">🧪 Test Connection</button>
+          <button class="btn btn-soft" id="reloadMaster">🔄 Reload Master</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
 
 <script>
-/* =========================
-   CONFIG
-   ========================= */
+/* ================= CONFIG ================= */
 let API_URL = localStorage.getItem("DAILY_SYSTEM_API_URL") || "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
-
-const DEFAULT_ROLES = [
-  "क्लस्टर असिस्टंट",
-  "फिल्ड एक्झीक्युटिव्ह",
-  "शाखा व्यवस्थापक",
-  "टि ऐ"
-];
 
 let staffMaster = [];
 let allQuestions = [];
-let branchChart, roleChart;
-let lastShareMessage = "";
+let entriesCache = [];
+let dashboardRowsCache = [];
+let branchChart, roleChart, staffDailyChart, staffMonthlyChart;
+let dashboardLoadedOnce = false;
 
-/* =========================
-   BASIC HELPERS
-   ========================= */
-const $ = (id) => document.getElementById(id);
-
+/* ================= HELPERS ================= */
+const $ = id => document.getElementById(id);
+const safe = v => (v ?? "").toString().trim();
+const toNum = v => {
+  const n = Number(String(v ?? "").replace(/[^\d.-]/g,""));
+  return isNaN(n) ? 0 : n;
+};
 function todayISO(){
   const d = new Date();
-  const off = d.getTimezoneOffset();
-  const local = new Date(d.getTime() - off*60000);
-  return local.toISOString().slice(0,10);
+  return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+}
+function monthStartISO(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-01`;
+}
+function monthEndISO(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(new Date(d.getFullYear(), d.getMonth()+1, 0).getDate()).padStart(2,"0")}`;
 }
 function showLoader(v=true){ $("loader").classList.toggle("active", v); }
 function toast(msg){
-  const el = $("toast");
-  el.textContent = msg;
-  el.classList.add("show");
-  setTimeout(()=>el.classList.remove("show"), 3500);
+  const el=$("toast"); el.textContent=msg; el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),3200);
 }
-function money(n){
-  const num = Number(String(n||"").replace(/[^\d.-]/g,""));
-  if(isNaN(num)) return n || "";
-  return "₹" + num.toLocaleString("en-IN");
+function esc(str){
+  return String(str ?? "").replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#039;"}[s]));
 }
-function safe(v){ return (v ?? "").toString().trim(); }
-
 function jsonp(action, params={}){
   return new Promise((resolve,reject)=>{
     if(!API_URL || API_URL.includes("PASTE_YOUR")){
-      reject(new Error("API URL set केलेला नाही. Setup Guide मध्ये Apps Script URL save करा."));
+      reject(new Error("API URL set केलेला नाही."));
       return;
     }
-
     const cb = "cb_" + Math.random().toString(36).slice(2);
     const script = document.createElement("script");
     const url = new URL(API_URL);
     url.searchParams.set("action", action);
     url.searchParams.set("callback", cb);
-    Object.keys(params).forEach(k => url.searchParams.set(k, params[k]));
+    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
 
-    window[cb] = (data)=>{
-      delete window[cb];
-      script.remove();
+    window[cb] = data => {
+      delete window[cb]; script.remove();
       if(data && data.success === false) reject(new Error(data.message || "Request failed"));
       else resolve(data);
     };
-
-    script.onerror = ()=>{
-      delete window[cb];
-      script.remove();
-      reject(new Error("API connection failed. Deployment permission check करा."));
+    script.onerror = () => {
+      delete window[cb]; script.remove();
+      reject(new Error("API connection failed."));
     };
-
     script.src = url.toString();
     document.body.appendChild(script);
   });
 }
+function parsePayload(entry){
+  if(!entry || !entry.payloadJson) return {};
+  try { return typeof entry.payloadJson === "object" ? entry.payloadJson : JSON.parse(entry.payloadJson); }
+  catch(e){ return {}; }
+}
+function normalizeDateClient(v){
+  const s = safe(v);
+  if(!s) return "";
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+  return s.slice(0,10);
+}
 
-/* =========================
-   NAVIGATION
-   ========================= */
-document.querySelectorAll(".nav-btn").forEach(btn=>{
+/* ================= NAV ================= */
+document.querySelectorAll(".nav").forEach(btn=>{
   btn.addEventListener("click", ()=>{
-    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".nav").forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-    const page = btn.dataset.page;
     document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
-    $("page-"+page).classList.remove("hidden");
-    if(page==="dashboard") loadDashboard();
+    $("page-"+btn.dataset.page).classList.remove("hidden");
+    if(btn.dataset.page === "dashboard" && !dashboardLoadedOnce){
+      dashboardLoadedOnce = true;
+      loadDashboard();
+    }
   });
 });
 
-/* =========================
-   INIT
-   ========================= */
+/* ================= INIT ================= */
 async function init(){
-  $("todayText").textContent = new Date().toLocaleDateString("mr-IN", {weekday:"long", year:"numeric", month:"long", day:"numeric"});
+  $("todayText").textContent = new Date().toLocaleDateString("mr-IN",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
   $("entryDate").value = todayISO();
   $("dashDate").value = todayISO();
   $("apiUrlInput").value = API_URL;
 
-  $("saveApiUrl").addEventListener("click", saveApiUrl);
-  $("testApi").addEventListener("click", testConnection);
-  $("staffSelect").addEventListener("change", onStaffChange);
-  $("shift").addEventListener("change", onShiftChange);
-  $("entryDate").addEventListener("change", onShiftChange);
-  $("submitBtn").addEventListener("click", submitEntry);
-  $("resetBtn").addEventListener("click", ()=>renderDynamicForm());
-  $("refreshDash").addEventListener("click", loadDashboard);
-  $("copyShare").addEventListener("click", copyShareText);
+  $("saveApiUrl").onclick = saveApiUrl;
+  $("testApi").onclick = testConnection;
+  $("reloadMaster").onclick = loadMasters;
+  $("staffSelect").onchange = onStaffChange;
+  $("shift").onchange = onShiftChange;
+  $("entryDate").onchange = onShiftChange;
+  $("submitBtn").onclick = submitEntry;
+  $("resetBtn").onclick = renderDynamicForm;
+  $("refreshDash").onclick = () => loadDashboard(true);
+  $("copyShare").onclick = copyShareText;
 
-  try{
-    await loadMasters();
-  }catch(e){
-    toast(e.message);
-  }
+  await loadMasters(false);
 }
-
 async function saveApiUrl(){
   API_URL = $("apiUrlInput").value.trim();
   localStorage.setItem("DAILY_SYSTEM_API_URL", API_URL);
   toast("API URL save झाला.");
   await testConnection();
 }
-
 async function testConnection(){
   showLoader(true);
-  try{
-    const res = await jsonp("ping");
-    toast("Connection successful: " + (res.message || "OK"));
-  }catch(e){ toast(e.message); }
+  try{ const res=await jsonp("ping"); toast("Connection successful: " + (res.message || "OK")); }
+  catch(e){ toast(e.message); }
   showLoader(false);
 }
 
-/* =========================
-   LOAD MASTER DATA
-   ========================= */
-async function loadMasters(){
-  showLoader(true);
+/* ================= MASTER ================= */
+async function loadMasters(show=true){
+  if(show) showLoader(true);
   try{
     const res = await jsonp("getMasterData");
     staffMaster = res.staff || [];
     allQuestions = res.questions || [];
-
     renderStaffDropdown();
     renderFilters();
-
-    if(!staffMaster.length) toast("StaffMaster sheet मध्ये staff data add करा.");
-    if(!allQuestions.length) toast("FormQuestions sheet मध्ये questions add करा.");
-  }catch(e){
-    toast(e.message);
-  }
-  showLoader(false);
+    if(!staffMaster.length) toast("StaffMaster मधून data आलेला नाही.");
+  }catch(e){ toast(e.message); }
+  if(show) showLoader(false);
 }
-
 function renderStaffDropdown(){
-  const sel = $("staffSelect");
-  sel.innerHTML = `<option value="">कर्मचारी निवडा</option>` + staffMaster
-    .filter(s=>String(s.active).toLowerCase() !== "no")
-    .map(s=>`<option value="${s.staffId}">${s.staffName} — ${s.role} — ${s.branch}</option>`).join("");
+  $("staffSelect").innerHTML = `<option value="">कर्मचारी निवडा</option>` + staffMaster
+    .filter(s => String(s.active).toLowerCase() !== "no")
+    .map(s => `<option value="${esc(s.staffId)}">${esc(s.staffName)} — ${esc(s.role)} — ${esc(s.branch)}</option>`)
+    .join("");
 }
-
 function renderFilters(){
-  const branches = [...new Set(staffMaster.map(s=>s.branch).filter(Boolean))].sort();
-  const roles = [...new Set([...DEFAULT_ROLES, ...staffMaster.map(s=>s.role).filter(Boolean)])];
-
-  $("branchFilter").innerHTML = `<option value="">All Branches</option>` + branches.map(b=>`<option>${b}</option>`).join("");
-  $("roleFilter").innerHTML = `<option value="">All Roles</option>` + roles.map(r=>`<option>${r}</option>`).join("");
+  const branches = [...new Set(staffMaster.map(s=>safe(s.branch)).filter(Boolean))].sort();
+  const roles = [...new Set(staffMaster.map(s=>safe(s.role)).filter(Boolean))].sort();
+  $("branchFilter").innerHTML = `<option value="">All Branches</option>` + branches.map(b=>`<option>${esc(b)}</option>`).join("");
+  $("roleFilter").innerHTML = `<option value="">All Roles</option>` + roles.map(r=>`<option>${esc(r)}</option>`).join("");
+}
+function getSelectedStaff(){
+  const id = $("staffSelect").value;
+  return staffMaster.find(s => safe(s.staffId) === safe(id));
+}
+function getQuestions(role, shift){
+  return allQuestions
+    .filter(q => safe(q.role) === safe(role) && safe(q.shift) === safe(shift) && String(q.active).toLowerCase() !== "no")
+    .sort((a,b)=>Number(a.order||0)-Number(b.order||0));
 }
 
+/* ================= ENTRY ================= */
 function onStaffChange(){
   const st = getSelectedStaff();
   $("role").value = st ? st.role : "";
@@ -687,267 +562,291 @@ function onStaffChange(){
   renderDynamicForm();
   onShiftChange();
 }
-
-function getSelectedStaff(){
-  const id = $("staffSelect").value;
-  return staffMaster.find(s=>s.staffId === id);
-}
-
 async function onShiftChange(){
   renderDynamicForm();
   if($("shift").value === "evening") await loadMorningPreview();
   else $("morningPreview").classList.add("hidden");
 }
-
-/* =========================
-   DYNAMIC FORM
-   ========================= */
-function getQuestionsForCurrent(){
-  const st = getSelectedStaff();
-  if(!st) return [];
-  const shift = $("shift").value;
-  return allQuestions
-    .filter(q => safe(q.role) === safe(st.role) && safe(q.shift) === shift && String(q.active).toLowerCase() !== "no")
-    .sort((a,b)=>Number(a.order||0)-Number(b.order||0));
-}
-
 function renderDynamicForm(){
   const st = getSelectedStaff();
-  const box = $("dynamicForm");
   const shift = $("shift").value;
   $("dynamicTitle").textContent = shift === "morning" ? "🎯 आजचे नियोजन" : "✅ आजची प्रत्यक्ष कामगिरी";
 
   if(!st){
-    box.innerHTML = `<p class="muted">कृपया कर्मचारी निवडा. पदानुसार प्रश्न आपोआप लोड होतील.</p>`;
+    $("dynamicForm").innerHTML = `<p class="muted">कृपया कर्मचारी निवडा.</p>`;
     $("questionCount").textContent = "0 प्रश्न";
     return;
   }
-
-  const qs = getQuestionsForCurrent();
+  const qs = getQuestions(st.role, shift);
   $("questionCount").textContent = qs.length + " प्रश्न";
-
   if(!qs.length){
-    box.innerHTML = `<p class="danger-text">या पदासाठी ${shift === "morning" ? "सकाळचे" : "सायंकाळचे"} प्रश्न FormQuestions sheet मध्ये नाहीत.</p>`;
+    $("dynamicForm").innerHTML = `<p class="danger">या पदासाठी प्रश्न FormQuestions sheet मध्ये नाहीत.</p>`;
     return;
   }
-
-  box.innerHTML = qs.map(q=>{
+  $("dynamicForm").innerHTML = qs.map(q=>{
     const id = "q_" + q.key;
-    const req = String(q.required).toLowerCase() === "yes" ? "required" : "";
-    const ph = q.placeholder ? `placeholder="${escapeHtml(q.placeholder)}"` : "";
-    if(q.type === "textarea"){
-      return `<div class="field"><label>${q.label}</label><textarea id="${id}" ${req} ${ph}></textarea></div>`;
-    }
-    if(q.type === "number" || q.type === "amount"){
-      return `<div class="field"><label>${q.label}</label><input id="${id}" type="number" ${req} ${ph}></div>`;
-    }
-    if(q.type === "yesno"){
-      return `<div class="field"><label>${q.label}</label><select id="${id}" ${req}><option value="">निवडा</option><option>होय</option><option>नाही</option></select></div>`;
-    }
-    if(q.type === "date"){
-      return `<div class="field"><label>${q.label}</label><input id="${id}" type="date" ${req}></div>`;
-    }
-    return `<div class="field"><label>${q.label}</label><input id="${id}" type="text" ${req} ${ph}></div>`;
+    const req = String(q.required).toLowerCase()==="yes" ? "required" : "";
+    const ph = q.placeholder ? `placeholder="${esc(q.placeholder)}"` : "";
+    const label = esc(q.label);
+    if(q.type === "textarea") return `<div class="field"><label>${label}</label><textarea id="${esc(id)}" ${req} ${ph}></textarea></div>`;
+    if(q.type === "number" || q.type === "amount") return `<div class="field"><label>${label}</label><input id="${esc(id)}" type="number" ${req} ${ph}></div>`;
+    if(q.type === "yesno") return `<div class="field"><label>${label}</label><select id="${esc(id)}" ${req}><option value="">निवडा</option><option>होय</option><option>नाही</option></select></div>`;
+    if(q.type === "date") return `<div class="field"><label>${label}</label><input id="${esc(id)}" type="date" ${req}></div>`;
+    return `<div class="field"><label>${label}</label><input id="${esc(id)}" type="text" ${req} ${ph}></div>`;
   }).join("");
 }
-
-function escapeHtml(str){
-  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]));
-}
-
-/* =========================
-   MORNING PREVIEW
-   ========================= */
 async function loadMorningPreview(){
   const st = getSelectedStaff();
   if(!st) return;
   showLoader(true);
   try{
-    const res = await jsonp("getEntry", {
-      date: $("entryDate").value,
-      staffId: st.staffId,
-      shift: "morning"
-    });
-
+    const res = await jsonp("getEntry",{date:$("entryDate").value,staffId:st.staffId,shift:"morning"});
     const box = $("morningPlanBox");
-    if(!res.entry){
-      $("morningPreview").classList.remove("hidden");
-      box.innerHTML = `<div class="plan-box"><b>⚠️ सकाळचे नियोजन सापडले नाही.</b><p>सायंकाळची actual entry करण्यापूर्वी सकाळचे planning भरलेले असणे आवश्यक आहे.</p></div>`;
-      showLoader(false);
-      return;
-    }
-
-    const payload = JSON.parse(res.entry.payloadJson || "{}");
-    const qs = allQuestions.filter(q=>safe(q.role)===safe(st.role) && q.shift==="morning" && String(q.active).toLowerCase() !== "no")
-      .sort((a,b)=>Number(a.order||0)-Number(b.order||0));
-
-    box.innerHTML = qs.map(q=>`
-      <div class="plan-box">
-        <b>${q.label}</b>
-        <p>${safe(payload[q.key]) || "-"}</p>
-      </div>
-    `).join("");
     $("morningPreview").classList.remove("hidden");
+    if(!res.entry){
+      box.innerHTML = `<div class="mini-card"><b class="danger">सकाळचे नियोजन सापडले नाही.</b><p class="muted">पहिले morning planning save करा.</p></div>`;
+      showLoader(false); return;
+    }
+    const payload = parsePayload(res.entry);
+    const qs = getQuestions(st.role,"morning");
+    box.innerHTML = qs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(payload[q.key] || "-")}</span></div>`).join("");
   }catch(e){ toast(e.message); }
   showLoader(false);
 }
-
-/* =========================
-   SUBMIT ENTRY
-   ========================= */
 async function submitEntry(){
   const st = getSelectedStaff();
   if(!st){ toast("कर्मचारी निवडा."); return; }
-
-  const qs = getQuestionsForCurrent();
+  const qs = getQuestions(st.role,$("shift").value);
   const payload = {};
   for(const q of qs){
-    const el = $("q_" + q.key);
+    const el = $("q_"+q.key);
     const val = el ? el.value.trim() : "";
     if(String(q.required).toLowerCase()==="yes" && !val){
       toast("कृपया भरा: " + q.label);
-      el && el.focus();
-      return;
+      el && el.focus(); return;
     }
-    payload[q.key] = val;
+    payload[q.key]=val;
   }
-
   showLoader(true);
   try{
-    const res = await jsonp("saveEntry", {
-      date: $("entryDate").value,
-      staffId: st.staffId,
-      staffName: st.staffName,
-      role: st.role,
-      branch: st.branch,
-      shift: $("shift").value,
-      payloadJson: JSON.stringify(payload)
+    const res = await jsonp("saveEntry",{
+      date:$("entryDate").value,
+      staffId:st.staffId,
+      staffName:st.staffName,
+      role:st.role,
+      branch:st.branch,
+      shift:$("shift").value,
+      payloadJson:JSON.stringify(payload)
     });
-
     buildShareText(st, qs, payload);
-    toast(res.message || "Entry saved successfully.");
+    dashboardLoadedOnce = false;
+    toast(res.message || "Entry saved.");
     document.querySelector('[data-page="share"]').click();
   }catch(e){ toast(e.message); }
   showLoader(false);
 }
-
 function buildShareText(st, qs, payload){
   const shiftLabel = $("shift").value === "morning" ? "🌅 आजचे नियोजन" : "🌙 आजची प्रत्यक्ष कामगिरी";
-  let msg = `📌 दैनंदिन नियोजन व त्याअनुषंगाने झालेले प्रत्यक्ष कार्य\n\n`;
-  msg += `📌 पदाचे नांव: ${st.role}\n`;
-  msg += `👤 कर्मचारी नाव: ${st.staffName}\n`;
-  msg += `🏦 शाखा: ${st.branch}\n`;
-  msg += `📅 दिनांक: ${$("entryDate").value}\n\n`;
-  msg += `${shiftLabel}\n\n`;
-
-  qs.forEach(q=>{
-    msg += `✅ ${q.label}: ${payload[q.key] || "-"}\n`;
-  });
-
-  msg += `\n— Digital Daily Work System`;
-  lastShareMessage = msg;
+  let msg = `📌 दैनंदिन नियोजन व प्रत्यक्ष कार्य\n\n`;
+  msg += `📌 पद: ${st.role}\n👤 कर्मचारी: ${st.staffName}\n🏦 शाखा: ${st.branch}\n📅 दिनांक: ${$("entryDate").value}\n\n${shiftLabel}\n\n`;
+  qs.forEach(q => msg += `✅ ${q.label}: ${payload[q.key] || "-"}\n`);
+  msg += `\n— Daily Staff Work System`;
   $("shareText").value = msg;
   $("waShare").href = "https://wa.me/?text=" + encodeURIComponent(msg);
 }
-
 async function copyShareText(){
-  const text = $("shareText").value;
-  if(!text){ toast("Share text उपलब्ध नाही."); return; }
-  await navigator.clipboard.writeText(text);
+  if(!$("shareText").value){ toast("Share text उपलब्ध नाही."); return; }
+  await navigator.clipboard.writeText($("shareText").value);
   toast("Text copied.");
 }
 
-/* =========================
-   DASHBOARD
-   ========================= */
-async function loadDashboard(){
+/* ================= DASHBOARD ================= */
+async function loadDashboard(force=false){
   showLoader(true);
   try{
-    const res = await jsonp("getDashboard", {date:$("dashDate").value});
-    const entries = res.entries || [];
-
-    const bf = $("branchFilter").value;
-    const rf = $("roleFilter").value;
-    const activeStaff = staffMaster.filter(s => String(s.active).toLowerCase() !== "no")
-      .filter(s => !bf || s.branch === bf)
-      .filter(s => !rf || s.role === rf);
-
-    const entryMap = {};
-    entries.forEach(e=>{
-      entryMap[e.staffId + "_" + e.shift] = e;
-    });
-
-    const rows = activeStaff.map(s=>{
-      const m = entryMap[s.staffId + "_morning"];
-      const ev = entryMap[s.staffId + "_evening"];
-      let status = "Pending";
-      let cls = "pending";
-      let remark = "Evening actual बाकी आहे";
-      if(m && ev){ status = "Complete"; cls = "done"; remark = "Planning आणि actual दोन्ही झाले"; }
-      else if(!m && !ev){ status = "Missing"; cls = "missing"; remark = "दोन्ही entry नाहीत"; }
-      else if(!m && ev){ status = "Check"; cls = "missing"; remark = "Morning planning नाही, पण evening actual आहे"; }
-      return {s,m,ev,status,cls,remark};
-    });
-
-    $("stTotal").textContent = activeStaff.length;
-    $("stMorning").textContent = rows.filter(r=>r.m).length;
-    $("stEvening").textContent = rows.filter(r=>r.ev).length;
-    $("stPending").textContent = rows.filter(r=>!(r.m && r.ev)).length;
-
-    $("statusTable").innerHTML = rows.map(r=>`
-      <tr>
-        <td>${r.s.staffName}</td>
-        <td>${r.s.role}</td>
-        <td>${r.s.branch}</td>
-        <td><span class="status ${r.m?'done':'pending'}">${r.m?'Done':'Pending'}</span></td>
-        <td><span class="status ${r.ev?'done':'pending'}">${r.ev?'Done':'Pending'}</span></td>
-        <td><span class="status ${r.cls}">${r.status}</span></td>
-        <td>${r.remark}</td>
-      </tr>
-    `).join("");
-
-    renderCharts(rows);
+    const date = $("dashDate").value;
+    const res = await jsonp("getDashboard",{date});
+    entriesCache = res.entries || [];
+    buildDashboardRows();
+    renderDashboard();
+    $("staffDetail").classList.add("hidden");
   }catch(e){ toast(e.message); }
   showLoader(false);
 }
+function buildDashboardRows(){
+  const bf = $("branchFilter").value;
+  const rf = $("roleFilter").value;
+  const activeStaff = staffMaster
+    .filter(s => String(s.active).toLowerCase() !== "no")
+    .filter(s => !bf || safe(s.branch) === safe(bf))
+    .filter(s => !rf || safe(s.role) === safe(rf));
 
-function renderCharts(rows){
+  const map = {};
+  entriesCache.forEach(e => map[safe(e.staffId)+"_"+safe(e.shift)] = e);
+
+  dashboardRowsCache = activeStaff.map(s=>{
+    const m = map[safe(s.staffId)+"_morning"];
+    const ev = map[safe(s.staffId)+"_evening"];
+    let status="Pending", cls="pending", action="Actual बाकी";
+    if(m && ev){ status="Complete"; cls="done"; action="View"; }
+    else if(!m && !ev){ status="Missing"; cls="missing"; action="No entry"; }
+    else if(!m && ev){ status="Check"; cls="check"; action="Planning missing"; }
+    return {staff:s,morning:m,evening:ev,status,cls,action};
+  });
+}
+function renderDashboard(){
+  const rows = dashboardRowsCache;
+  $("stTotal").textContent = rows.length;
+  $("stMorning").textContent = rows.filter(r=>r.morning).length;
+  $("stEvening").textContent = rows.filter(r=>r.evening).length;
+  $("stPending").textContent = rows.filter(r=>!(r.morning && r.evening)).length;
+
+  $("statusTable").innerHTML = rows.map((r,i)=>`
+    <tr>
+      <td><button class="staff-link" onclick="showStaffDetail(${i})">${esc(r.staff.staffName)}</button></td>
+      <td>${esc(r.staff.role)}</td>
+      <td>${esc(r.staff.branch)}</td>
+      <td><span class="status ${r.morning?'done':'pending'}">${r.morning?'Done':'Pending'}</span></td>
+      <td><span class="status ${r.evening?'done':'pending'}">${r.evening?'Done':'Pending'}</span></td>
+      <td><span class="status ${r.cls}">${r.status}</span></td>
+      <td><button class="btn btn-soft" onclick="showStaffDetail(${i})">Open</button></td>
+    </tr>
+  `).join("");
+
+  renderSummaryCharts(rows);
+}
+function renderSummaryCharts(rows){
   const branchData = {};
   rows.forEach(r=>{
-    branchData[r.s.branch] ||= {complete:0,pending:0};
-    if(r.m && r.ev) branchData[r.s.branch].complete++;
-    else branchData[r.s.branch].pending++;
+    const b = safe(r.staff.branch) || "Other";
+    branchData[b] ||= {complete:0,pending:0};
+    if(r.morning && r.evening) branchData[b].complete++;
+    else branchData[b].pending++;
   });
 
   const roleData = {};
   rows.forEach(r=>{
-    roleData[r.s.role] ||= {morning:0,evening:0};
-    if(r.m) roleData[r.s.role].morning++;
-    if(r.ev) roleData[r.s.role].evening++;
+    const role = safe(r.staff.role) || "Other";
+    roleData[role] ||= 0;
+    if(r.morning) roleData[role]++;
+    if(r.evening) roleData[role]++;
   });
 
   if(branchChart) branchChart.destroy();
-  branchChart = new Chart($("branchChart"), {
+  branchChart = new Chart($("branchChart"),{
     type:"bar",
     data:{
       labels:Object.keys(branchData),
       datasets:[
-        {label:"Complete", data:Object.values(branchData).map(x=>x.complete)},
-        {label:"Pending", data:Object.values(branchData).map(x=>x.pending)}
+        {label:"Complete",data:Object.values(branchData).map(x=>x.complete)},
+        {label:"Pending",data:Object.values(branchData).map(x=>x.pending)}
       ]
     },
     options:{responsive:true,plugins:{legend:{position:"bottom"}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}
   });
 
   if(roleChart) roleChart.destroy();
-  roleChart = new Chart($("roleChart"), {
+  roleChart = new Chart($("roleChart"),{
     type:"doughnut",
-    data:{
-      labels:Object.keys(roleData),
-      datasets:[{label:"Entries", data:Object.values(roleData).map(x=>x.morning+x.evening)}]
-    },
+    data:{labels:Object.keys(roleData),datasets:[{data:Object.values(roleData)}]},
     options:{responsive:true,plugins:{legend:{position:"bottom"}}}
   });
+}
+
+/* ================= STAFF DRILLDOWN ================= */
+async function showStaffDetail(index){
+  const row = dashboardRowsCache[index];
+  if(!row) return;
+  const st = row.staff;
+  const morningPayload = parsePayload(row.morning);
+  const eveningPayload = parsePayload(row.evening);
+
+  const mQs = getQuestions(st.role,"morning");
+  const eQs = getQuestions(st.role,"evening");
+
+  $("staffDetail").classList.remove("hidden");
+  $("detailTitle").textContent = `${st.staffName} — ${st.role} — ${st.branch}`;
+  $("detailTag").textContent = $("dashDate").value;
+
+  const mFilled = mQs.filter(q => safe(morningPayload[q.key])).length;
+  const eFilled = eQs.filter(q => safe(eveningPayload[q.key])).length;
+  const total = Math.max(1, mQs.length + eQs.length);
+  const score = Math.round(((mFilled + eFilled) / total) * 100);
+
+  $("detailPlanCount").textContent = mFilled + "/" + mQs.length;
+  $("detailActualCount").textContent = eFilled + "/" + eQs.length;
+  $("detailScore").textContent = score + "%";
+
+  $("planList").innerHTML = row.morning ? mQs.map(q=>`
+    <div class="kv"><b>${esc(q.label)}</b><span>${esc(morningPayload[q.key] || "-")}</span></div>
+  `).join("") : `<p class="danger">सकाळचे planning भरलेले नाही.</p>`;
+
+  $("actualList").innerHTML = row.evening ? eQs.map(q=>`
+    <div class="kv"><b>${esc(q.label)}</b><span>${esc(eveningPayload[q.key] || "-")}</span></div>
+  `).join("") : `<p class="danger">सायंकाळचे actual भरलेले नाही.</p>`;
+
+  $("planStatusText").textContent = row.morning ? "Done" : "Pending";
+  $("actualStatusText").textContent = row.evening ? "Done" : "Pending";
+  $("overallStatusText").textContent = row.status;
+
+  renderStaffDailyChart(st, morningPayload, eveningPayload, mQs, eQs);
+  await renderMonthlyChart(st);
+  $("staffDetail").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function renderStaffDailyChart(st, mp, ep, mQs, eQs){
+  const labels = ["Planning Fields","Actual Fields"];
+  const data = [
+    mQs.filter(q=>safe(mp[q.key])).length,
+    eQs.filter(q=>safe(ep[q.key])).length
+  ];
+  if(staffDailyChart) staffDailyChart.destroy();
+  staffDailyChart = new Chart($("staffDailyChart"),{
+    type:"bar",
+    data:{labels,datasets:[{label:"Filled Fields",data}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}
+  });
+}
+async function renderMonthlyChart(st){
+  const date = $("dashDate").value;
+  const start = monthStartISO(date);
+  const end = monthEndISO(date);
+  $("monthTag").textContent = `${start} ते ${end}`;
+
+  try{
+    const res = await jsonp("getStaffMonthly",{staffId:st.staffId,startDate:start,endDate:end});
+    const entries = res.entries || [];
+
+    const days = {};
+    entries.forEach(e=>{
+      const d = normalizeDateClient(e.date);
+      days[d] ||= {morning:0,evening:0};
+      if(safe(e.shift)==="morning") days[d].morning = 1;
+      if(safe(e.shift)==="evening") days[d].evening = 1;
+    });
+
+    const labels = Object.keys(days).sort();
+    const complete = labels.map(d => days[d].morning && days[d].evening ? 1 : 0);
+    const partial = labels.map(d => days[d].morning + days[d].evening);
+
+    if(staffMonthlyChart) staffMonthlyChart.destroy();
+    staffMonthlyChart = new Chart($("staffMonthlyChart"),{
+      type:"line",
+      data:{
+        labels,
+        datasets:[
+          {label:"Complete Day",data:complete,tension:.35},
+          {label:"Total Entries",data:partial,tension:.35}
+        ]
+      },
+      options:{
+        responsive:true,
+        plugins:{legend:{position:"bottom"}},
+        scales:{y:{beginAtZero:true,ticks:{precision:0},max:2}}
+      }
+    });
+  }catch(e){
+    toast("Monthly chart साठी Code.gs update करा: " + e.message);
+  }
 }
 
 init();
