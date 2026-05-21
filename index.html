@@ -156,6 +156,18 @@ function qualityVerdictText(score){
   if(score>0) return 'Review Needed';
   return 'Score Pending';
 }
+function effectiveWorkQuality(obj){
+  if(!obj) return 0;
+  const existing=Number(obj.workQuality||0);
+  if(existing>0) return Math.min(100,Math.max(0,Math.round(existing)));
+  const calc=calculateStaffWorkScore(obj);
+  return calc===''?0:Number(calc);
+}
+function cleanRemark(v){
+  const t=safe(v);
+  if(!t || t==='0' || t.toLowerCase()==='null' || t.toLowerCase()==='undefined') return '';
+  return t;
+}
 function autoCalculateAllScores(){
   accountStaffRowsCache.forEach(r=>{r.workQuality=calculateStaffWorkScore(r)});
 }
@@ -247,14 +259,14 @@ function buildAccountBulkShare(unit,rows){
 }
 async function loadDashboard(show=true){if(show)showLoader(true);try{const res=await jsonp('getDashboard',{date:$('dashDate').value});entriesCache=res.entries||[];unitSummaryCache=res.unitSummary||[];accountStaffSystemCache=res.accountStaffSystem||[];buildDashboardRows();renderDashboard(res.managementSummary||{});$('staffDetail').classList.add('hidden')}catch(e){toast(e.message)}if(show)showLoader(false)}
 function buildDashboardRows(){const bf=$('branchFilter').value,rf=$('roleFilter').value,activeStaff=staffMaster.filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम').filter(s=>!bf||safe(s.branch)===safe(bf)).filter(s=>!rf||safe(s.role)===safe(rf)),map={},accMap={};entriesCache.forEach(e=>map[safe(e.staffId)+'_'+safe(e.shift).toLowerCase()]=e);accountStaffSystemCache.forEach(r=>accMap[safe(r.staffId)]=r);dashboardRowsCache=activeStaff.map(s=>{const m=map[safe(s.staffId)+'_morning'],ev=map[safe(s.staffId)+'_evening'],acc=accMap[safe(s.staffId)]||{};let status='Pending',cls='pending';if(m&&ev){status='Complete';cls='done'}else if(!m&&!ev){status='Missing';cls='missing'}else if(!m&&ev){status='Check';cls='check'}return{staff:s,morning:m,evening:ev,account:acc,status,cls}})}
-function rowRemark(r){const ep=parsePayload(r.evening);return safe(r.account&&r.account.remark)||safe(ep.remark)||safe(ep.important_note)||'-'}
-function rowQuality(r){return Number((r.account&&r.account.workQuality)||0)}
+function rowRemark(r){const ep=parsePayload(r.evening);return cleanRemark(r.account&&r.account.remark)||cleanRemark(ep.remark)||cleanRemark(ep.important_note)||'-'}
+function rowQuality(r){return effectiveWorkQuality(r.account)}
 function renderDashboard(mgmt){
   const rows=dashboardRowsCache,units=unitSummaryCache.filter(u=>!$('branchFilter').value||safe(u.branch)===safe($('branchFilter').value));
   $('stTotal').textContent=rows.length;$('stMorning').textContent=rows.filter(r=>r.morning).length;$('stEvening').textContent=rows.filter(r=>r.evening).length;$('stAvgSys').textContent=pct(mgmt.averageSystemAchievement||0);
   $('mgmtSummary').innerHTML=`<div class="grid g4"><div><b>Total Units</b><br>${mgmt.totalUnits||0}</div><div><b>Strong Units</b><br>${mgmt.strongUnits||0}</div><div><b>Attention Units</b><br>${mgmt.attentionUnits||0}</div><div><b>Average</b><br>${pct(mgmt.averageSystemAchievement||0)}</div></div><p class="verdict">${esc(mgmt.message||'Dashboard refresh करा.')}</p>`;
   $('statusTable').innerHTML=rows.map((r,i)=>{const q=rowQuality(r);const qCls=q>=75?'done':(q>0?'pending':'missing');return `<tr><td><button class="staff-link" onclick="showStaffDetail(${i})">${esc(r.staff.staffName)}</button></td><td>${esc(r.staff.role)}</td><td>${esc(r.staff.branch)}</td><td><span class="status ${r.morning?'done':'pending'}">${r.morning?'Done':'Pending'}</span></td><td><span class="status ${r.evening?'done':'pending'}">${r.evening?'Done':'Pending'}</span></td><td><span class="status ${r.cls}">${r.status}</span></td><td><span class="status ${qCls}">${q?q+'/100':'-'}</span></td><td>${esc(rowRemark(r))}</td><td><button class="btn btn-soft" onclick="showStaffDetail(${i})">Open</button></td></tr>`}).join('');
-  $('unitTable').innerHTML=units.map(u=>{const s=u.system||{};const cls=(s.overallPercent||0)>=85?'ok':'attention';const q=Number(s.workQuality||0);const qCls=q>=75?'ok':'attention';return `<tr><td>${esc(u.branch)}</td><td>${u.complete}/${u.staffTotal} (${u.entryPercent||0}%)</td><td>${num(s.odAchieved)}/${num(s.odTarget)}<br><b>${pct(s.odPercent||0)}</b></td><td>${num(s.collectionAchieved)}/${num(s.collectionTarget)}<br><b>${pct(s.collectionPercent||0)}</b></td><td>${num(s.disbursementAchieved)}/${num(s.disbursementTarget)}<br><b>${pct(s.disbursementPercent||0)}</b></td><td>${num(s.newCustomerAchieved)}/${num(s.newCustomerTarget)}<br><b>${pct(s.newCustomerPercent||0)}</b></td><td class="verdict ${qCls}">${q?q+'/100':'-'}<br><small>${esc(s.qualityVerdict||'Quality score pending')}</small></td><td class="verdict ${cls}">${esc(u.verdict)}</td></tr>`}).join('')||'<tr><td colspan="8">No unit data.</td></tr>';
+  $('unitTable').innerHTML=units.map(u=>{const s=u.system||{};const cls=(s.overallPercent||0)>=85?'ok':'attention';const q=effectiveWorkQuality(s);const qCls=q>=75?'ok':(q>0?'attention':'missing');const qText=q?q+'/100':'-';const qVerdict=qualityVerdictText(q);return `<tr><td>${esc(u.branch)}</td><td>${u.complete}/${u.staffTotal} (${u.entryPercent||0}%)</td><td>${num(s.odAchieved)}/${num(s.odTarget)}<br><b>${pct(s.odPercent||0)}</b></td><td>${num(s.collectionAchieved)}/${num(s.collectionTarget)}<br><b>${pct(s.collectionPercent||0)}</b></td><td>${num(s.disbursementAchieved)}/${num(s.disbursementTarget)}<br><b>${pct(s.disbursementPercent||0)}</b></td><td>${num(s.newCustomerAchieved)}/${num(s.newCustomerTarget)}<br><b>${pct(s.newCustomerPercent||0)}</b></td><td><span class="verdict ${qCls}">${qText}</span><br><small>${esc(qVerdict)}</small></td><td class="verdict ${cls}">${esc(u.verdict)}</td></tr>`}).join('')||'<tr><td colspan="8">No unit data.</td></tr>';
   setTimeout(()=>renderCharts(rows,units),50)
 }
 function renderCharts(rows,units){if(!window.Chart)return;const branchData={};rows.forEach(r=>{const b=safe(r.staff.branch)||'Other';branchData[b]||={complete:0,pending:0};if(r.morning&&r.evening)branchData[b].complete++;else branchData[b].pending++});if(branchChart)branchChart.destroy();branchChart=new Chart($('branchChart'),{type:'bar',data:{labels:Object.keys(branchData),datasets:[{label:'Complete',data:Object.values(branchData).map(x=>x.complete),borderRadius:10},{label:'Pending',data:Object.values(branchData).map(x=>x.pending),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});if(systemChart)systemChart.destroy();systemChart=new Chart($('systemChart'),{type:'bar',data:{labels:units.map(u=>u.branch),datasets:[{label:'Overall %',data:units.map(u=>u.system?u.system.overallPercent:0),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:120}}}})}
