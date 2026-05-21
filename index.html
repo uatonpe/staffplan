@@ -1,1112 +1,206 @@
+
 <!DOCTYPE html>
 <html lang="mr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Anik Daily Staff Work System Pro</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Anik Daily Staff Work System - Pro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
-  --red: #e21818;
-  --blue: #172d8c;
-  --blue2: #2348c7;
-  --ink: #101828;
-  --muted: #667085;
-  --bg: #f4f7ff;
-  --card: #fff;
-  --line: #e7edf8;
-  --soft: #eef3ff;
-  --green: #16a34a;
-  --orange: #f59e0b;
-  --danger: #ef4444;
-  --purple: #7c3aed;
-  --shadow: 0 12px 30px rgba(23,45,140,.08);
-  --shadow2: 0 24px 65px rgba(23,45,140,.13);
-  --r: 24px
+  --primary:#007bff;
+  --blue:#007bff;
+  --blue2:#0d6efd;
+  --green:#28c76f;
+  --orange:#ff9f43;
+  --danger:#ea5455;
+  --purple:#6f42c1;
+  --ink:#344054;
+  --muted:#667085;
+  --bg:#f8f8f8;
+  --card:#ffffff;
+  --line:#edf0f5;
+  --soft:#f4f7fb;
+  --shadow:0 4px 15px rgba(0,0,0,.06);
+  --shadow2:0 10px 30px rgba(0,0,0,.09);
+  --r:16px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  margin:0;
-  background:radial-gradient(circle at 8% 0%,rgba(226,24,24,.08),transparent 28%),radial-gradient(circle at 95% 0%,rgba(23,45,140,.12),transparent 30%),linear-gradient(180deg,#fbfcff 0%,#eef4ff 100%);
-  color:var(--ink);
-  font-family:"Noto Sans Devanagari","Poppins",system-ui,sans-serif;
-  min-height:100vh
-}
-.app{display:grid;grid-template-columns:270px minmax(0,1fr);min-height:100vh}
-.sidebar{position:sticky;top:0;height:100vh;overflow:auto;padding:18px 14px;background:linear-gradient(180deg,#071340 0%,#172d8c 62%,#2348c7 100%);color:#fff}
-.brand{padding:16px;border-radius:28px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.17);box-shadow:0 16px 40px rgba(0,0,0,.14);margin-bottom:14px}
-.brand-logo{width:78px;height:78px;border-radius:24px;background:#fff;display:grid;place-items:center;margin-bottom:12px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.18)}
-.brand-logo img{width:100%;height:100%;object-fit:contain;padding:6px}
-.brand h1{margin:0 0 6px;font-size:18px;font-weight:900;line-height:1.25}
-.brand p{margin:0;font-size:12px;opacity:.86;line-height:1.45;font-weight:650}
-.nav{width:100%;border:0;background:transparent;color:#fff;display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:18px;margin:6px 0;font-family:inherit;font-size:15px;font-weight:900;text-align:left;cursor:pointer;transition:.15s}
-.nav:hover,.nav.active{background:rgba(255,255,255,.17);transform:translateX(2px)}
-.side-note{margin-top:16px;border-radius:22px;padding:14px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);font-size:12px;line-height:1.6;font-weight:650}
-main{padding:22px;overflow:hidden}
-.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
-.title h2{margin:0;font-size:27px;line-height:1.2;font-weight:950;color:#0f1f49;letter-spacing:-.35px}
-.title p{margin:4px 0 0;color:var(--muted);font-weight:750}
-.date-pill{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:10px 14px;font-weight:900;box-shadow:var(--shadow);white-space:nowrap}
-.hero{position:relative;overflow:hidden;border-radius:30px;background:linear-gradient(135deg,#14246f 0%,#172d8c 48%,#e21818 180%);color:#fff;padding:24px;margin-bottom:18px;box-shadow:var(--shadow2)}
-.hero:after{content:"";position:absolute;right:-70px;top:-80px;width:240px;height:240px;border-radius:999px;background:rgba(255,255,255,.10)}
-.hero h3{position:relative;margin:0 0 8px;font-size:24px;font-weight:950}
-.hero p{position:relative;margin:0;opacity:.94;font-weight:650;line-height:1.55;max-width:920px}
-.grid{display:grid;gap:16px}
-.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
-.card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
-.section{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:12px;margin-bottom:15px;border-bottom:1px solid var(--line)}
-.section h3{margin:0;font-size:18px;font-weight:950;color:#142044}
-.tag{background:var(--soft);color:var(--blue);padding:7px 10px;border-radius:999px;font-size:12px;font-weight:950;white-space:nowrap}
-label{display:block;margin-bottom:7px;font-weight:950;color:#263b5f}
-input,select,textarea{width:100%;border:1px solid #dce6f5;border-radius:16px;background:#fff;padding:12px 13px;font-family:inherit;font-size:15px;outline:none;transition:.15s}
-textarea{min-height:96px;resize:vertical}
-input:focus,select:focus,textarea:focus{border-color:var(--blue2);box-shadow:0 0 0 4px rgba(35,72,199,.11)}
-.field{margin-bottom:13px}
-.btns{display:flex;gap:10px;flex-wrap:wrap}
-.btn{border:0;border-radius:16px;padding:12px 16px;font-family:inherit;font-weight:950;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:.15s}
-.btn:hover{transform:translateY(-1px)}
-.btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 10px 24px rgba(23,45,140,.24)}
-.btn-soft{background:#eef3ff;color:var(--blue)}
-.btn-green{background:#e8fff1;color:#087a31}
-.stat{background:#fff;border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-.stat:after{content:"";position:absolute;right:-28px;top:-28px;width:98px;height:98px;border-radius:999px;background:rgba(23,45,140,.08)}
-.stat .icon{font-size:25px}
-.stat .num{font-size:31px;font-weight:950;margin:6px 0 0;color:#122152}
-.stat .lbl{font-size:12px;color:var(--muted);font-weight:950;margin-top:2px}
-.stat.good .num{color:var(--green)}
-.stat.warn .num{color:var(--orange)}
-.stat.bad .num{color:var(--danger)}
-.stat.purple .num{color:var(--purple)}
-table{width:100%;border-collapse:separate;border-spacing:0 9px}
-th{font-size:12px;text-align:left;padding:0 10px;color:#667085;font-weight:950;white-space:nowrap}
-td{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 10px;font-weight:780;vertical-align:middle}
-td:first-child{border-left:1px solid var(--line);border-radius:15px 0 0 15px}
-td:last-child{border-right:1px solid var(--line);border-radius:0 15px 15px 0}
-.staff-link{border:0;background:transparent;color:var(--blue);font-family:inherit;font-weight:950;cursor:pointer;text-align:left;padding:0;text-decoration:underline;text-underline-offset:3px}
-.status{padding:6px 9px;border-radius:999px;font-size:12px;font-weight:950;display:inline-block;white-space:nowrap}
-.done{background:#e8fff1;color:#087a31}
-.pending{background:#fff7df;color:#9a5f00}
-.missing{background:#fff0f0;color:#b42318}
-.check{background:#f1edff;color:#5b21b6}
-.compare{display:grid;grid-template-columns:repeat(3, 1fr);gap:14px}
-.mini{border:1px solid var(--line);border-radius:20px;background:#fbfdff;padding:14px}
-.mini h4{margin:0 0 10px;font-size:16px;font-weight:950;color:#122152}
-.kv{border-bottom:1px dashed #d9e6f5;padding:9px 0}
-.kv:last-child{border-bottom:none}
-.kv b{display:block;color:#223653;font-size:13px;font-weight:950}
-.kv span{display:block;margin-top:4px;color:#46556c;font-weight:760;white-space:pre-wrap}
-.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
-.score-box{border-radius:18px;padding:14px;background:#fff;border:1px solid var(--line)}
-.score-box b{display:block;font-size:12px;color:var(--muted);font-weight:950}
-.score-box span{display:block;font-size:21px;font-weight:950;margin-top:4px}
-.copybox{width:100%;min-height:280px;background:#08132f;color:#f7fbff;border:0;border-radius:24px;padding:18px;line-height:1.62;font-family:"Noto Sans Devanagari",sans-serif;font-size:15px}
-.hidden{display:none!important}
-.muted{color:var(--muted);font-weight:700}
-.danger{color:var(--danger);font-weight:950}
-.lock-banner{background:#fff0f0;color:#b42318;border:1px solid #fda29b;padding:12px 16px;border-radius:16px;font-weight:950;margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.loader{position:fixed;inset:0;display:none;place-items:center;background:rgba(244,247,255,.70);backdrop-filter:blur(7px);z-index:9999}
-.loader.active{display:grid}
-.spin{width:58px;height:58px;border-radius:999px;border:6px solid #dbe5ff;border-top-color:var(--blue);animation:spin .75s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.toast{position:fixed;right:20px;bottom:20px;display:none;z-index:10000;background:#101828;color:#fff;padding:13px 16px;border-radius:16px;box-shadow:var(--shadow2);font-weight:850;max-width:430px}
-.toast.show{display:block}
-@media(max-width:1020px){
-  .app{grid-template-columns:1fr}
-  .sidebar{position:relative;height:auto}
-  main{padding:14px}
-  .g2,.g3,.g4,.compare,.score-grid{grid-template-columns:1fr}
-  .top{align-items:flex-start;flex-direction:column}
-  .hero{padding:19px;border-radius:24px}
-  .hero h3{font-size:21px}
-  .title h2{font-size:23px}
-  table{font-size:13px}
-  td,th{padding:10px 8px}
-  .brand{display:flex;gap:13px;align-items:center}
-  .brand-logo{margin-bottom:0;width:64px;height:64px;flex:0 0 auto}
-}
-@media(max-width:560px){
-  .sidebar{padding:12px}
-  .nav{display:inline-flex;width:auto;margin:4px 3px;padding:10px 12px;font-size:13px}
-  .side-note{display:none}
-  .card{padding:14px;border-radius:20px}
-  .stat .num{font-size:26px}
-  .btn{width:100%}
-  .section{align-items:flex-start;flex-direction:column}
-  .date-pill{font-size:13px}
-}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans Devanagari',Poppins,system-ui,sans-serif;padding:10px;-webkit-font-smoothing:antialiased}
+.app{max-width:1600px;margin:auto;display:block;min-height:100vh}
+.side{position:relative;height:auto;overflow:visible;background:transparent;color:var(--ink);padding:0;margin:0 0 16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px}
+.brand{width:100%;background:transparent;border:0;box-shadow:none;text-align:center;padding:8px 0 6px;margin:0;border-radius:0;color:var(--ink)}
+.logo{width:200px;height:78px;margin:0 auto 6px;border-radius:0;background:url('https://anikfin.com/wp-content/uploads/2024/06/anik-horizontal-1-1024x400.png') center/contain no-repeat;color:transparent;box-shadow:none;font-size:0}
+.brand h1{margin:0;font-size:20px;font-weight:700;color:#333;line-height:1.25}
+.brand p{margin:5px 0 0;color:var(--muted);font-size:13px;font-weight:500}
+.nav{width:auto;border:1px solid #dfe1e5;background:#fff;color:#4B5563;padding:11px 16px;border-radius:25px;text-align:center;font:inherit;font-size:14px;font-weight:600;cursor:pointer;margin:0;box-shadow:var(--shadow);transition:.2s}
+.nav:hover,.nav.active{background:var(--primary);color:#fff;border-color:var(--primary);transform:translateY(-1px)}
+.hint{width:100%;max-width:920px;margin:6px auto 0;background:#e6f7ff;border:1px solid #91d5ff;color:#005a8c;border-radius:12px;padding:12px 15px;font-size:13px;font-weight:500;line-height:1.55;text-align:center;box-shadow:none}
+.main{padding:0}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--card);padding:16px 20px;border-radius:16px;box-shadow:var(--shadow);margin-bottom:15px}.top h2{margin:0;font-size:23px;font-weight:700;color:#333}.top p{margin:3px 0 0;color:var(--muted);font-size:14px;font-weight:500}.pill{background:#f4f7fb;border:1px solid #dfe1e5;border-radius:25px;padding:10px 14px;color:#495057;font-size:14px;font-weight:600;box-shadow:none;white-space:nowrap}
+.hero{background:#fff;border:1px solid var(--line);border-left:5px solid var(--primary);border-radius:16px;color:var(--ink);padding:18px 20px;box-shadow:var(--shadow);margin-bottom:15px}.hero h3{margin:0 0 6px;font-size:20px;font-weight:700;color:#333}.hero p{margin:0;color:#667085;line-height:1.55;font-weight:500;font-size:14px}.grid{display:grid;gap:15px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:var(--card);border:0;border-radius:16px;padding:18px;box-shadow:var(--shadow2);margin-bottom:18px}.section{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 0 12px;margin-bottom:15px;border-bottom:1px solid #f0f0f0}.section h3{margin:0;font-size:18px;font-weight:700;color:#333}.tag{display:inline-block;background:#e7f1ff;color:#0056b3;padding:6px 10px;border-radius:18px;font-size:12px;font-weight:600;white-space:nowrap}label{display:block;margin-bottom:7px;color:#4B5563;font-size:14px;font-weight:600}input,select,textarea{width:100%;border:1px solid #dfe1e5;border-radius:25px;background:#fff;padding:12px 15px;font-family:inherit;font-size:14px;color:#344054;outline:none;transition:border-color .2s,box-shadow .2s}textarea{min-height:95px;resize:vertical;border-radius:14px}input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,123,255,.16)}input[readonly]{background:#f8fafc;color:#667085}.field{margin-bottom:12px}.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.btn{border:0;border-radius:25px;padding:12px 18px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:.2s}.btn:hover{transform:translateY(-1px)}.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(0,123,255,.22)}.btn-soft{background:#f4f7fb;color:#495057;border:1px solid #dfe1e5}.btn-green{background:#eaf9f2;color:#1e8755;border:1px solid #c8f0da}.stat{background:#fff;border:0;border-radius:12px;padding:15px;box-shadow:var(--shadow);text-align:center;position:relative;overflow:hidden}.stat:after{display:none}.stat .icon{font-size:22px}.stat .num{font-size:28px;font-weight:700;margin-top:6px;color:#0056b3}.stat .lbl{font-size:13px;color:#6c757d;font-weight:500}.stat.good .num{color:var(--green)}.stat.warn .num{color:#d97706}.stat.bad .num{color:var(--danger)}.stat.purple .num{color:var(--purple)}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}.table-card,.table-container{background:#fff;border-radius:16px;box-shadow:var(--shadow2);padding:15px}table{width:100%;border-collapse:collapse;margin-top:5px;min-width:720px}th,td{padding:12px 10px;text-align:left;border-bottom:1px solid #f0f0f0;font-size:14px;white-space:nowrap;background:#fff}th{font-weight:700;color:#495057;text-transform:uppercase;font-size:11px;letter-spacing:.4px;background:#fafafa}tbody tr:hover td{background:#f8f9fa}td:first-child,td:last-child{border-radius:0;border-left:0;border-right:0}.staff-link{border:0;background:transparent;color:var(--primary);font-family:inherit;font-weight:700;cursor:pointer;text-align:left;padding:0;text-decoration:underline;text-underline-offset:3px}.status,.verdict{display:inline-block;padding:4px 10px;border-radius:18px;font-size:12px;font-weight:700}.done,.ok{background:#d4edda;color:#155724}.pending,.attention{background:#fff3cd;color:#856404}.missing{background:#f8d7da;color:#721c24}.check{background:#e2e3e5;color:#383d41}.lockbox{background:#fff3cd;border:1px solid #ffe29a;color:#856404;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-weight:600}.compare{display:grid;grid-template-columns:1fr 1fr;gap:15px}.mini{border:1px solid #f0f0f0;border-radius:14px;background:#fbfdff;padding:14px}.mini h4{margin:0 0 10px;font-size:16px;color:#333}.kv{padding:9px 0;border-bottom:1px dashed #dfe1e5}.kv:last-child{border-bottom:0}.kv b{display:block;color:#4B5563;font-size:13px;font-weight:700}.kv span{display:block;margin-top:4px;color:#667085;font-size:14px;white-space:pre-wrap}.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.score-box{border-radius:12px;padding:14px;background:#fff;border:1px solid #f0f0f0;text-align:center}.score-box b{display:block;font-size:12px;color:#6c757d}.score-box span{display:block;font-size:22px;font-weight:700;margin-top:4px;color:#333}.copybox{width:100%;min-height:280px;background:#f8fafc;color:#344054;border:1px solid #dfe1e5;border-radius:14px;padding:15px;line-height:1.65;font-family:inherit;font-size:14px}.hidden{display:none!important}.muted{color:var(--muted);font-weight:500}.danger{color:var(--danger);font-weight:700}.loader{position:fixed;inset:0;display:none;place-items:center;background:rgba(255,255,255,.90);z-index:9999}.loader.active{display:grid}.spin{width:42px;height:42px;border-radius:50%;border:5px solid rgba(0,0,0,.10);border-left-color:var(--primary);animation:spin 1s ease infinite}@keyframes spin{to{transform:rotate(360deg)}}.toast{position:fixed;right:18px;bottom:18px;display:none;z-index:10000;background:#333;color:#fff;padding:12px 15px;border-radius:12px;box-shadow:var(--shadow2);font-weight:600;max-width:430px}.toast.show{display:block}@media(max-width:900px){body{padding:8px}.side{gap:7px}.nav{font-size:13px;padding:10px 12px}.top{align-items:flex-start;flex-direction:column;padding:15px}.top h2{font-size:21px}.g2,.g3,.g4,.compare,.score-grid{grid-template-columns:1fr}.card{padding:15px}.section{align-items:flex-start;flex-direction:column}.hero{padding:15px}.hint{text-align:left}.btn{width:100%}.logo{width:160px;height:62px}table{font-size:13px;min-width:680px}th,td{padding:10px 8px}.pill{font-size:13px}}
+
+.bulk-table{min-width:1180px}.bulk-table input{min-width:105px;padding:9px 10px;border-radius:12px;font-size:13px}.bulk-table input.remark{min-width:180px}.bulk-total{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.bulk-total b{display:block;color:#333}.bulk-total span{font-size:18px;font-weight:800;color:var(--primary)}@media(max-width:768px){.bulk-total{grid-template-columns:1fr 1fr}.bulk-table{min-width:1060px}}
 </style>
 </head>
 <body>
-<div class="loader" id="loader"><div class="spin"></div></div>
-<div class="toast" id="toast"></div>
+<div class="loader" id="loader"><div class="spin"></div></div><div class="toast" id="toast"></div>
 <div class="app">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-logo">
-        <img src="data:image/png;base64,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gQIAAAQIEqlFATAQIECBAgAABAgQIECBAgED+BRY0QwUACyplPwIECBAgQIAAAQIECBAgUH0CIiJAgAABAgQIECBAgAABAgTyL7DAGSoAWGAqOxIgQIAAAQIECBAgQIAAgWoTEA8BAgQIECBAgAABAgQIECCQf4EFz1ABwIJb2ZMAAQIECBAgQIAAAQIECFSXgGgIECBAgAABAgQIECBAgACB/AssRIYKABYCy64ECBAgQIAAAQIECBAgQKCaBMRCgAABAgQIECBAgAABAgQI5F9gYTJUALAwWvYlQIAAAQIECBAgQIAAAQLVIyASAgQIECBAgAABAgQIECBAIP8CC5WhAoCF4rIzAQIECBAgQIAAAQIECBCoVgFxECBAgAABAgQIECBAgAABAvkXWLgMFQAsnJe9CRAgQIAAAQIECBAgQIBAdQiIggABAgQIECBAgAABAgQIEMi/wEJmqABgIcHsToAAAQIECBAgQIAAAQIEqkFADAQIECBAgAABAgQIECBAgED+BRY2QwUACytmfwIECBAgQIAAAQIECBAg0PcCIiBAgAABAgQIECBAgAABAgTyL7DQGSoAWGgyBxAgQIAAAQIECBAgQIAAgb4WMD4BAgQIECBAgAABAgQIECCQf4GFz1ABwMKbOYIAAQIECBAgQIAAAQIECPStgNEJECBAgAABAgQIECBAgACB/AssQoYKABYBzSEECBAgQIAAAQIECBAgQKAvBYxNgAABAgQIECBAgAABAgQI5F9gUTJUALAoao4hQIAAAQIECBAgQIAAAQJ9J2BkAgQIECBAgAABAgQIECBAIP8Ci5ShAoBFYnMQAQIECBAgQIAAAQIECBDoKwHjEiBAgAABAgQIECBAgAABAvkXWLQMFQAsmpujCBAgQIAAAQIECBAgQIBA3wgYlQABAgQIECBAgAABAgQIEMi/wCJmqABgEeEcRoAAAQIECBAgQIAAAQIE+kLAmAQIECBAgAABAgQIECBAgED+BRY1QwUAiyrnOAIECBAgQIAAAQIECBAg0PsCRiRAgAABAgQIECBAgAABAgTyL7DIGSoAWGQ6BxIgQIAAAQIECBAgQIAAgd4WMB4BAgQIECBAgAABAgQIECCQf4FFz1ABwKLbOZIAAQIECBAgQIAAAQIECPSugNEIECBAgAABAgQIECBAgACB/AssRoYKABYDz6EECBAgQIAAAQIECBAgQKA3BYxFgAABAgQIECBAgAABAgQI5F9gcTJUALA4eo4lQIAAAQIECBAgQIAAAQK9J2AkAgQIECBAgAABAgQIECBAIP8Ci5WhAoDF4nMwAQIECBAgQIAAAQIECBDoLQHjECBAgAABAgQIECBAgAABAvkXWLzMFQAsnp+jCRAgQIAAAQIECBAgQIBA7wgYhQABAgQIECBAgAABAgQIEMi/wGJmqABgMQEdToAAAQIECBAgQIAAAQIEekPAGAQIECBAgAABAgQIECBAgED+BRY3QwUAiyvoeAIECBAgQIAAAQIECBAg0PMCRiRAgAABAgQIECBAgAABAgTyL7DYGSoAWGxCHRAgQIAAAQIECBAgQIAAgZ4W0D8BAgQIECBAgAABAgQIECCQf4HFz1ABwOIb6oEAAQIECBAgQIAAAQIECPSsgN4JECBAgAABAgQIECBAgACB/At0Q4YKALoBURcECBAgQIAAAQIECBAgQKAnBfRNgAABAgQIECBAgAABAgQI5F+gOzJUANAdivogQIAAAQIECBAgQIAAAQI9J6BnAgQIECBAgAABAgQIECBAIP8C3ZKhAoBuYdQJAQIECBAgQIAAAQIECBDoKQH9EiBAgAABAgQIECBAgAABAvkX6J4MFQB0j6NeCBAgQIAAAQIECBAgQIBAzwjolQABAgQIECBAgAABAgQIEMi/QDdlqACgmyB1Q4AAAQIECBAgQIAAAQIEekJAnwQIECBAgAABAgQIECBAgED+BborQwUA3SWpHwIECBAgQIAAAQIECBAg0P3CeiRAgAABAgQIECBAgAABAgTyL9BtGSoA6DZKHREgQIAAAQIECBAgQIAAge4W0B8BAgQIECBAgAABAgQIECCQf4Huy1ABQPdZ6okAAQIECBAgQIAAAQIECHSvgN4IECBAgAABAgQIECBAgACB/At0Y4YKALoRU1cECBAgQIAAAQIECBAgQKA7BfRFgAABAgQIECBAgAABAgQI5F+gOzPUANAdivogQIAAAQIECBAgQIAAAQLdJ6AnAgQIECBAgAABAgQIECBAIP8C3ZqhAoBu5dQZAQIECBAgQIAAAQIECBDoLgH9ECBAgAABAgQIECBAgAABAvkX6N4MFQB0r6feCBAgQIAAAQIECBAgQIBA9wjohQABAgQIECBAgAABAgQIEMi/QDd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" alt="Anik Logo">
-      </div>
-      <div>
-        <h1>Anik Daily Staff Work System Pro</h1>
-        <p>Planning • Actual Work • Branches</p>
-      </div>
-    </div>
-    <button class="nav active" data-page="entry">📝 Daily Entry</button>
+  <aside class="side">
+    <div class="brand"><div class="logo">A</div><h1>Anik Daily Staff Work System</h1><p>Plan Lock • Actual Tracking • Account System Figures • Management Dashboard</p></div>
+    <button class="nav active" data-page="entry">📝 Staff Entry</button>
+    <button class="nav" data-page="account">🏦 Account Team</button>
     <button class="nav" data-page="dashboard">📊 Dashboard</button>
     <button class="nav" data-page="share">📤 Share Text</button>
-    <button class="nav" data-page="settings">⚙️ Setup</button>
-    <div class="side-note">
-      Morning planning एकदा सबमिट केल्यावर लॉक होते. सायंकाळी प्रत्यक्ष कामगिरी भरताना सकाळचे नियोजन आपोआप समोर दिसेल.
-    </div>
+    <button class="nav" data-page="settings">⚙️ Settings</button>
+    <div class="hint">सकाळचा plan एकदाच submit होईल. त्यानंतर तो lock राहील. सायंकाळी actual entry भरता येईल.</div>
   </aside>
-
-  <main>
-    <div class="top">
-      <div class="title">
-        <h2>दैनंदिन नियोजन व प्रत्यक्ष कार्य</h2>
-        <p>Verified Enterprise Work Verification & Analytics</p>
-      </div>
-      <div class="date-pill">📅 <span id="todayText"></span></div>
-    </div>
-
-    <div class="hero">
-      <h3>Target vs. Actual vs. System Verification</h3>
-      <p>कर्मचाऱ्यांचे सकाळचे नियोजन, संध्याकाळची प्रत्यक्ष कामगिरी आणि अकाऊंट्स टीमने प्रमाणित केलेले सिस्टीम रिपोर्ट आकडे एकाच ठिकाणी पडताळा.</p>
-    </div>
-
-    <!-- ENTRY PAGE -->
+  <main class="main">
+    <div class="top"><div><h2 id="pageTitle">Staff Entry</h2><p id="pageSub">दैनंदिन नियोजन आणि प्रत्यक्ष कामगिरी</p></div><div class="pill" id="todayText">Today</div></div>
     <section id="page-entry" class="page">
-      <div class="grid g2">
-        <div class="card">
-          <div class="section">
-            <h3>👤 Staff & Unit Details</h3>
-            <span class="tag">Auto Validation</span>
-          </div>
-          <div class="grid g2">
-            <div class="field">
-              <label>दिनांक</label>
-              <input type="date" id="entryDate">
-            </div>
-            <div class="field">
-              <label>Entry Type</label>
-              <select id="shift">
-                <option value="morning">🌅 सकाळचे नियोजन (Target)</option>
-                <option value="evening">🌙 सायंकाळची कामगिरी (Actual)</option>
-                <option value="system">🖥️ सिस्टीम डेटा (Accounts Team)</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label>कर्मचारी नाव</label>
-            <select id="staffSelect">
-              <option value="">कर्मचारी निवडा</option>
-            </select>
-          </div>
-          <div class="grid g2">
-            <div class="field">
-              <label>पद</label>
-              <input id="role" readonly placeholder="पद auto येईल">
-            </div>
-            <div class="field">
-              <label>शाखा</label>
-              <input id="branch" readonly placeholder="शाखा auto येईल">
-            </div>
-          </div>
-
-          <div id="morningPreview" class="hidden">
-            <div class="section" style="margin-top:20px">
-              <h3>🌅 सकाळचे लॉक केलेले नियोजन</h3>
-              <span class="tag" style="background:#fff3cd; color:#856404;">Target Reference</span>
-            </div>
-            <div id="morningPlanBox"></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div id="lockBanner" class="lock-banner hidden">
-            🔒 हे नियोजन आधीच सबमिट केले आहे आणि आता लॉक आहे.
-          </div>
-          <div class="section">
-            <h3 id="dynamicTitle">🎯 आजचे नियोजन</h3>
-            <span class="tag" id="questionCount">0 प्रश्न</span>
-          </div>
-          <div id="dynamicForm">
-            <p class="muted">कृपया कर्मचारी निवडा.</p>
-          </div>
-          <div class="btns" style="margin-top:20px">
-            <button class="btn btn-primary" id="submitBtn">✅ Save Entry</button>
-            <button class="btn btn-soft" id="resetBtn">🔄 Reset</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- DASHBOARD PAGE -->
-    <section id="page-dashboard" class="page hidden">
-      <div class="card" style="margin-bottom:16px">
-        <div class="section">
-          <h3>📊 Live Dashboard Filters</h3>
-          <span class="tag">Enterprise View</span>
-        </div>
+      <div class="hero"><h3>आजचे काम सोप्या पद्धतीने</h3><p>स्टाफने सकाळचा plan भरल्यावर तो lock होईल. संध्याकाळी actual भरल्यावर dashboard मध्ये management ला plan vs actual स्पष्ट दिसेल.</p></div>
+      <div class="card"><div class="section"><h3>Staff Work Entry</h3><span class="tag" id="entryLockTag">Ready</span></div>
+        <div id="lockMsg" class="lockbox hidden"></div>
         <div class="grid g4">
-          <div class="field">
-            <label>दिनांक</label>
-            <input type="date" id="dashDate">
-          </div>
-          <div class="field">
-            <label>Branch Filter</label>
-            <select id="branchFilter">
-              <option value="">All Branches</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Role Filter</label>
-            <select id="roleFilter">
-              <option value="">All Roles</option>
-            </select>
-          </div>
-          <div class="field" style="display:flex;align-items:end">
-            <button class="btn btn-primary" id="refreshDash" style="width:100%">🔎 Refresh</button>
-          </div>
+          <div class="field"><label>दिनांक</label><input type="date" id="entryDate"></div>
+          <div class="field"><label>कर्मचारी</label><select id="staffSelect"><option value="">कर्मचारी निवडा</option></select></div>
+          <div class="field"><label>Entry Type</label><select id="shift"><option value="morning">सकाळचा Plan</option><option value="evening">सायंकाळची Actual</option></select></div>
+          <div class="field" style="display:flex;align-items:end"><button class="btn btn-soft" id="reloadEntry" style="width:100%">🔄 Check Lock</button></div>
         </div>
+        <div id="staffInfo" class="muted"></div><div id="dynamicForm" style="margin-top:14px"></div>
+        <div class="btns"><button class="btn btn-primary" id="submitBtn">💾 Save Entry</button><button class="btn btn-soft" id="resetBtn">Reset</button></div>
       </div>
-
-      <div class="grid g4" style="margin-bottom:16px">
-        <div class="stat">
-          <div class="icon">👥</div>
-          <div class="num" id="stTotal">0</div>
-          <div class="lbl">Total Staff</div>
-        </div>
-        <div class="stat good">
-          <div class="icon">🌅</div>
-          <div class="num" id="stMorning">0</div>
-          <div class="lbl">Planning Done (Target)</div>
-        </div>
-        <div class="stat warn">
-          <div class="icon">🌙</div>
-          <div class="num" id="stEvening">0</div>
-          <div class="lbl">Actual Done</div>
-        </div>
-        <div class="stat purple">
-          <div class="icon">🖥️</div>
-          <div class="num" id="stSystem">0</div>
-          <div class="lbl">System Verified</div>
-        </div>
-      </div>
-
-      <div class="grid g2" style="margin-bottom:16px">
-        <div class="card">
-          <div class="section">
-            <h3>Branch-wise Completion</h3>
-            <span class="tag">Today</span>
-          </div>
-          <canvas id="branchChart" height="120"></canvas>
-        </div>
-        <div class="card">
-          <div class="section">
-            <h3>Role-wise Entries</h3>
-            <span class="tag">Today</span>
-          </div>
-          <canvas id="roleChart" height="120"></canvas>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom:16px">
-        <div class="section">
-          <h3>Staff-wise Daily Status & Variance</h3>
-          <span class="tag">Click name for deep analysis</span>
-        </div>
-        <div style="overflow:auto">
-          <table>
-            <thead>
-              <tr>
-                <th>Staff</th>
-                <th>Role</th>
-                <th>Branch</th>
-                <th>Planning (Target)</th>
-                <th>Actual Work</th>
-                <th>System Data</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="statusTable"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- DEEP DETAILED ANALYTICS (STAFF SELECTED) -->
-      <div id="staffDetail" class="hidden">
-        <div class="card" style="margin-bottom:16px">
-          <div class="section">
-            <h3 id="detailTitle">Staff Detail Analytics</h3>
-            <span class="tag" id="detailTag">Target vs Actual vs System</span>
-          </div>
-          <div class="grid g3" style="margin-bottom:14px">
-            <div class="stat good">
-              <div class="icon">🌅</div>
-              <div class="num" id="detailPlanCount">0</div>
-              <div class="lbl">Planned Metrics</div>
-            </div>
-            <div class="stat warn">
-              <div class="icon">🌙</div>
-              <div class="num" id="detailActualCount">0</div>
-              <div class="lbl">Actual Executed</div>
-            </div>
-            <div class="stat purple">
-              <div class="icon">🖥️</div>
-              <div class="num" id="detailSystemCount">0</div>
-              <div class="lbl">System Verified</div>
-            </div>
-          </div>
-
-          <div class="compare">
-            <div class="mini">
-              <h4>🌅 सकाळचे नियोजन (Target)</h4>
-              <div id="planList"></div>
-            </div>
-            <div class="mini">
-              <h4>🌙 सायंकाळची कामगिरी (Actual)</h4>
-              <div id="actualList"></div>
-            </div>
-            <div class="mini">
-              <h4>🖥️ सिस्टीम डेटा (Accounts Verified)</h4>
-              <div id="systemList"></div>
-            </div>
-          </div>
-
-          <div class="score-grid">
-            <div class="score-box" style="border-left: 5px solid var(--green);">
-              <b>Planning (Target) Status</b>
-              <span id="planStatusText">-</span>
-            </div>
-            <div class="score-box" style="border-left: 5px solid var(--orange);">
-              <b>Actual Status</b>
-              <span id="actualStatusText">-</span>
-            </div>
-            <div class="score-box" style="border-left: 5px solid var(--purple);">
-              <b>Verification Status</b>
-              <span id="systemStatusText">-</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid g2" style="margin-bottom:16px">
-          <div class="card">
-            <div class="section">
-              <h3>Today's Target vs. Actual vs. System Variance</h3>
-              <span class="tag">Daily Gap Analysis</span>
-            </div>
-            <canvas id="staffDailyChart" height="130"></canvas>
-          </div>
-          <div class="card">
-            <div class="section">
-              <h3>Monthly Performance Trend</h3>
-              <span class="tag">Last 30 Days</span>
-            </div>
-            <canvas id="staffMonthlyChart" height="130"></canvas>
-          </div>
-        </div>
+      <div class="card" id="morningPreviewCard" style="display:none"><div class="section"><h3>सकाळचा Plan Preview</h3><span class="tag">For actual comparison</span></div><div id="morningPreview"></div></div>
+    </section>
+    <section id="page-account" class="page hidden">
+      <div class="hero"><h3>Account Team — Staff-wise Bulk Entry</h3><p>Unit निवडा, सर्व staff rows एकाच table मध्ये दिसतील. Target/Achieved आकडे भरून <b>Save All</b> करा. नंतर staff data येत गेल्यावर हीच table पुन्हा load करून multiple time update करता येईल.</p></div>
+      <div class="card"><div class="section"><h3>Staff-wise System Figures</h3><span class="tag">Fast Table Entry</span></div>
+        <div class="grid g3"><div class="field"><label>दिनांक</label><input type="date" id="accDate"></div><div class="field"><label>Unit / Branch</label><select id="accBranch"></select></div><div class="field" style="display:flex;align-items:end"><button class="btn btn-soft" id="loadAccStaff" style="width:100%">Load Staff Table</button></div></div>
+        <div class="mini" id="accBulkSummary" style="margin-bottom:12px">Unit निवडून staff table load करा.</div>
+        <div style="overflow:auto"><table class="bulk-table"><thead><tr><th>Staff</th><th>Role</th><th>OD Target</th><th>OD Achieved</th><th>Collection Target</th><th>Collection Achieved</th><th>Disb. Target</th><th>Disb. Achieved</th><th>New Cust. Target</th><th>New Cust. Achieved</th><th>Remark</th></tr></thead><tbody id="accStaffBody"><tr><td colspan="11">Load Staff Table करा.</td></tr></tbody></table></div>
+        <div class="btns" style="margin-top:12px"><button class="btn btn-primary" id="saveAccBulk">💾 Save All Staff Rows</button><button class="btn btn-soft" id="clearAccBlank">Clear Blank Rows</button></div>
       </div>
     </section>
-
-    <!-- SHARE PAGE -->
-    <section id="page-share" class="page hidden">
-      <div class="card">
-        <div class="section">
-          <h3>📤 WhatsApp / Text Share Format</h3>
-          <span class="tag">Verified Draft</span>
-        </div>
-        <textarea id="shareText" class="copybox" readonly placeholder="Save entry first to auto-generate draft..."></textarea>
-        <div class="btns" style="margin-top:14px">
-          <button class="btn btn-primary" id="copyShare">📋 Copy Text</button>
-          <a class="btn btn-green" id="waShare" target="_blank" href="#">🟢 Share on WhatsApp</a>
-        </div>
-      </div>
+    <section id="page-dashboard" class="page hidden">
+      <div class="card"><div class="section"><h3>Dashboard</h3><span class="tag">Simple View</span></div><div class="grid g4"><div class="field"><label>दिनांक</label><input type="date" id="dashDate"></div><div class="field"><label>Branch Filter</label><select id="branchFilter"><option value="">All Branches</option></select></div><div class="field"><label>Role Filter</label><select id="roleFilter"><option value="">All Roles</option></select></div><div class="field" style="display:flex;align-items:end"><button class="btn btn-primary" id="refreshDash" style="width:100%">🔎 Refresh</button></div></div></div>
+      <div class="grid g4"><div class="stat"><div class="num" id="stTotal">0</div><div class="lbl">Total Staff</div></div><div class="stat good"><div class="num" id="stMorning">0</div><div class="lbl">Planning Done</div></div><div class="stat warn"><div class="num" id="stEvening">0</div><div class="lbl">Actual Done</div></div><div class="stat purple"><div class="num" id="stAvgSys">0%</div><div class="lbl">System Achievement</div></div></div>
+      <div class="card"><div class="section"><h3>Management Summary</h3><span class="tag">System says</span></div><div id="mgmtSummary" class="mini"></div></div>
+      <div class="grid g2"><div class="card"><div class="section"><h3>Branch-wise Completion</h3><span class="tag">Today</span></div><canvas id="branchChart" height="120"></canvas></div><div class="card"><div class="section"><h3>System Achievement</h3><span class="tag">Unit Target</span></div><canvas id="systemChart" height="120"></canvas></div></div>
+      <div class="card"><div class="section"><h3>Unit-wise System Verdict</h3><span class="tag">Target vs Achieved</span></div><div style="overflow:auto"><table><thead><tr><th>Unit</th><th>Entry Complete</th><th>OD</th><th>Collection</th><th>Disbursement</th><th>New Customer</th><th>System Verdict</th></tr></thead><tbody id="unitTable"></tbody></table></div></div>
+      <div class="card"><div class="section"><h3>Staff-wise Daily Status</h3><span class="tag">Click staff name</span></div><div style="overflow:auto"><table><thead><tr><th>Staff</th><th>Role</th><th>Branch</th><th>Planning</th><th>Actual</th><th>Status</th><th>Open</th></tr></thead><tbody id="statusTable"></tbody></table></div></div>
+      <div id="staffDetail" class="hidden"><div class="card"><div class="section"><h3 id="detailTitle">Staff Detail</h3><span class="tag" id="detailTag">Plan vs Actual</span></div><div class="grid g3"><div class="stat good"><div class="num" id="detailPlanCount">0</div><div class="lbl">Planning Fields</div></div><div class="stat purple"><div class="num" id="detailActualCount">0</div><div class="lbl">Actual Fields</div></div><div class="stat warn"><div class="num" id="detailScore">0%</div><div class="lbl">Daily Completion</div></div></div><div class="grid g2" style="margin-top:14px"><div class="mini"><h4>🌅 सकाळचे नियोजन</h4><div id="planList"></div></div><div class="mini"><h4>🌙 सायंकाळची प्रत्यक्ष कामगिरी</h4><div id="actualList"></div></div></div></div></div>
     </section>
-
-    <!-- SETUP PAGE -->
-    <section id="page-settings" class="page hidden">
-      <div class="card">
-        <div class="section">
-          <h3>⚙️ System Settings</h3>
-          <span class="tag">System Config</span>
-        </div>
-        <div class="field">
-          <label>Google Apps Script Web App URL</label>
-          <input id="apiUrlInput" placeholder="https://script.google.com/macros/s/AKfycbwULNEswrM5ubUh5dfFgeKqdWO4qpUsHEtsKWEIYAbFxAoWgFMyxdpzVEqyogRFDuk/exec">
-        </div>
-        <div class="btns">
-          <button class="btn btn-primary" id="saveApiUrl">💾 Save API URL</button>
-          <button class="btn btn-soft" id="testApi">🧪 Test Connection</button>
-          <button class="btn btn-soft" id="reloadMaster">🔄 Reload Masters</button>
-        </div>
-      </div>
-    </section>
+    <section id="page-share" class="page hidden"><div class="card"><div class="section"><h3>WhatsApp / Management Share Text</h3><span class="tag">Auto generated</span></div><textarea id="shareText" class="copybox"></textarea><div class="btns" style="margin-top:12px"><button class="btn btn-green" id="copyShare">Copy Text</button><a class="btn btn-soft" id="waShare" target="_blank">Open WhatsApp</a></div></div></section>
+    <section id="page-settings" class="page hidden"><div class="card"><div class="section"><h3>Settings</h3><span class="tag">Apps Script URL</span></div><div class="field"><label>Web App URL</label><input id="apiUrlInput" placeholder="Paste Apps Script Web App URL"></div><div class="btns"><button class="btn btn-primary" id="saveApiUrl">Save URL</button><button class="btn btn-soft" id="testApi">Test Connection</button><button class="btn btn-soft" id="reloadMaster">Reload Master</button></div></div></section>
   </main>
 </div>
-
 <script>
-let API_URL = localStorage.getItem('DAILY_SYSTEM_API_URL') || '';
-let staffMaster = [];
-let allQuestions = [];
-let entriesCache = [];
-let dashboardRowsCache = [];
-let branchChart = null;
-let roleChart = null;
-let staffDailyChart = null;
-let staffMonthlyChart = null;
-let dashboardLoadedOnce = false;
-let morningEntryCache = null;
-let morningLockedState = false;
-
-const $ = id => document.getElementById(id);
-const safe = v => (v ?? '').toString().trim();
-
-function todayISO() {
-  const d = new Date();
-  return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+let API_URL=localStorage.getItem('DAILY_SYSTEM_API_URL')||'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+let staffMaster=[],allQuestions=[],entriesCache=[],dashboardRowsCache=[],unitSummaryCache=[],branchChart=null,systemChart=null,morningEntryCache=null,currentEntryLocked=false;
+const $=id=>document.getElementById(id),safe=v=>(v??'').toString().trim();
+function todayISO(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function showLoader(v=true){$('loader').classList.toggle('active',v)}
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3600)}
+function esc(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
+function parsePayload(entry){if(!entry||!entry.payloadJson)return {};try{return typeof entry.payloadJson==='object'?entry.payloadJson:JSON.parse(entry.payloadJson)}catch(e){return {}}}
+function jsonp(action,params={}){return new Promise((resolve,reject)=>{if(!API_URL||API_URL.includes('PASTE_YOUR')){reject(new Error('API URL set केलेला नाही. Settings मध्ये URL paste करा.'));return}const cb='cb_'+Math.random().toString(36).slice(2),script=document.createElement('script'),url=new URL(API_URL);url.searchParams.set('action',action);url.searchParams.set('callback',cb);Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));window[cb]=data=>{delete window[cb];script.remove();if(data&&data.success===false)reject(new Error(data.message||'Request failed'));else resolve(data)};script.onerror=()=>{delete window[cb];script.remove();reject(new Error('API connection failed.'))};script.src=url.toString();document.body.appendChild(script)})}
+function num(v){return Number(v||0).toLocaleString('en-IN')}
+function pct(v){return (Number(v||0))+'%'}
+async function init(){document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>openPage(b.dataset.page));$('todayText').textContent=new Date().toLocaleDateString('mr-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});['entryDate','dashDate','accDate'].forEach(id=>$(id).value=todayISO());$('apiUrlInput').value=API_URL;$('saveApiUrl').onclick=saveApiUrl;$('testApi').onclick=testConnection;$('reloadMaster').onclick=()=>loadMasters(true);$('staffSelect').onchange=onStaffChange;$('shift').onchange=onShiftChange;$('entryDate').onchange=onShiftChange;$('reloadEntry').onclick=onShiftChange;$('submitBtn').onclick=submitEntry;$('resetBtn').onclick=renderDynamicForm;$('refreshDash').onclick=()=>loadDashboard(true);$('copyShare').onclick=copyShareText;$('loadAccStaff').onclick=loadAccountStaffBulk;$('saveAccBulk').onclick=saveAccountStaffBulk;$('clearAccBlank').onclick=clearBlankAccountRows;await loadMasters(false)}
+function openPage(page){document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===page));document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));$('page-'+page).classList.remove('hidden');const titles={entry:['Staff Entry','दैनंदिन नियोजन आणि प्रत्यक्ष कामगिरी'],account:['Account Team','Unit-wise system target आणि achievement'],dashboard:['Dashboard','Management power view'],share:['Share Text','WhatsApp / report-ready text'],settings:['Settings','API setup']};$('pageTitle').textContent=titles[page][0];$('pageSub').textContent=titles[page][1];if(page==='dashboard')loadDashboard(false)}
+async function saveApiUrl(){API_URL=$('apiUrlInput').value.trim();localStorage.setItem('DAILY_SYSTEM_API_URL',API_URL);toast('API URL save झाला.');await testConnection()}
+async function testConnection(){showLoader(true);try{const res=await jsonp('ping');toast('Connection successful: '+(res.message||'OK'))}catch(e){toast(e.message)}showLoader(false)}
+async function loadMasters(show=true){if(show)showLoader(true);try{const res=await jsonp('getMasterData');staffMaster=res.staff||[];allQuestions=res.questions||[];renderStaffDropdown();renderFilters();renderAccountBranches();if(!staffMaster.length)toast('StaffMaster मधून data आलेला नाही.')}catch(e){toast(e.message)}if(show)showLoader(false)}
+function renderStaffDropdown(){$('staffSelect').innerHTML='<option value="">कर्मचारी निवडा</option>'+staffMaster.filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम').map(s=>`<option value="${esc(s.staffId)}">${esc(s.staffName)} — ${esc(s.role)} — ${esc(s.branch)}</option>`).join('')}
+function branches(){return [...new Set(staffMaster.map(s=>safe(s.branch)).filter(Boolean))].sort()}
+function renderFilters(){const br=branches(),roles=[...new Set(staffMaster.map(s=>safe(s.role)).filter(Boolean))].sort();$('branchFilter').innerHTML='<option value="">All Branches</option>'+br.map(b=>`<option>${esc(b)}</option>`).join('');$('roleFilter').innerHTML='<option value="">All Roles</option>'+roles.map(r=>`<option>${esc(r)}</option>`).join('')}
+function renderAccountBranches(){$('accBranch').innerHTML='<option value="">Unit निवडा</option>'+branches().map(b=>`<option>${esc(b)}</option>`).join('')}
+function getSelectedStaff(){return staffMaster.find(s=>safe(s.staffId)===safe($('staffSelect').value))}
+function getQuestions(role,shift){return allQuestions.filter(q=>safe(q.role)===safe(role)&&safe(q.shift)===safe(shift)&&String(q.active).toLowerCase()!=='no').sort((a,b)=>Number(a.order||0)-Number(b.order||0))}
+async function onStaffChange(){const st=getSelectedStaff();$('staffInfo').textContent=st?`Role: ${st.role} | Branch: ${st.branch}`:'';await onShiftChange()}
+async function onShiftChange(){currentEntryLocked=false;morningEntryCache=null;$('lockMsg').classList.add('hidden');$('entryLockTag').textContent='Ready';renderDynamicForm();const st=getSelectedStaff();if(!st)return;showLoader(true);try{const shift=$('shift').value;const existing=await jsonp('getEntry',{date:$('entryDate').value,staffId:st.staffId,shift});if(existing.entry){fillForm(parsePayload(existing.entry));if(shift==='morning'){currentEntryLocked=true;setFormLocked(true);$('submitBtn').disabled=true;$('entryLockTag').textContent='Locked';$('lockMsg').textContent='हा सकाळचा plan आधीच save झाला आहे. Lock असल्यामुळे पुन्हा edit/submit करता येणार नाही.';$('lockMsg').classList.remove('hidden')}else{$('entryLockTag').textContent='Actual Update'}}else{$('submitBtn').disabled=false;setFormLocked(false);$('entryLockTag').textContent=shift==='morning'?'New Plan':'Actual'}if(shift==='evening'){const mr=await jsonp('getEntry',{date:$('entryDate').value,staffId:st.staffId,shift:'morning'});morningEntryCache=mr.entry||null;renderMorningPreview(st)}}catch(e){toast(e.message)}showLoader(false)}
+function renderDynamicForm(){const st=getSelectedStaff(),shift=$('shift').value;if(!st){$('dynamicForm').innerHTML='<p class="danger">कर्मचारी निवडा.</p>';return}const qs=getQuestions(st.role,shift);if(!qs.length){$('dynamicForm').innerHTML='<p class="danger">या role आणि shift साठी FormQuestions मध्ये questions नाहीत.</p>';return}$('dynamicForm').innerHTML='<div class="grid g2">'+qs.map(q=>fieldHtml(q)).join('')+'</div>';$('submitBtn').disabled=false;$('morningPreviewCard').style.display=shift==='evening'?'block':'none'}
+function fieldHtml(q){const req=String(q.required).toLowerCase()==='yes'?' *':'';if(q.type==='textarea')return `<div class="field"><label>${esc(q.label)}${req}</label><textarea id="q_${esc(q.key)}" placeholder="${esc(q.placeholder)}"></textarea></div>`;if(q.type==='yesno')return `<div class="field"><label>${esc(q.label)}${req}</label><select id="q_${esc(q.key)}"><option value="">निवडा</option><option>होय</option><option>नाही</option></select></div>`;const type=(q.type==='number'||q.type==='amount')?'number':'text';return `<div class="field"><label>${esc(q.label)}${req}</label><input type="${type}" id="q_${esc(q.key)}" placeholder="${esc(q.placeholder)}"></div>`}
+function fillForm(payload){Object.keys(payload||{}).forEach(k=>{const el=$('q_'+k);if(el)el.value=payload[k]})}
+function setFormLocked(lock){document.querySelectorAll('#dynamicForm input,#dynamicForm textarea,#dynamicForm select').forEach(el=>{if(el.tagName==='SELECT')el.disabled=lock;else el.readOnly=lock})}
+function renderMorningPreview(st){const qs=getQuestions(st.role,'morning'),p=parsePayload(morningEntryCache);if(!morningEntryCache){$('morningPreview').innerHTML='<p class="danger">सकाळचा plan उपलब्ध नाही. आधी morning plan save करणे आवश्यक आहे.</p>';return}$('morningPreview').innerHTML=qs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(p[q.key]||'-')}</span></div>`).join('')}
+async function submitEntry(){const st=getSelectedStaff();if(!st){toast('कर्मचारी निवडा.');return}if(currentEntryLocked){toast('Morning plan lock आहे. पुन्हा save करता येणार नाही.');return}const shift=$('shift').value,qs=getQuestions(st.role,shift),payload={};for(const q of qs){const el=$('q_'+q.key),val=el?el.value.trim():'';if(String(q.required).toLowerCase()==='yes'&&!val){toast('कृपया भरा: '+q.label);el&&el.focus();return}payload[q.key]=val}showLoader(true);try{const res=await jsonp('saveEntry',{date:$('entryDate').value,staffId:st.staffId,staffName:st.staffName,role:st.role,branch:st.branch,shift,payloadJson:JSON.stringify(payload)});let morningEntryForShare=morningEntryCache;if(shift==='evening'&&!morningEntryForShare){try{const mr=await jsonp('getEntry',{date:$('entryDate').value,staffId:st.staffId,shift:'morning'});morningEntryForShare=mr.entry||null}catch(e){}}buildShareText(st,shift,qs,payload,morningEntryForShare);toast(res.message||'Entry saved.');if(shift==='morning')await onShiftChange();openPage('share')}catch(e){toast(e.message)}showLoader(false)}
+function buildShareText(st,shift,currentQs,currentPayload,morningEntry){const date=$('entryDate').value;let msg=`📌 दैनंदिन नियोजन व प्रत्यक्ष कार्य\n\n👤 कर्मचारी: ${st.staffName}\n📌 पद: ${st.role}\n🏦 शाखा: ${st.branch}\n📅 दिनांक: ${date}\n\n`;if(shift==='evening'){msg+='🎯 सकाळचे नियोजन\n';const morningQs=getQuestions(st.role,'morning'),morningPayload=parsePayload(morningEntry);if(morningEntry){morningQs.forEach(q=>msg+=`• ${q.label}: ${morningPayload[q.key]||'-'}\n`)}else msg+='• सकाळचे नियोजन उपलब्ध नाही\n';msg+='\n✅ सायंकाळची प्रत्यक्ष कामगिरी\n';currentQs.forEach(q=>msg+=`• ${q.label}: ${currentPayload[q.key]||'-'}\n`)}else{msg+='🎯 आजचे नियोजन\n';currentQs.forEach(q=>msg+=`• ${q.label}: ${currentPayload[q.key]||'-'}\n`);msg+='\n🔒 हा plan आता system मध्ये lock झाला आहे.\n'}msg+='\n— Anik Daily Staff Work System';$('shareText').value=msg;$('waShare').href='https://wa.me/?text='+encodeURIComponent(msg)}
+async function copyShareText(){const text=$('shareText').value;if(!text){toast('Share text उपलब्ध नाही.');return}await navigator.clipboard.writeText(text);toast('Text copied.')}
+let accountStaffRowsCache=[];
+function accountRowInput(row,i,key,type='number'){
+  const val=row&&row[key]?row[key]:'';
+  return `<input ${type==='number'?'type="number" step="1"':'type="text"'} data-i="${i}" data-key="${key}" value="${esc(val)}" class="${key==='remark'?'remark':''}">`;
 }
-
-function showLoader(v = true) {
-  $('loader').classList.toggle('active', v);
-}
-
-function toast(msg) {
-  const el = $('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 3500);
-}
-
-function esc(str) {
-  return String(str ?? '').replace(/[&<>"']/g, s => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-  }[s]));
-}
-
-function parsePayload(entry) {
-  if (!entry || !entry.payloadJson) return {};
-  try {
-    return typeof entry.payloadJson === 'object' ? entry.payloadJson : JSON.parse(entry.payloadJson);
-  } catch (e) {
-    return {};
-  }
-}
-
-function jsonp(action, params = {}) {
-  return new Promise((resolve, reject) => {
-    if (!API_URL || API_URL.includes('YOUR_SPREADSHEET_ID_HERE')) {
-      reject(new Error('API URL कॉन्फिगर केलेला नाही. सेटअप मेनू मध्ये जाऊन योग्य URL टाका.'));
-      return;
-    }
-    const cb = 'cb_' + Math.random().toString(36).slice(2);
-    const script = document.createElement('script');
-    const url = new URL(API_URL);
-    url.searchParams.set('action', action);
-    url.searchParams.set('callback', cb);
-    Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-    
-    window[cb] = data => {
-      delete window[cb];
-      script.remove();
-      if (data && data.success === false) reject(new Error(data.message || 'Request failed'));
-      else resolve(data);
-    };
-    
-    script.onerror = () => {
-      delete window[cb];
-      script.remove();
-      reject(new Error('Google App Script सर्व्हरशी संपर्क होऊ शकला नाही.'));
-    };
-    script.src = url.toString();
-    document.body.appendChild(script);
-  });
-}
-
-document.querySelectorAll('.nav').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.nav').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-    $('page-' + btn.dataset.page).classList.remove('hidden');
-    if (btn.dataset.page === 'dashboard' && !dashboardLoadedOnce) {
-      dashboardLoadedOnce = true;
-      setTimeout(() => loadDashboard(), 60);
-    }
-  });
-});
-
-async function init() {
-  $('todayText').textContent = new Date().toLocaleDateString('mr-IN', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
-  $('entryDate').value = todayISO();
-  $('dashDate').value = todayISO();
-  $('apiUrlInput').value = API_URL;
-
-  $('saveApiUrl').onclick = saveApiUrl;
-  $('testApi').onclick = testConnection;
-  $('reloadMaster').onclick = () => loadMasters(true);
-  $('staffSelect').onchange = onStaffChange;
-  $('shift').onchange = onShiftChange;
-  $('entryDate').onchange = onDateOrStaffChange;
-  $('submitBtn').onclick = submitEntry;
-  $('resetBtn').onclick = renderDynamicForm;
-  $('refreshDash').onclick = () => loadDashboard(true);
-  $('copyShare').onclick = copyShareText;
-
-  await loadMasters(false);
-}
-
-async function saveApiUrl() {
-  API_URL = $('apiUrlInput').value.trim();
-  localStorage.setItem('DAILY_SYSTEM_API_URL', API_URL);
-  toast('API URL यशस्वीरीत्या सेव्ह झाला.');
-  await testConnection();
-}
-
-async function testConnection() {
+async function loadAccountStaffBulk(){
+  if(!$('accBranch').value){toast('Unit निवडा.');return}
   showLoader(true);
-  try {
-    const res = await jsonp('ping');
-    toast('सर्व्हर कनेक्ट झाला: ' + (res.message || 'OK'));
-  } catch (e) {
-    toast(e.message);
-  }
+  try{
+    const res=await jsonp('getAccountStaffBulk',{date:$('accDate').value,branch:$('accBranch').value});
+    accountStaffRowsCache=res.rows||[];
+    renderAccountStaffTable(accountStaffRowsCache,res.unit);
+    toast(accountStaffRowsCache.length+' staff rows loaded.');
+  }catch(e){toast(e.message)}
   showLoader(false);
 }
-
-async function loadMasters(show = true) {
-  if (show) showLoader(true);
-  try {
-    const res = await jsonp('getMasterData');
-    staffMaster = res.staff || [];
-    allQuestions = res.questions || [];
-    renderStaffDropdown();
-    renderFilters();
-    if (!staffMaster.length) toast('StaffMaster शीटमध्ये कोणताही डेटा आढळला नाही.');
-  } catch (e) {
-    toast(e.message);
-  }
-  if (show) showLoader(false);
+function renderAccountStaffTable(rows,unit){
+  if(!rows.length){$('accStaffBody').innerHTML='<tr><td colspan="11">या unit मध्ये active staff नाहीत.</td></tr>';updateAccountBulkSummary(unit);return}
+  $('accStaffBody').innerHTML=rows.map((r,i)=>`<tr>
+    <td><b>${esc(r.staffName)}</b><br><small>${esc(r.staffId)}</small></td>
+    <td>${esc(r.role)}</td>
+    <td>${accountRowInput(r,i,'odTarget')}</td><td>${accountRowInput(r,i,'odAchieved')}</td>
+    <td>${accountRowInput(r,i,'collectionTarget')}</td><td>${accountRowInput(r,i,'collectionAchieved')}</td>
+    <td>${accountRowInput(r,i,'disbursementTarget')}</td><td>${accountRowInput(r,i,'disbursementAchieved')}</td>
+    <td>${accountRowInput(r,i,'newCustomerTarget')}</td><td>${accountRowInput(r,i,'newCustomerAchieved')}</td>
+    <td>${accountRowInput(r,i,'remark','text')}</td>
+  </tr>`).join('');
+  document.querySelectorAll('#accStaffBody input').forEach(inp=>inp.addEventListener('input',()=>{const i=Number(inp.dataset.i),key=inp.dataset.key;accountStaffRowsCache[i][key]=inp.value;updateAccountBulkSummary(calcLocalUnitTotal())}));
+  updateAccountBulkSummary(unit||calcLocalUnitTotal());
 }
-
-function renderStaffDropdown() {
-  $('staffSelect').innerHTML = '<option value="">कर्मचारी निवडा</option>' +
-    staffMaster.filter(s => String(s.active).toLowerCase() !== 'no').map(s => 
-      `<option value="${esc(s.staffId)}">${esc(s.staffName)} — ${esc(s.role)} — ${esc(s.branch)}</option>`
-    ).join('');
+function calcLocalUnitTotal(){
+  const total={odTarget:0,odAchieved:0,collectionTarget:0,collectionAchieved:0,disbursementTarget:0,disbursementAchieved:0,newCustomerTarget:0,newCustomerAchieved:0};
+  accountStaffRowsCache.forEach(r=>Object.keys(total).forEach(k=>total[k]+=Number(r[k]||0)));
+  function per(a,t){return t?Math.round((a/t)*100):0}
+  total.odPercent=per(total.odAchieved,total.odTarget);total.collectionPercent=per(total.collectionAchieved,total.collectionTarget);total.disbursementPercent=per(total.disbursementAchieved,total.disbursementTarget);total.newCustomerPercent=per(total.newCustomerAchieved,total.newCustomerTarget);
+  const arr=[total.odPercent,total.collectionPercent,total.disbursementPercent,total.newCustomerPercent].filter(x=>x>0);total.overallPercent=Math.round(arr.reduce((a,b)=>a+b,0)/Math.max(1,arr.length));
+  total.verdict=total.overallPercent>=100?'Target पूर्ण / अधिक — Strong Performance':total.overallPercent>=85?'Target जवळपास पूर्ण — Good Control':total.overallPercent>=60?'Partial Achievement — Follow-up Required':total.overallPercent>0?'Low Achievement — Management Attention Needed':'System figures pending';
+  return total;
 }
-
-function renderFilters() {
-  const branches = [...new Set(staffMaster.map(s => safe(s.branch)).filter(Boolean))].sort();
-  const roles = [...new Set(staffMaster.map(s => safe(s.role)).filter(Boolean))].sort();
-  $('branchFilter').innerHTML = '<option value="">All Branches</option>' + branches.map(b => `<option>${esc(b)}</option>`).join('');
-  $('roleFilter').innerHTML = '<option value="">All Roles</option>' + roles.map(r => `<option>${esc(r)}</option>`).join('');
+function updateAccountBulkSummary(u){
+  u=u||{};
+  $('accBulkSummary').innerHTML=`<div class="bulk-total"><div><b>OD</b><span>${num(u.odAchieved)}/${num(u.odTarget)} (${pct(u.odPercent||0)})</span></div><div><b>Collection</b><span>${num(u.collectionAchieved)}/${num(u.collectionTarget)} (${pct(u.collectionPercent||0)})</span></div><div><b>Disbursement</b><span>${num(u.disbursementAchieved)}/${num(u.disbursementTarget)} (${pct(u.disbursementPercent||0)})</span></div><div><b>New Customer</b><span>${num(u.newCustomerAchieved)}/${num(u.newCustomerTarget)} (${pct(u.newCustomerPercent||0)})</span></div></div><p class="verdict" style="margin-bottom:0">${esc(u.verdict||'Staff-wise figures भरल्यावर total इथे दिसेल.')}</p>`;
 }
-
-function getSelectedStaff() {
-  const id = $('staffSelect').value;
-  return staffMaster.find(s => safe(s.staffId) === safe(id));
-}
-
-function getQuestions(role, shift) {
-  return allQuestions.filter(q => safe(q.role) === safe(role) && safe(q.shift) === safe(shift) && String(q.active).toLowerCase() !== 'no').sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
-}
-
-async function onDateOrStaffChange() {
-  const st = getSelectedStaff();
-  if (!st) return;
-  
+async function saveAccountStaffBulk(){
+  if(!$('accBranch').value){toast('Unit निवडा.');return}
+  if(!accountStaffRowsCache.length){toast('आधी Load Staff Table करा.');return}
+  document.querySelectorAll('#accStaffBody input').forEach(inp=>{const i=Number(inp.dataset.i),key=inp.dataset.key;accountStaffRowsCache[i][key]=inp.value});
   showLoader(true);
-  try {
-    const res = await jsonp('checkLockStatus', {
-      date: $('entryDate').value,
-      staffId: st.staffId
-    });
-
-    morningLockedState = res.morningLocked || false;
-    
-    // Automatically manage default entry type selection
-    if (morningLockedState) {
-      if ($('shift').value === 'morning') {
-        $('shift').value = 'evening'; // Shift automatically to Evening Actual
-        toast('सकाळचे नियोजन आधीच सबमिट केले आहे, थेट कामगिरी नोंदवा.');
-      }
-    }
-    
-    onStaffChange();
-  } catch(e) {
-    toast(e.message);
-  }
+  try{
+    const rows=accountStaffRowsCache.map(r=>({staffId:r.staffId,staffName:r.staffName,role:r.role,odTarget:r.odTarget,odAchieved:r.odAchieved,collectionTarget:r.collectionTarget,collectionAchieved:r.collectionAchieved,disbursementTarget:r.disbursementTarget,disbursementAchieved:r.disbursementAchieved,newCustomerTarget:r.newCustomerTarget,newCustomerAchieved:r.newCustomerAchieved,remark:r.remark}));
+    const res=await jsonp('saveAccountStaffBulk',{date:$('accDate').value,branch:$('accBranch').value,rowsJson:JSON.stringify(rows)});
+    accountStaffRowsCache=res.rows||accountStaffRowsCache;
+    renderAccountStaffTable(accountStaffRowsCache,res.unit);
+    buildAccountBulkShare(res.unit,accountStaffRowsCache);
+    toast(res.message||'All staff rows saved.');
+  }catch(e){toast(e.message)}
   showLoader(false);
 }
-
-function onStaffChange() {
-  const st = getSelectedStaff();
-  $('role').value = st ? st.role : '';
-  $('branch').value = st ? st.branch : '';
-  onShiftChange();
+function clearBlankAccountRows(){
+  accountStaffRowsCache.forEach(r=>{['odTarget','odAchieved','collectionTarget','collectionAchieved','disbursementTarget','disbursementAchieved','newCustomerTarget','newCustomerAchieved','remark'].forEach(k=>r[k]='')});
+  renderAccountStaffTable(accountStaffRowsCache,calcLocalUnitTotal());
 }
-
-async function onShiftChange() {
-  const st = getSelectedStaff();
-  const shift = $('shift').value;
-  
-  if (shift === 'morning' && morningLockedState) {
-    $('lockBanner').classList.remove('hidden');
-    $('submitBtn').disabled = true;
-    $('submitBtn').style.opacity = '0.5';
-  } else {
-    $('lockBanner').classList.add('hidden');
-    $('submitBtn').disabled = false;
-    $('submitBtn').style.opacity = '1';
-  }
-  
-  renderDynamicForm();
-  
-  if (shift === 'evening' || shift === 'system') {
-    await loadMorningPreview();
-  } else {
-    $('morningPreview').classList.add('hidden');
-  }
+function buildAccountBulkShare(unit,rows){
+  let msg=`🏦 Account Team Staff-wise System Figures\nUnit: ${$('accBranch').value}\nDate: ${$('accDate').value}\n\nUnit Total:\nOD: ${num(unit.odAchieved)} / ${num(unit.odTarget)} (${unit.odPercent}%)\nCollection: ${num(unit.collectionAchieved)} / ${num(unit.collectionTarget)} (${unit.collectionPercent}%)\nDisbursement: ${num(unit.disbursementAchieved)} / ${num(unit.disbursementTarget)} (${unit.disbursementPercent}%)\nNew Customer: ${num(unit.newCustomerAchieved)} / ${num(unit.newCustomerTarget)} (${unit.newCustomerPercent}%)\n\nSystem Verdict: ${unit.verdict}\n\nStaff Rows Updated: ${rows.length}\n\n— Anik Daily Staff Work System`;
+  $('shareText').value=msg;$('waShare').href='https://wa.me/?text='+encodeURIComponent(msg);
 }
-
-function renderDynamicForm() {
-  const st = getSelectedStaff();
-  const shift = $('shift').value;
-  
-  if (shift === 'morning') $('dynamicTitle').textContent = '🌅 आजचे नियोजन';
-  else if (shift === 'evening') $('dynamicTitle').textContent = '🌙 आजची प्रत्यक्ष कामगिरी';
-  else $('dynamicTitle').textContent = '🖥️ सिस्टीम पडताळणी डेटा (अकाउंट्स)';
-
-  if (!st) {
-    $('dynamicForm').innerHTML = '<p class="muted">कृपया कर्मचारी निवडा.</p>';
-    $('questionCount').textContent = '0 प्रश्न';
-    return;
-  }
-  
-  const qs = getQuestions(st.role, shift);
-  $('questionCount').textContent = qs.length + ' प्रश्न';
-  
-  if (!qs.length) {
-    $('dynamicForm').innerHTML = '<p class="danger">या पदासाठी प्रश्न FormQuestions शीटमध्ये उपलब्ध नाहीत.</p>';
-    return;
-  }
-  
-  $('dynamicForm').innerHTML = qs.map(q => {
-    const id = 'q_' + q.key;
-    const req = String(q.required).toLowerCase() === 'yes' ? 'required' : '';
-    const ph = q.placeholder ? `placeholder="${esc(q.placeholder)}"` : '';
-    const label = esc(q.label);
-    
-    if (q.type === 'textarea') {
-      return `<div class="field"><label>${label}</label><textarea id="${esc(id)}" ${req} ${ph}></textarea></div>`;
-    }
-    if (q.type === 'number' || q.type === 'amount') {
-      return `<div class="field"><label>${label}</label><input id="${esc(id)}" type="number" ${req} ${ph}></div>`;
-    }
-    if (q.type === 'yesno') {
-      return `<div class="field"><label>${label}</label><select id="${esc(id)}" ${req}><option value="">निवडा</option><option>होय</option><option>नाही</option></select></div>`;
-    }
-    if (q.type === 'date') {
-      return `<div class="field"><label>${label}</label><input id="${esc(id)}" type="date" ${req}></div>`;
-    }
-    return `<div class="field"><label>${label}</label><input id="${esc(id)}" type="text" ${req} ${ph}></div>`;
-  }).join('');
-}
-
-async function loadMorningPreview() {
-  const st = getSelectedStaff();
-  if (!st) return;
-  showLoader(true);
-  try {
-    const res = await jsonp('getEntry', {
-      date: $('entryDate').value,
-      staffId: st.staffId,
-      shift: 'morning'
-    });
-    morningEntryCache = res.entry || null;
-    const box = $('morningPlanBox');
-    $('morningPreview').classList.remove('hidden');
-    if (!morningEntryCache) {
-      box.innerHTML = '<div class="mini"><p class="danger">सकाळचे नियोजन अद्याप सबमिट केले नाही.</p></div>';
-      showLoader(false);
-      return;
-    }
-    const payload = parsePayload(morningEntryCache);
-    const qs = getQuestions(st.role, 'morning');
-    box.innerHTML = qs.map(q => `<div class="kv"><b>${esc(q.label)}</b><span>${esc(payload[q.key] || '-')}</span></div>`).join('');
-  } catch (e) {
-    toast(e.message);
-  }
-  showLoader(false);
-}
-
-async function submitEntry() {
-  const st = getSelectedStaff();
-  if (!st) {
-    toast('कृपया कर्मचारी निवडा.');
-    return;
-  }
-  const shift = $('shift').value;
-  if (shift === 'morning' && morningLockedState) {
-    toast('नियोजन आधीच लॉक झाले आहे. नवीन एन्ट्री करता येणार नाही.');
-    return;
-  }
-  
-  const qs = getQuestions(st.role, shift);
-  const payload = {};
-  for (const q of qs) {
-    const el = $('q_' + q.key);
-    const val = el ? el.value.trim() : '';
-    if (String(q.required).toLowerCase() === 'yes' && !val) {
-      toast('कृपया आवश्यक फील्ड भरा: ' + q.label);
-      if (el) el.focus();
-      return;
-    }
-    payload[q.key] = val;
-  }
-  
-  showLoader(true);
-  try {
-    const res = await jsonp('saveEntry', {
-      date: $('entryDate').value,
-      staffId: st.staffId,
-      staffName: st.staffName,
-      role: st.role,
-      branch: st.branch,
-      shift: shift,
-      payloadJson: JSON.stringify(payload)
-    });
-    
-    if (res.success === false) {
-      toast(res.message);
-      showLoader(false);
-      return;
-    }
-
-    let morningEntryForShare = morningEntryCache;
-    if (shift === 'evening' && !morningEntryForShare) {
-      try {
-        const mr = await jsonp('getEntry', {
-          date: $('entryDate').value,
-          staffId: st.staffId,
-          shift: 'morning'
-        });
-        morningEntryForShare = mr.entry || null;
-      } catch (e) {}
-    }
-    
-    buildShareText(st, shift, qs, payload, morningEntryForShare);
-    dashboardLoadedOnce = false;
-    toast(res.message || 'माहिती यशस्वीरीत्या सेव्ह झाली.');
-    
-    // Refresh locks state
-    await onDateOrStaffChange();
-    document.querySelector('[data-page="share"]').click();
-  } catch (e) {
-    toast(e.message);
-  }
-  showLoader(false);
-}
-
-function buildShareText(st, shift, currentQs, currentPayload, morningEntry) {
-  const date = $('entryDate').value;
-  let msg = `📌 *दैनंदिन कार्य व नियोजन अहवाल* \n\n*पद:* ${st.role}\n*नाव:* ${st.staffName}\n*शाखा:* ${st.branch}\n*दिनांक:* ${date}\n\n`;
-  
-  if (shift === 'evening') {
-    msg += '🌅 *सकाळचे नियोजन (Target):*\n';
-    const morningQs = getQuestions(st.role, 'morning');
-    const morningPayload = parsePayload(morningEntry);
-    if (morningEntry) {
-      morningQs.forEach(q => {
-        msg += `• ${q.label}: ${morningPayload[q.key] || '-'}\n`;
-      });
-    } else {
-      msg += '• सकाळी नियोजन भरले गेले नाही.\n';
-    }
-    msg += '\n🌙 *सायंकाळची प्रत्यक्ष कामगिरी (Actual):*\n';
-    currentQs.forEach(q => {
-      msg += `• ${q.label}: ${currentPayload[q.key] || '-'}\n`;
-    });
-  } else if (shift === 'system') {
-    msg += '🖥️ *सिस्टीम पडताळणी रिपोर्ट (Verified):*\n';
-    currentQs.forEach(q => {
-      msg += `• ${q.label}: ${currentPayload[q.key] || '-'}\n`;
-    });
-  } else {
-    msg += '🌅 *सकाळचे नियोजन (Target):*\n';
-    currentQs.forEach(q => {
-      msg += `• ${q.label}: ${currentPayload[q.key] || '-'}\n`;
-    });
-  }
-  msg += '\n_Generated via Anik Daily Staff Work System Pro_';
-  $('shareText').value = msg;
-  $('waShare').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
-}
-
-async function copyShareText() {
-  const text = $('shareText').value;
-  if (!text) {
-    toast('शेअर करण्यासाठी कोणतीही माहिती उपलब्ध नाही.');
-    return;
-  }
-  await navigator.clipboard.writeText(text);
-  toast('मजकूर कॉपी झाला.');
-}
-
-async function loadDashboard(force = false) {
-  showLoader(true);
-  try {
-    const res = await jsonp('getDashboard', { date: $('dashDate').value });
-    entriesCache = res.entries || [];
-    buildDashboardRows();
-    renderDashboard();
-    $('staffDetail').classList.add('hidden');
-  } catch (e) {
-    toast(e.message);
-  }
-  showLoader(false);
-}
-
-function buildDashboardRows() {
-  const bf = $('branchFilter').value;
-  const rf = $('roleFilter').value;
-  const activeStaff = staffMaster.filter(s => String(s.active).toLowerCase() !== 'no')
-                                 .filter(s => !bf || safe(s.branch) === safe(bf))
-                                 .filter(s => !rf || safe(s.role) === safe(rf));
-  const map = {};
-  entriesCache.forEach(e => {
-    map[safe(e.staffId) + '_' + safe(e.shift)] = e;
-  });
-
-  dashboardRowsCache = activeStaff.map(s => {
-    const m = map[safe(s.staffId) + '_morning'];
-    const ev = map[safe(s.staffId) + '_evening'];
-    const sys = map[safe(s.staffId) + '_system'];
-    
-    let status = 'Pending';
-    let cls = 'pending';
-    if (m && ev && sys) {
-      status = 'Verified';
-      cls = 'done';
-    } else if (m && ev && !sys) {
-      status = 'Completed';
-      cls = 'check';
-    } else if (!m && !ev) {
-      status = 'Missing';
-      cls = 'missing';
-    } else {
-      status = 'Partial';
-      cls = 'check';
-    }
-    return { staff: s, morning: m, evening: ev, system: sys, status, cls };
-  });
-}
-
-function renderDashboard() {
-  const rows = dashboardRowsCache;
-  $('stTotal').textContent = rows.length;
-  $('stMorning').textContent = rows.filter(r => r.morning).length;
-  $('stEvening').textContent = rows.filter(r => r.evening).length;
-  $('stSystem').textContent = rows.filter(r => r.system).length;
-
-  $('statusTable').innerHTML = rows.map((r, i) => `
-    <tr>
-      <td><button class="staff-link" onclick="showStaffDetail(${i})">${esc(r.staff.staffName)}</button></td>
-      <td>${esc(r.staff.role)}</td>
-      <td>${esc(r.staff.branch)}</td>
-      <td><span class="status ${r.morning ? 'done' : 'pending'}">${r.morning ? 'Done' : 'Pending'}</span></td>
-      <td><span class="status ${r.evening ? 'done' : 'pending'}">${r.evening ? 'Done' : 'Pending'}</span></td>
-      <td><span class="status ${r.system ? 'done' : 'pending'}">${r.system ? 'Verified' : 'Pending'}</span></td>
-      <td><span class="status ${r.cls}">${r.status}</span></td>
-      <td><button class="btn btn-soft" onclick="showStaffDetail(${i})">View Detail</button></td>
-    </tr>
-  `).join('');
-  
-  setTimeout(() => renderSummaryCharts(rows), 30);
-}
-
-function renderSummaryCharts(rows) {
-  if (!window.Chart) return;
-  const branchData = {};
-  const roleData = {};
-
-  rows.forEach(r => {
-    const b = safe(r.staff.branch) || 'Other';
-    branchData[b] ||= { complete: 0, pending: 0 };
-    if (r.morning && r.evening) branchData[b].complete++;
-    else branchData[b].pending++;
-
-    const role = safe(r.staff.role) || 'Other';
-    roleData[role] ||= 0;
-    if (r.morning) roleData[role]++;
-    if (r.evening) roleData[role]++;
-  });
-
-  if (branchChart) branchChart.destroy();
-  branchChart = new Chart($('branchChart'), {
-    type: 'bar',
-    data: {
-      labels: Object.keys(branchData),
-      datasets: [
-        { label: 'Completed', data: Object.values(branchData).map(x => x.complete), backgroundColor: 'rgba(22, 163, 74, 0.75)', borderRadius: 10 },
-        { label: 'Pending', data: Object.values(branchData).map(x => x.pending), backgroundColor: 'rgba(226, 24, 24, 0.72)', borderRadius: 10 }
-      ]
-    },
-    options: {
-      responsive: true,
-      animation: false,
-      plugins: { legend: { position: 'bottom' } },
-      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
-    }
-  });
-
-  if (roleChart) roleChart.destroy();
-  roleChart = new Chart($('roleChart'), {
-    type: 'doughnut',
-    data: {
-      labels: Object.keys(roleData),
-      datasets: [{
-        data: Object.values(roleData),
-        backgroundColor: ['#172d8c', '#e21818', '#16a34a', '#f59e0b', '#7c3aed', '#06b6d4']
-      }]
-    },
-    options: {
-      responsive: true,
-      animation: false,
-      plugins: { legend: { position: 'bottom' } }
-    }
-  });
-}
-
-async function showStaffDetail(index) {
-  const row = dashboardRowsCache[index];
-  if (!row) return;
-
-  const st = row.staff;
-  const mp = parsePayload(row.morning);
-  const ep = parsePayload(row.evening);
-  const sp = parsePayload(row.system);
-
-  const mQs = getQuestions(st.role, 'morning');
-  const eQs = getQuestions(st.role, 'evening');
-  const sQs = getQuestions(st.role, 'system');
-
-  $('staffDetail').classList.remove('hidden');
-  $('detailTitle').textContent = `${st.staffName} — ${st.role} — ${st.branch}`;
-  $('detailTag').textContent = $('dashDate').value;
-
-  const mFilled = mQs.filter(q => safe(mp[q.key])).length;
-  const eFilled = eQs.filter(q => safe(ep[q.key])).length;
-  const sFilled = sQs.filter(q => safe(sp[q.key])).length;
-
-  $('detailPlanCount').textContent = mFilled + '/' + mQs.length;
-  $('detailActualCount').textContent = eFilled + '/' + eQs.length;
-  $('detailSystemCount').textContent = sFilled + '/' + sQs.length;
-
-  $('planList').innerHTML = row.morning ? mQs.map(q => `<div class="kv"><b>${esc(q.label)}</b><span>${esc(mp[q.key] || '-')}</span></div>`).join('') : '<p class="danger">सकाळचे नियोजन भरलेले नाही.</p>';
-  $('actualList').innerHTML = row.evening ? eQs.map(q => `<div class="kv"><b>${esc(q.label)}</b><span>${esc(ep[q.key] || '-')}</span></div>`).join('') : '<p class="danger">प्रत्यक्ष कामगिरी भरलेली नाही.</p>';
-  $('systemList').innerHTML = row.system ? sQs.map(q => `<div class="kv"><b>${esc(q.label)}</b><span>${esc(sp[q.key] || '-')}</span></div>`).join('') : '<p class="danger">सिस्टीम रिपोर्ट डेटा उपलब्ध नाही.</p>';
-
-  $('planStatusText').textContent = row.morning ? 'Done (Lock)' : 'Pending';
-  $('actualStatusText').textContent = row.evening ? 'Done' : 'Pending';
-  $('systemStatusText').textContent = row.system ? 'Verified' : 'Pending';
-
-  renderStaffDailyChart(mQs, eQs, sQs, mp, ep, sp);
-  await loadStaffMonthlyTrend(st.staffId);
-  $('staffDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function renderStaffDailyChart(mQs, eQs, sQs, mp, ep, sp) {
-  if (!window.Chart) return;
-  
-  // Numerical fields value summation comparison
-  let targetSum = 0, actualSum = 0, systemSum = 0;
-  
-  mQs.forEach(q => { if(q.type === 'number' || q.type === 'amount') targetSum += Number(mp[q.key] || 0); });
-  eQs.forEach(q => { if(q.type === 'number' || q.type === 'amount') actualSum += Number(ep[q.key] || 0); });
-  sQs.forEach(q => { if(q.type === 'number' || q.type === 'amount') systemSum += Number(sp[q.key] || 0); });
-
-  const data = [targetSum, actualSum, systemSum];
-
-  if (staffDailyChart) staffDailyChart.destroy();
-  staffDailyChart = new Chart($('staffDailyChart'), {
-    type: 'bar',
-    data: {
-      labels: ['Target (Plan)', 'Actual (Executed)', 'System (Verified)'],
-      datasets: [{
-        label: 'Metric values',
-        data,
-        backgroundColor: ['#172d8c', '#e21818', '#7c3aed'],
-        borderRadius: 12
-      }]
-    },
-    options: {
-      responsive: true,
-      animation: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true } }
-    }
-  });
-}
-
-async function loadStaffMonthlyTrend(staffId) {
-  const endDate = todayISO();
-  const d = new Date();
-  d.setDate(d.getDate() - 30);
-  const startDate = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-
-  try {
-    const res = await jsonp('getStaffMonthly', { staffId, startDate, endDate });
-    const entries = res.entries || [];
-    
-    const datesMap = {};
-    entries.forEach(e => {
-      datesMap[e.date] ||= { morning: 0, evening: 0, system: 0 };
-      const payload = parsePayload(e);
-      let sum = 0;
-      Object.values(payload).forEach(v => {
-        if(!isNaN(v) && v !== '') sum += Number(v);
-      });
-      datesMap[e.date][e.shift] = sum;
-    });
-
-    const sortedDates = Object.keys(datesMap).sort();
-    const targetData = sortedDates.map(d => datesMap[d].morning);
-    const actualData = sortedDates.map(d => datesMap[d].evening);
-    const systemData = sortedDates.map(d => datesMap[d].system);
-
-    if (staffMonthlyChart) staffMonthlyChart.destroy();
-    staffMonthlyChart = new Chart($('staffMonthlyChart'), {
-      type: 'line',
-      data: {
-        labels: sortedDates.map(d => d.slice(5)), // MM-DD format
-        datasets: [
-          { label: 'Target', data: targetData, borderColor: '#172d8c', fill: false, tension: 0.1 },
-          { label: 'Actual', data: actualData, borderColor: '#e21818', fill: false, tension: 0.1 },
-          { label: 'System', data: systemData, borderColor: '#7c3aed', fill: false, tension: 0.1 }
-        ]
-      },
-      options: {
-        responsive: true,
-        animation: false,
-        plugins: { legend: { position: 'bottom' } },
-        scales: { y: { beginAtZero: true } }
-      }
-    });
-  } catch (e) {
-    toast('Performace Trend Load Error: ' + e.message);
-  }
-}
-
+async function loadDashboard(show=true){if(show)showLoader(true);try{const res=await jsonp('getDashboard',{date:$('dashDate').value});entriesCache=res.entries||[];unitSummaryCache=res.unitSummary||[];buildDashboardRows();renderDashboard(res.managementSummary||{});$('staffDetail').classList.add('hidden')}catch(e){toast(e.message)}if(show)showLoader(false)}
+function buildDashboardRows(){const bf=$('branchFilter').value,rf=$('roleFilter').value,activeStaff=staffMaster.filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम').filter(s=>!bf||safe(s.branch)===safe(bf)).filter(s=>!rf||safe(s.role)===safe(rf)),map={};entriesCache.forEach(e=>map[safe(e.staffId)+'_'+safe(e.shift).toLowerCase()]=e);dashboardRowsCache=activeStaff.map(s=>{const m=map[safe(s.staffId)+'_morning'],ev=map[safe(s.staffId)+'_evening'];let status='Pending',cls='pending';if(m&&ev){status='Complete';cls='done'}else if(!m&&!ev){status='Missing';cls='missing'}else if(!m&&ev){status='Check';cls='check'}return{staff:s,morning:m,evening:ev,status,cls}})}
+function renderDashboard(mgmt){const rows=dashboardRowsCache,units=unitSummaryCache.filter(u=>!$('branchFilter').value||safe(u.branch)===safe($('branchFilter').value));$('stTotal').textContent=rows.length;$('stMorning').textContent=rows.filter(r=>r.morning).length;$('stEvening').textContent=rows.filter(r=>r.evening).length;$('stAvgSys').textContent=pct(mgmt.averageSystemAchievement||0);$('mgmtSummary').innerHTML=`<div class="grid g4"><div><b>Total Units</b><br>${mgmt.totalUnits||0}</div><div><b>Strong Units</b><br>${mgmt.strongUnits||0}</div><div><b>Attention Units</b><br>${mgmt.attentionUnits||0}</div><div><b>Average</b><br>${pct(mgmt.averageSystemAchievement||0)}</div></div><p class="verdict">${esc(mgmt.message||'Dashboard refresh करा.')}</p>`;$('statusTable').innerHTML=rows.map((r,i)=>`<tr><td><button class="staff-link" onclick="showStaffDetail(${i})">${esc(r.staff.staffName)}</button></td><td>${esc(r.staff.role)}</td><td>${esc(r.staff.branch)}</td><td><span class="status ${r.morning?'done':'pending'}">${r.morning?'Done':'Pending'}</span></td><td><span class="status ${r.evening?'done':'pending'}">${r.evening?'Done':'Pending'}</span></td><td><span class="status ${r.cls}">${r.status}</span></td><td><button class="btn btn-soft" onclick="showStaffDetail(${i})">Open</button></td></tr>`).join('');$('unitTable').innerHTML=units.map(u=>{const s=u.system||{};const cls=(s.overallPercent||0)>=85?'ok':'attention';return `<tr><td>${esc(u.branch)}</td><td>${u.complete}/${u.staffTotal} (${u.entryPercent||0}%)</td><td>${num(s.odAchieved)}/${num(s.odTarget)}<br><b>${pct(s.odPercent||0)}</b></td><td>${num(s.collectionAchieved)}/${num(s.collectionTarget)}<br><b>${pct(s.collectionPercent||0)}</b></td><td>${num(s.disbursementAchieved)}/${num(s.disbursementTarget)}<br><b>${pct(s.disbursementPercent||0)}</b></td><td>${num(s.newCustomerAchieved)}/${num(s.newCustomerTarget)}<br><b>${pct(s.newCustomerPercent||0)}</b></td><td class="verdict ${cls}">${esc(u.verdict)}</td></tr>`}).join('')||'<tr><td colspan="7">No unit data.</td></tr>';setTimeout(()=>renderCharts(rows,units),50)}
+function renderCharts(rows,units){if(!window.Chart)return;const branchData={};rows.forEach(r=>{const b=safe(r.staff.branch)||'Other';branchData[b]||={complete:0,pending:0};if(r.morning&&r.evening)branchData[b].complete++;else branchData[b].pending++});if(branchChart)branchChart.destroy();branchChart=new Chart($('branchChart'),{type:'bar',data:{labels:Object.keys(branchData),datasets:[{label:'Complete',data:Object.values(branchData).map(x=>x.complete),borderRadius:10},{label:'Pending',data:Object.values(branchData).map(x=>x.pending),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});if(systemChart)systemChart.destroy();systemChart=new Chart($('systemChart'),{type:'bar',data:{labels:units.map(u=>u.branch),datasets:[{label:'Overall %',data:units.map(u=>u.system?u.system.overallPercent:0),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:120}}}})}
+function showStaffDetail(index){const row=dashboardRowsCache[index];if(!row)return;const st=row.staff,mp=parsePayload(row.morning),ep=parsePayload(row.evening),mQs=getQuestions(st.role,'morning'),eQs=getQuestions(st.role,'evening');$('staffDetail').classList.remove('hidden');$('detailTitle').textContent=`${st.staffName} — ${st.role} — ${st.branch}`;$('detailTag').textContent=$('dashDate').value;const mFilled=mQs.filter(q=>safe(mp[q.key])).length,eFilled=eQs.filter(q=>safe(ep[q.key])).length,total=Math.max(1,mQs.length+eQs.length),score=Math.round(((mFilled+eFilled)/total)*100);$('detailPlanCount').textContent=mFilled+'/'+mQs.length;$('detailActualCount').textContent=eFilled+'/'+eQs.length;$('detailScore').textContent=score+'%';$('planList').innerHTML=row.morning?mQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(mp[q.key]||'-')}</span></div>`).join(''):'<p class="danger">सकाळचे planning भरलेले नाही.</p>';$('actualList').innerHTML=row.evening?eQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(ep[q.key]||'-')}</span></div>`).join(''):'<p class="danger">सायंकाळचे actual भरलेले नाही.</p>';$('staffDetail').scrollIntoView({behavior:'smooth',block:'start'})}
 init();
 </script>
 </body>
