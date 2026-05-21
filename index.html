@@ -76,11 +76,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans Devan
       <div class="card" id="morningPreviewCard" style="display:none"><div class="section"><h3>सकाळचा Plan Preview</h3><span class="tag">For actual comparison</span></div><div id="morningPreview"></div></div>
     </section>
     <section id="page-account" class="page hidden">
-      <div class="hero"><h3>Account Team — Staff-wise Bulk Entry</h3><p>Unit निवडा, सर्व staff rows एकाच table मध्ये दिसतील. Target/Achieved आकडे भरून <b>Save All</b> करा. नंतर staff data येत गेल्यावर हीच table पुन्हा load करून multiple time update करता येईल.</p></div>
+      <div class="hero"><h3>Account Team — Staff-wise Bulk Entry</h3><p>Unit निवडा, सर्व staff rows एकाच table मध्ये दिसतील. Target/Achieved आकडे भरले की system स्वतः staff-wise score /100 काढेल. <b>Save All</b> केल्यावर सर्व score आणि remarks एकदम save/update होतील.</p></div>
       <div class="card"><div class="section"><h3>Staff-wise System Figures</h3><span class="tag">Fast Table Entry</span></div>
         <div class="grid g3"><div class="field"><label>दिनांक</label><input type="date" id="accDate"></div><div class="field"><label>Unit / Branch</label><select id="accBranch"></select></div><div class="field" style="display:flex;align-items:end"><button class="btn btn-soft" id="loadAccStaff" style="width:100%">Load Staff Table</button></div></div>
         <div class="mini" id="accBulkSummary" style="margin-bottom:12px">Unit निवडून staff table load करा.</div>
-        <div style="overflow:auto"><table class="bulk-table"><thead><tr><th>Staff</th><th>Role</th><th>OD Target</th><th>OD Achieved</th><th>Collection Target</th><th>Collection Achieved</th><th>Disb. Target</th><th>Disb. Achieved</th><th>New Cust. Target</th><th>New Cust. Achieved</th><th>Remark</th></tr></thead><tbody id="accStaffBody"><tr><td colspan="11">Load Staff Table करा.</td></tr></tbody></table></div>
+        <div style="overflow:auto"><table class="bulk-table"><thead><tr><th>Staff</th><th>Role</th><th>OD Target</th><th>OD Achieved</th><th>Collection Target</th><th>Collection Achieved</th><th>Disb. Target</th><th>Disb. Achieved</th><th>New Cust. Target</th><th>New Cust. Achieved</th><th>Auto Score /100</th><th>Remark</th></tr></thead><tbody id="accStaffBody"><tr><td colspan="12">Load Staff Table करा.</td></tr></tbody></table></div>
         <div class="btns" style="margin-top:12px"><button class="btn btn-primary" id="saveAccBulk">💾 Save All Staff Rows</button><button class="btn btn-soft" id="clearAccBlank">Clear Blank Rows</button></div>
       </div>
     </section>
@@ -89,8 +89,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans Devan
       <div class="grid g4"><div class="stat"><div class="num" id="stTotal">0</div><div class="lbl">Total Staff</div></div><div class="stat good"><div class="num" id="stMorning">0</div><div class="lbl">Planning Done</div></div><div class="stat warn"><div class="num" id="stEvening">0</div><div class="lbl">Actual Done</div></div><div class="stat purple"><div class="num" id="stAvgSys">0%</div><div class="lbl">System Achievement</div></div></div>
       <div class="card"><div class="section"><h3>Management Summary</h3><span class="tag">System says</span></div><div id="mgmtSummary" class="mini"></div></div>
       <div class="grid g2"><div class="card"><div class="section"><h3>Branch-wise Completion</h3><span class="tag">Today</span></div><canvas id="branchChart" height="120"></canvas></div><div class="card"><div class="section"><h3>System Achievement</h3><span class="tag">Unit Target</span></div><canvas id="systemChart" height="120"></canvas></div></div>
-      <div class="card"><div class="section"><h3>Unit-wise System Verdict</h3><span class="tag">Target vs Achieved</span></div><div style="overflow:auto"><table><thead><tr><th>Unit</th><th>Entry Complete</th><th>OD</th><th>Collection</th><th>Disbursement</th><th>New Customer</th><th>System Verdict</th></tr></thead><tbody id="unitTable"></tbody></table></div></div>
-      <div class="card"><div class="section"><h3>Staff-wise Daily Status</h3><span class="tag">Click staff name</span></div><div style="overflow:auto"><table><thead><tr><th>Staff</th><th>Role</th><th>Branch</th><th>Planning</th><th>Actual</th><th>Status</th><th>Open</th></tr></thead><tbody id="statusTable"></tbody></table></div></div>
+      <div class="card"><div class="section"><h3>Unit-wise System Verdict</h3><span class="tag">Target vs Achieved</span></div><div style="overflow:auto"><table><thead><tr><th>Unit</th><th>Entry Complete</th><th>OD</th><th>Collection</th><th>Disbursement</th><th>New Customer</th><th>Work Quality</th><th>System Verdict</th></tr></thead><tbody id="unitTable"></tbody></table></div></div>
+      <div class="card"><div class="section"><h3>Staff-wise Daily Status</h3><span class="tag">Click staff name</span></div><div style="overflow:auto"><table><thead><tr><th>Staff</th><th>Role</th><th>Branch</th><th>Planning</th><th>Actual</th><th>Status</th><th>Quality</th><th>Remark</th><th>Open</th></tr></thead><tbody id="statusTable"></tbody></table></div></div>
       <div id="staffDetail" class="hidden"><div class="card"><div class="section"><h3 id="detailTitle">Staff Detail</h3><span class="tag" id="detailTag">Plan vs Actual</span></div><div class="grid g3"><div class="stat good"><div class="num" id="detailPlanCount">0</div><div class="lbl">Planning Fields</div></div><div class="stat purple"><div class="num" id="detailActualCount">0</div><div class="lbl">Actual Fields</div></div><div class="stat warn"><div class="num" id="detailScore">0%</div><div class="lbl">Daily Completion</div></div></div><div class="grid g2" style="margin-top:14px"><div class="mini"><h4>🌅 सकाळचे नियोजन</h4><div id="planList"></div></div><div class="mini"><h4>🌙 सायंकाळची प्रत्यक्ष कामगिरी</h4><div id="actualList"></div></div></div></div></div>
     </section>
     <section id="page-share" class="page hidden"><div class="card"><div class="section"><h3>WhatsApp / Management Share Text</h3><span class="tag">Auto generated</span></div><textarea id="shareText" class="copybox"></textarea><div class="btns" style="margin-top:12px"><button class="btn btn-green" id="copyShare">Copy Text</button><a class="btn btn-soft" id="waShare" target="_blank">Open WhatsApp</a></div></div></section>
@@ -131,9 +131,42 @@ async function submitEntry(){const st=getSelectedStaff();if(!st){toast('कर�
 function buildShareText(st,shift,currentQs,currentPayload,morningEntry){const date=$('entryDate').value;let msg=`📌 दैनंदिन नियोजन व प्रत्यक्ष कार्य\n\n👤 कर्मचारी: ${st.staffName}\n📌 पद: ${st.role}\n🏦 शाखा: ${st.branch}\n📅 दिनांक: ${date}\n\n`;if(shift==='evening'){msg+='🎯 सकाळचे नियोजन\n';const morningQs=getQuestions(st.role,'morning'),morningPayload=parsePayload(morningEntry);if(morningEntry){morningQs.forEach(q=>msg+=`• ${q.label}: ${morningPayload[q.key]||'-'}\n`)}else msg+='• सकाळचे नियोजन उपलब्ध नाही\n';msg+='\n✅ सायंकाळची प्रत्यक्ष कामगिरी\n';currentQs.forEach(q=>msg+=`• ${q.label}: ${currentPayload[q.key]||'-'}\n`)}else{msg+='🎯 आजचे नियोजन\n';currentQs.forEach(q=>msg+=`• ${q.label}: ${currentPayload[q.key]||'-'}\n`);msg+='\n🔒 हा plan आता system मध्ये lock झाला आहे.\n'}msg+='\n— Anik Daily Staff Work System';$('shareText').value=msg;$('waShare').href='https://wa.me/?text='+encodeURIComponent(msg)}
 async function copyShareText(){const text=$('shareText').value;if(!text){toast('Share text उपलब्ध नाही.');return}await navigator.clipboard.writeText(text);toast('Text copied.')}
 let accountStaffRowsCache=[];
+let accountStaffSystemCache=[];
+function metricScore(achieved,target){
+  const t=Number(target||0), a=Number(achieved||0);
+  if(!t || t<=0) return null;
+  return Math.max(0, Math.min(100, Math.round((a/t)*100)));
+}
+function calculateStaffWorkScore(r){
+  const metrics=[
+    {score:metricScore(r.odAchieved,r.odTarget),weight:25},
+    {score:metricScore(r.collectionAchieved,r.collectionTarget),weight:35},
+    {score:metricScore(r.disbursementAchieved,r.disbursementTarget),weight:25},
+    {score:metricScore(r.newCustomerAchieved,r.newCustomerTarget),weight:15}
+  ].filter(m=>m.score!==null);
+  if(!metrics.length) return '';
+  const w=metrics.reduce((s,m)=>s+m.weight,0);
+  return Math.round(metrics.reduce((s,m)=>s+(m.score*m.weight),0)/w);
+}
+function qualityVerdictText(score){
+  score=Number(score||0);
+  if(score>=90) return 'Excellent Work Quality';
+  if(score>=75) return 'Good Work Quality';
+  if(score>=60) return 'Improve Required';
+  if(score>0) return 'Review Needed';
+  return 'Score Pending';
+}
+function autoCalculateAllScores(){
+  accountStaffRowsCache.forEach(r=>{r.workQuality=calculateStaffWorkScore(r)});
+}
 function accountRowInput(row,i,key,type='number'){
+  if(key==='workQuality'){
+    const val=calculateStaffWorkScore(row);
+    row.workQuality=val;
+    return `<input type="number" readonly data-i="${i}" data-key="${key}" value="${esc(val)}" title="Auto calculated from Target vs Achieved">`;
+  }
   const val=row&&row[key]?row[key]:'';
-  return `<input ${type==='number'?'type="number" step="1"':'type="text"'} data-i="${i}" data-key="${key}" value="${esc(val)}" class="${key==='remark'?'remark':''}">`;
+  return `<input ${type==='number'?'type="number" step="1" min="0"':'type="text"'} data-i="${i}" data-key="${key}" value="${esc(val)}" class="${key==='remark'?'remark':''}">`;
 }
 async function loadAccountStaffBulk(){
   if(!$('accBranch').value){toast('Unit निवडा.');return}
@@ -147,7 +180,7 @@ async function loadAccountStaffBulk(){
   showLoader(false);
 }
 function renderAccountStaffTable(rows,unit){
-  if(!rows.length){$('accStaffBody').innerHTML='<tr><td colspan="11">या unit मध्ये active staff नाहीत.</td></tr>';updateAccountBulkSummary(unit);return}
+  if(!rows.length){$('accStaffBody').innerHTML='<tr><td colspan="12">या unit मध्ये active staff नाहीत.</td></tr>';updateAccountBulkSummary(unit);return}
   $('accStaffBody').innerHTML=rows.map((r,i)=>`<tr>
     <td><b>${esc(r.staffName)}</b><br><small>${esc(r.staffId)}</small></td>
     <td>${esc(r.role)}</td>
@@ -155,14 +188,29 @@ function renderAccountStaffTable(rows,unit){
     <td>${accountRowInput(r,i,'collectionTarget')}</td><td>${accountRowInput(r,i,'collectionAchieved')}</td>
     <td>${accountRowInput(r,i,'disbursementTarget')}</td><td>${accountRowInput(r,i,'disbursementAchieved')}</td>
     <td>${accountRowInput(r,i,'newCustomerTarget')}</td><td>${accountRowInput(r,i,'newCustomerAchieved')}</td>
-    <td>${accountRowInput(r,i,'remark','text')}</td>
+    <td>${accountRowInput(r,i,'workQuality')}</td><td>${accountRowInput(r,i,'remark','text')}</td>
   </tr>`).join('');
-  document.querySelectorAll('#accStaffBody input').forEach(inp=>inp.addEventListener('input',()=>{const i=Number(inp.dataset.i),key=inp.dataset.key;accountStaffRowsCache[i][key]=inp.value;updateAccountBulkSummary(calcLocalUnitTotal())}));
+  document.querySelectorAll('#accStaffBody input').forEach(inp=>inp.addEventListener('input',()=>{
+    const i=Number(inp.dataset.i),key=inp.dataset.key;
+    accountStaffRowsCache[i][key]=inp.value;
+    if(key!=='workQuality'){
+      const score=calculateStaffWorkScore(accountStaffRowsCache[i]);
+      accountStaffRowsCache[i].workQuality=score;
+      const scoreInput=document.querySelector(`#accStaffBody input[data-i="${i}"][data-key="workQuality"]`);
+      if(scoreInput) scoreInput.value=score;
+    }
+    updateAccountBulkSummary(calcLocalUnitTotal());
+  }));
+  autoCalculateAllScores();
   updateAccountBulkSummary(unit||calcLocalUnitTotal());
 }
 function calcLocalUnitTotal(){
-  const total={odTarget:0,odAchieved:0,collectionTarget:0,collectionAchieved:0,disbursementTarget:0,disbursementAchieved:0,newCustomerTarget:0,newCustomerAchieved:0};
-  accountStaffRowsCache.forEach(r=>Object.keys(total).forEach(k=>total[k]+=Number(r[k]||0)));
+  autoCalculateAllScores();
+  const total={odTarget:0,odAchieved:0,collectionTarget:0,collectionAchieved:0,disbursementTarget:0,disbursementAchieved:0,newCustomerTarget:0,newCustomerAchieved:0,workQuality:0};
+  let qSum=0,qCount=0;
+  accountStaffRowsCache.forEach(r=>{['odTarget','odAchieved','collectionTarget','collectionAchieved','disbursementTarget','disbursementAchieved','newCustomerTarget','newCustomerAchieved'].forEach(k=>total[k]+=Number(r[k]||0));const q=Number(r.workQuality||0);if(q>0){qSum+=Math.min(100,Math.max(0,q));qCount++;}});
+  total.workQuality=qCount?Math.round(qSum/qCount):0;
+  total.qualityVerdict=qualityVerdictText(total.workQuality);
   function per(a,t){return t?Math.round((a/t)*100):0}
   total.odPercent=per(total.odAchieved,total.odTarget);total.collectionPercent=per(total.collectionAchieved,total.collectionTarget);total.disbursementPercent=per(total.disbursementAchieved,total.disbursementTarget);total.newCustomerPercent=per(total.newCustomerAchieved,total.newCustomerTarget);
   const arr=[total.odPercent,total.collectionPercent,total.disbursementPercent,total.newCustomerPercent].filter(x=>x>0);total.overallPercent=Math.round(arr.reduce((a,b)=>a+b,0)/Math.max(1,arr.length));
@@ -171,15 +219,16 @@ function calcLocalUnitTotal(){
 }
 function updateAccountBulkSummary(u){
   u=u||{};
-  $('accBulkSummary').innerHTML=`<div class="bulk-total"><div><b>OD</b><span>${num(u.odAchieved)}/${num(u.odTarget)} (${pct(u.odPercent||0)})</span></div><div><b>Collection</b><span>${num(u.collectionAchieved)}/${num(u.collectionTarget)} (${pct(u.collectionPercent||0)})</span></div><div><b>Disbursement</b><span>${num(u.disbursementAchieved)}/${num(u.disbursementTarget)} (${pct(u.disbursementPercent||0)})</span></div><div><b>New Customer</b><span>${num(u.newCustomerAchieved)}/${num(u.newCustomerTarget)} (${pct(u.newCustomerPercent||0)})</span></div></div><p class="verdict" style="margin-bottom:0">${esc(u.verdict||'Staff-wise figures भरल्यावर total इथे दिसेल.')}</p>`;
+  $('accBulkSummary').innerHTML=`<div class="bulk-total"><div><b>OD</b><span>${num(u.odAchieved)}/${num(u.odTarget)} (${pct(u.odPercent||0)})</span></div><div><b>Collection</b><span>${num(u.collectionAchieved)}/${num(u.collectionTarget)} (${pct(u.collectionPercent||0)})</span></div><div><b>Disbursement</b><span>${num(u.disbursementAchieved)}/${num(u.disbursementTarget)} (${pct(u.disbursementPercent||0)})</span></div><div><b>New Customer</b><span>${num(u.newCustomerAchieved)}/${num(u.newCustomerTarget)} (${pct(u.newCustomerPercent||0)})</span></div><div><b>Auto Score</b><span>${num(u.workQuality)}/100</span></div></div><p class="verdict" style="margin-bottom:0">${esc((u.qualityVerdict?u.qualityVerdict+' | ':'')+(u.verdict||'Staff-wise figures भरल्यावर total इथे दिसेल.'))}</p>`;
 }
 async function saveAccountStaffBulk(){
   if(!$('accBranch').value){toast('Unit निवडा.');return}
   if(!accountStaffRowsCache.length){toast('आधी Load Staff Table करा.');return}
   document.querySelectorAll('#accStaffBody input').forEach(inp=>{const i=Number(inp.dataset.i),key=inp.dataset.key;accountStaffRowsCache[i][key]=inp.value});
+  autoCalculateAllScores();
   showLoader(true);
   try{
-    const rows=accountStaffRowsCache.map(r=>({staffId:r.staffId,staffName:r.staffName,role:r.role,odTarget:r.odTarget,odAchieved:r.odAchieved,collectionTarget:r.collectionTarget,collectionAchieved:r.collectionAchieved,disbursementTarget:r.disbursementTarget,disbursementAchieved:r.disbursementAchieved,newCustomerTarget:r.newCustomerTarget,newCustomerAchieved:r.newCustomerAchieved,remark:r.remark}));
+    const rows=accountStaffRowsCache.map(r=>({staffId:r.staffId,staffName:r.staffName,role:r.role,odTarget:r.odTarget,odAchieved:r.odAchieved,collectionTarget:r.collectionTarget,collectionAchieved:r.collectionAchieved,disbursementTarget:r.disbursementTarget,disbursementAchieved:r.disbursementAchieved,newCustomerTarget:r.newCustomerTarget,newCustomerAchieved:r.newCustomerAchieved,workQuality:r.workQuality,remark:r.remark}));
     const res=await jsonp('saveAccountStaffBulk',{date:$('accDate').value,branch:$('accBranch').value,rowsJson:JSON.stringify(rows)});
     accountStaffRowsCache=res.rows||accountStaffRowsCache;
     renderAccountStaffTable(accountStaffRowsCache,res.unit);
@@ -189,16 +238,25 @@ async function saveAccountStaffBulk(){
   showLoader(false);
 }
 function clearBlankAccountRows(){
-  accountStaffRowsCache.forEach(r=>{['odTarget','odAchieved','collectionTarget','collectionAchieved','disbursementTarget','disbursementAchieved','newCustomerTarget','newCustomerAchieved','remark'].forEach(k=>r[k]='')});
+  accountStaffRowsCache.forEach(r=>{['odTarget','odAchieved','collectionTarget','collectionAchieved','disbursementTarget','disbursementAchieved','newCustomerTarget','newCustomerAchieved','workQuality','remark'].forEach(k=>r[k]='')});
   renderAccountStaffTable(accountStaffRowsCache,calcLocalUnitTotal());
 }
 function buildAccountBulkShare(unit,rows){
-  let msg=`🏦 Account Team Staff-wise System Figures\nUnit: ${$('accBranch').value}\nDate: ${$('accDate').value}\n\nUnit Total:\nOD: ${num(unit.odAchieved)} / ${num(unit.odTarget)} (${unit.odPercent}%)\nCollection: ${num(unit.collectionAchieved)} / ${num(unit.collectionTarget)} (${unit.collectionPercent}%)\nDisbursement: ${num(unit.disbursementAchieved)} / ${num(unit.disbursementTarget)} (${unit.disbursementPercent}%)\nNew Customer: ${num(unit.newCustomerAchieved)} / ${num(unit.newCustomerTarget)} (${unit.newCustomerPercent}%)\n\nSystem Verdict: ${unit.verdict}\n\nStaff Rows Updated: ${rows.length}\n\n— Anik Daily Staff Work System`;
+  let msg=`🏦 Account Team Staff-wise System Figures\nUnit: ${$('accBranch').value}\nDate: ${$('accDate').value}\n\nUnit Total:\nOD: ${num(unit.odAchieved)} / ${num(unit.odTarget)} (${unit.odPercent}%)\nCollection: ${num(unit.collectionAchieved)} / ${num(unit.collectionTarget)} (${unit.collectionPercent}%)\nDisbursement: ${num(unit.disbursementAchieved)} / ${num(unit.disbursementTarget)} (${unit.disbursementPercent}%)\nNew Customer: ${num(unit.newCustomerAchieved)} / ${num(unit.newCustomerTarget)} (${unit.newCustomerPercent}%)\nWork Quality: ${num(unit.workQuality)}/100\n\nSystem Verdict: ${unit.verdict}\n\nStaff Rows Updated: ${rows.length}\n\n— Anik Daily Staff Work System`;
   $('shareText').value=msg;$('waShare').href='https://wa.me/?text='+encodeURIComponent(msg);
 }
-async function loadDashboard(show=true){if(show)showLoader(true);try{const res=await jsonp('getDashboard',{date:$('dashDate').value});entriesCache=res.entries||[];unitSummaryCache=res.unitSummary||[];buildDashboardRows();renderDashboard(res.managementSummary||{});$('staffDetail').classList.add('hidden')}catch(e){toast(e.message)}if(show)showLoader(false)}
-function buildDashboardRows(){const bf=$('branchFilter').value,rf=$('roleFilter').value,activeStaff=staffMaster.filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम').filter(s=>!bf||safe(s.branch)===safe(bf)).filter(s=>!rf||safe(s.role)===safe(rf)),map={};entriesCache.forEach(e=>map[safe(e.staffId)+'_'+safe(e.shift).toLowerCase()]=e);dashboardRowsCache=activeStaff.map(s=>{const m=map[safe(s.staffId)+'_morning'],ev=map[safe(s.staffId)+'_evening'];let status='Pending',cls='pending';if(m&&ev){status='Complete';cls='done'}else if(!m&&!ev){status='Missing';cls='missing'}else if(!m&&ev){status='Check';cls='check'}return{staff:s,morning:m,evening:ev,status,cls}})}
-function renderDashboard(mgmt){const rows=dashboardRowsCache,units=unitSummaryCache.filter(u=>!$('branchFilter').value||safe(u.branch)===safe($('branchFilter').value));$('stTotal').textContent=rows.length;$('stMorning').textContent=rows.filter(r=>r.morning).length;$('stEvening').textContent=rows.filter(r=>r.evening).length;$('stAvgSys').textContent=pct(mgmt.averageSystemAchievement||0);$('mgmtSummary').innerHTML=`<div class="grid g4"><div><b>Total Units</b><br>${mgmt.totalUnits||0}</div><div><b>Strong Units</b><br>${mgmt.strongUnits||0}</div><div><b>Attention Units</b><br>${mgmt.attentionUnits||0}</div><div><b>Average</b><br>${pct(mgmt.averageSystemAchievement||0)}</div></div><p class="verdict">${esc(mgmt.message||'Dashboard refresh करा.')}</p>`;$('statusTable').innerHTML=rows.map((r,i)=>`<tr><td><button class="staff-link" onclick="showStaffDetail(${i})">${esc(r.staff.staffName)}</button></td><td>${esc(r.staff.role)}</td><td>${esc(r.staff.branch)}</td><td><span class="status ${r.morning?'done':'pending'}">${r.morning?'Done':'Pending'}</span></td><td><span class="status ${r.evening?'done':'pending'}">${r.evening?'Done':'Pending'}</span></td><td><span class="status ${r.cls}">${r.status}</span></td><td><button class="btn btn-soft" onclick="showStaffDetail(${i})">Open</button></td></tr>`).join('');$('unitTable').innerHTML=units.map(u=>{const s=u.system||{};const cls=(s.overallPercent||0)>=85?'ok':'attention';return `<tr><td>${esc(u.branch)}</td><td>${u.complete}/${u.staffTotal} (${u.entryPercent||0}%)</td><td>${num(s.odAchieved)}/${num(s.odTarget)}<br><b>${pct(s.odPercent||0)}</b></td><td>${num(s.collectionAchieved)}/${num(s.collectionTarget)}<br><b>${pct(s.collectionPercent||0)}</b></td><td>${num(s.disbursementAchieved)}/${num(s.disbursementTarget)}<br><b>${pct(s.disbursementPercent||0)}</b></td><td>${num(s.newCustomerAchieved)}/${num(s.newCustomerTarget)}<br><b>${pct(s.newCustomerPercent||0)}</b></td><td class="verdict ${cls}">${esc(u.verdict)}</td></tr>`}).join('')||'<tr><td colspan="7">No unit data.</td></tr>';setTimeout(()=>renderCharts(rows,units),50)}
+async function loadDashboard(show=true){if(show)showLoader(true);try{const res=await jsonp('getDashboard',{date:$('dashDate').value});entriesCache=res.entries||[];unitSummaryCache=res.unitSummary||[];accountStaffSystemCache=res.accountStaffSystem||[];buildDashboardRows();renderDashboard(res.managementSummary||{});$('staffDetail').classList.add('hidden')}catch(e){toast(e.message)}if(show)showLoader(false)}
+function buildDashboardRows(){const bf=$('branchFilter').value,rf=$('roleFilter').value,activeStaff=staffMaster.filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम').filter(s=>!bf||safe(s.branch)===safe(bf)).filter(s=>!rf||safe(s.role)===safe(rf)),map={},accMap={};entriesCache.forEach(e=>map[safe(e.staffId)+'_'+safe(e.shift).toLowerCase()]=e);accountStaffSystemCache.forEach(r=>accMap[safe(r.staffId)]=r);dashboardRowsCache=activeStaff.map(s=>{const m=map[safe(s.staffId)+'_morning'],ev=map[safe(s.staffId)+'_evening'],acc=accMap[safe(s.staffId)]||{};let status='Pending',cls='pending';if(m&&ev){status='Complete';cls='done'}else if(!m&&!ev){status='Missing';cls='missing'}else if(!m&&ev){status='Check';cls='check'}return{staff:s,morning:m,evening:ev,account:acc,status,cls}})}
+function rowRemark(r){const ep=parsePayload(r.evening);return safe(r.account&&r.account.remark)||safe(ep.remark)||safe(ep.important_note)||'-'}
+function rowQuality(r){return Number((r.account&&r.account.workQuality)||0)}
+function renderDashboard(mgmt){
+  const rows=dashboardRowsCache,units=unitSummaryCache.filter(u=>!$('branchFilter').value||safe(u.branch)===safe($('branchFilter').value));
+  $('stTotal').textContent=rows.length;$('stMorning').textContent=rows.filter(r=>r.morning).length;$('stEvening').textContent=rows.filter(r=>r.evening).length;$('stAvgSys').textContent=pct(mgmt.averageSystemAchievement||0);
+  $('mgmtSummary').innerHTML=`<div class="grid g4"><div><b>Total Units</b><br>${mgmt.totalUnits||0}</div><div><b>Strong Units</b><br>${mgmt.strongUnits||0}</div><div><b>Attention Units</b><br>${mgmt.attentionUnits||0}</div><div><b>Average</b><br>${pct(mgmt.averageSystemAchievement||0)}</div></div><p class="verdict">${esc(mgmt.message||'Dashboard refresh करा.')}</p>`;
+  $('statusTable').innerHTML=rows.map((r,i)=>{const q=rowQuality(r);const qCls=q>=75?'done':(q>0?'pending':'missing');return `<tr><td><button class="staff-link" onclick="showStaffDetail(${i})">${esc(r.staff.staffName)}</button></td><td>${esc(r.staff.role)}</td><td>${esc(r.staff.branch)}</td><td><span class="status ${r.morning?'done':'pending'}">${r.morning?'Done':'Pending'}</span></td><td><span class="status ${r.evening?'done':'pending'}">${r.evening?'Done':'Pending'}</span></td><td><span class="status ${r.cls}">${r.status}</span></td><td><span class="status ${qCls}">${q?q+'/100':'-'}</span></td><td>${esc(rowRemark(r))}</td><td><button class="btn btn-soft" onclick="showStaffDetail(${i})">Open</button></td></tr>`}).join('');
+  $('unitTable').innerHTML=units.map(u=>{const s=u.system||{};const cls=(s.overallPercent||0)>=85?'ok':'attention';const q=Number(s.workQuality||0);const qCls=q>=75?'ok':'attention';return `<tr><td>${esc(u.branch)}</td><td>${u.complete}/${u.staffTotal} (${u.entryPercent||0}%)</td><td>${num(s.odAchieved)}/${num(s.odTarget)}<br><b>${pct(s.odPercent||0)}</b></td><td>${num(s.collectionAchieved)}/${num(s.collectionTarget)}<br><b>${pct(s.collectionPercent||0)}</b></td><td>${num(s.disbursementAchieved)}/${num(s.disbursementTarget)}<br><b>${pct(s.disbursementPercent||0)}</b></td><td>${num(s.newCustomerAchieved)}/${num(s.newCustomerTarget)}<br><b>${pct(s.newCustomerPercent||0)}</b></td><td class="verdict ${qCls}">${q?q+'/100':'-'}<br><small>${esc(s.qualityVerdict||'Quality score pending')}</small></td><td class="verdict ${cls}">${esc(u.verdict)}</td></tr>`}).join('')||'<tr><td colspan="8">No unit data.</td></tr>';
+  setTimeout(()=>renderCharts(rows,units),50)
+}
 function renderCharts(rows,units){if(!window.Chart)return;const branchData={};rows.forEach(r=>{const b=safe(r.staff.branch)||'Other';branchData[b]||={complete:0,pending:0};if(r.morning&&r.evening)branchData[b].complete++;else branchData[b].pending++});if(branchChart)branchChart.destroy();branchChart=new Chart($('branchChart'),{type:'bar',data:{labels:Object.keys(branchData),datasets:[{label:'Complete',data:Object.values(branchData).map(x=>x.complete),borderRadius:10},{label:'Pending',data:Object.values(branchData).map(x=>x.pending),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});if(systemChart)systemChart.destroy();systemChart=new Chart($('systemChart'),{type:'bar',data:{labels:units.map(u=>u.branch),datasets:[{label:'Overall %',data:units.map(u=>u.system?u.system.overallPercent:0),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:120}}}})}
 function showStaffDetail(index){const row=dashboardRowsCache[index];if(!row)return;const st=row.staff,mp=parsePayload(row.morning),ep=parsePayload(row.evening),mQs=getQuestions(st.role,'morning'),eQs=getQuestions(st.role,'evening');$('staffDetail').classList.remove('hidden');$('detailTitle').textContent=`${st.staffName} — ${st.role} — ${st.branch}`;$('detailTag').textContent=$('dashDate').value;const mFilled=mQs.filter(q=>safe(mp[q.key])).length,eFilled=eQs.filter(q=>safe(ep[q.key])).length,total=Math.max(1,mQs.length+eQs.length),score=Math.round(((mFilled+eFilled)/total)*100);$('detailPlanCount').textContent=mFilled+'/'+mQs.length;$('detailActualCount').textContent=eFilled+'/'+eQs.length;$('detailScore').textContent=score+'%';$('planList').innerHTML=row.morning?mQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(mp[q.key]||'-')}</span></div>`).join(''):'<p class="danger">सकाळचे planning भरलेले नाही.</p>';$('actualList').innerHTML=row.evening?eQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(ep[q.key]||'-')}</span></div>`).join(''):'<p class="danger">सायंकाळचे actual भरलेले नाही.</p>';$('staffDetail').scrollIntoView({behavior:'smooth',block:'start'})}
 init();
