@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="mr">
 <head>
@@ -44,18 +45,227 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans Devan
 .hero{background:#fff;border:1px solid var(--line);border-left:5px solid var(--primary);border-radius:16px;color:var(--ink);padding:18px 20px;box-shadow:var(--shadow);margin-bottom:15px}.hero h3{margin:0 0 6px;font-size:20px;font-weight:700;color:#333}.hero p{margin:0;color:#667085;line-height:1.55;font-weight:500;font-size:14px}.grid{display:grid;gap:15px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:var(--card);border:0;border-radius:16px;padding:18px;box-shadow:var(--shadow2);margin-bottom:18px}.section{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 0 12px;margin-bottom:15px;border-bottom:1px solid #f0f0f0}.section h3{margin:0;font-size:18px;font-weight:700;color:#333}.tag{display:inline-block;background:#e7f1ff;color:#0056b3;padding:6px 10px;border-radius:18px;font-size:12px;font-weight:600;white-space:nowrap}label{display:block;margin-bottom:7px;color:#4B5563;font-size:14px;font-weight:600}input,select,textarea{width:100%;border:1px solid #dfe1e5;border-radius:25px;background:#fff;padding:12px 15px;font-family:inherit;font-size:14px;color:#344054;outline:none;transition:border-color .2s,box-shadow .2s}textarea{min-height:95px;resize:vertical;border-radius:14px}input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,123,255,.16)}input[readonly]{background:#f8fafc;color:#667085}.field{margin-bottom:12px}.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.btn{border:0;border-radius:25px;padding:12px 18px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:.2s}.btn:hover{transform:translateY(-1px)}.btn-primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(0,123,255,.22)}.btn-soft{background:#f4f7fb;color:#495057;border:1px solid #dfe1e5}.btn-green{background:#eaf9f2;color:#1e8755;border:1px solid #c8f0da}.stat{background:#fff;border:0;border-radius:12px;padding:15px;box-shadow:var(--shadow);text-align:center;position:relative;overflow:hidden}.stat:after{display:none}.stat .icon{font-size:22px}.stat .num{font-size:28px;font-weight:700;margin-top:6px;color:#0056b3}.stat .lbl{font-size:13px;color:#6c757d;font-weight:500}.stat.good .num{color:var(--green)}.stat.warn .num{color:#d97706}.stat.bad .num{color:var(--danger)}.stat.purple .num{color:var(--purple)}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}.table-card,.table-container{background:#fff;border-radius:16px;box-shadow:var(--shadow2);padding:15px}table{width:100%;border-collapse:collapse;margin-top:5px;min-width:720px}th,td{padding:12px 10px;text-align:left;border-bottom:1px solid #f0f0f0;font-size:14px;white-space:nowrap;background:#fff}th{font-weight:700;color:#495057;text-transform:uppercase;font-size:11px;letter-spacing:.4px;background:#fafafa}tbody tr:hover td{background:#f8f9fa}td:first-child,td:last-child{border-radius:0;border-left:0;border-right:0}.staff-link{border:0;background:transparent;color:var(--primary);font-family:inherit;font-weight:700;cursor:pointer;text-align:left;padding:0;text-decoration:underline;text-underline-offset:3px}.status,.verdict{display:inline-block;padding:4px 10px;border-radius:18px;font-size:12px;font-weight:700}.done,.ok{background:#d4edda;color:#155724}.pending,.attention{background:#fff3cd;color:#856404}.missing{background:#f8d7da;color:#721c24}.check{background:#e2e3e5;color:#383d41}.lockbox{background:#fff3cd;border:1px solid #ffe29a;color:#856404;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-weight:600}.compare{display:grid;grid-template-columns:1fr 1fr;gap:15px}.mini{border:1px solid #f0f0f0;border-radius:14px;background:#fbfdff;padding:14px}.mini h4{margin:0 0 10px;font-size:16px;color:#333}.kv{padding:9px 0;border-bottom:1px dashed #dfe1e5}.kv:last-child{border-bottom:0}.kv b{display:block;color:#4B5563;font-size:13px;font-weight:700}.kv span{display:block;margin-top:4px;color:#667085;font-size:14px;white-space:pre-wrap}.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.score-box{border-radius:12px;padding:14px;background:#fff;border:1px solid #f0f0f0;text-align:center}.score-box b{display:block;font-size:12px;color:#6c757d}.score-box span{display:block;font-size:22px;font-weight:700;margin-top:4px;color:#333}.copybox{width:100%;min-height:280px;background:#f8fafc;color:#344054;border:1px solid #dfe1e5;border-radius:14px;padding:15px;line-height:1.65;font-family:inherit;font-size:14px}.hidden{display:none!important}.muted{color:var(--muted);font-weight:500}.danger{color:var(--danger);font-weight:700}.loader{position:fixed;inset:0;display:none;place-items:center;background:rgba(255,255,255,.90);z-index:9999}.loader.active{display:grid}.spin{width:42px;height:42px;border-radius:50%;border:5px solid rgba(0,0,0,.10);border-left-color:var(--primary);animation:spin 1s ease infinite}@keyframes spin{to{transform:rotate(360deg)}}.toast{position:fixed;right:18px;bottom:18px;display:none;z-index:10000;background:#333;color:#fff;padding:12px 15px;border-radius:12px;box-shadow:var(--shadow2);font-weight:600;max-width:430px}.toast.show{display:block}@media(max-width:900px){body{padding:8px}.side{gap:7px}.nav{font-size:13px;padding:10px 12px}.top{align-items:flex-start;flex-direction:column;padding:15px}.top h2{font-size:21px}.g2,.g3,.g4,.compare,.score-grid{grid-template-columns:1fr}.card{padding:15px}.section{align-items:flex-start;flex-direction:column}.hero{padding:15px}.hint{text-align:left}.btn{width:100%}.logo{width:160px;height:62px}table{font-size:13px;min-width:680px}th,td{padding:10px 8px}.pill{font-size:13px}}
 
 .bulk-table{min-width:1180px}.bulk-table input{min-width:105px;padding:9px 10px;border-radius:12px;font-size:13px}.bulk-table input.remark{min-width:180px}.bulk-total{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.bulk-total b{display:block;color:#333}.bulk-total span{font-size:18px;font-weight:800;color:var(--primary)}@media(max-width:768px){.bulk-total{grid-template-columns:1fr 1fr}.bulk-table{min-width:1060px}}
+
+
+/* ===== Final Pro Mobile + Power BI Look Updates ===== */
+body{background:linear-gradient(180deg,#eef5ff 0%,#f8fbff 42%,#ffffff 100%);padding:12px;color:#1f2937}
+.app{max-width:1540px}
+.app-shell{position:sticky;top:8px;z-index:30;background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:12px;box-shadow:0 14px 45px rgba(15,23,42,.10)}
+.brand{padding:4px 0 8px}.brand h1{font-size:22px;font-weight:900;letter-spacing:-.3px;color:#0f172a}.brand p{color:#64748b;font-weight:700}.logo{width:185px;height:62px;margin-bottom:2px}.nav{border:0;background:#f8fafc;color:#334155;border-radius:18px;padding:12px 17px;box-shadow:inset 0 0 0 1px #e2e8f0,0 8px 22px rgba(15,23,42,.06);font-weight:800}.nav:hover,.nav.active{background:linear-gradient(135deg,#0b5cff,#0ea5e9);color:#fff;box-shadow:0 12px 28px rgba(11,92,255,.23)}
+.secret-trigger{width:34px;height:34px;border:0;border-radius:50%;background:#f1f5f9;color:#94a3b8;box-shadow:inset 0 0 0 1px #e2e8f0;cursor:pointer;font-size:20px;line-height:1;transition:.2s}.secret-trigger:hover{background:#e2e8f0;color:#475569;transform:scale(1.04)}
+.secret-panel{position:absolute;right:18px;top:112px;display:flex;gap:8px;flex-wrap:wrap;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:20px;padding:10px;box-shadow:0 18px 55px rgba(15,23,42,.18);z-index:60}.admin-nav{margin:0;font-size:13px;padding:10px 14px}.hint{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;border-radius:18px;font-weight:700}
+.top,.hero,.card,.table-card,.table-container{border:1px solid #e7edf7;box-shadow:0 12px 35px rgba(15,23,42,.08);border-radius:22px}.top{background:rgba(255,255,255,.92);position:sticky;top:112px;z-index:20;backdrop-filter:blur(10px)}.top h2{font-weight:900;color:#0f172a}.hero{background:linear-gradient(135deg,#ffffff 0%,#eff6ff 100%);border-left:0}.hero h3{font-size:22px;font-weight:900;color:#0f172a}.card{background:rgba(255,255,255,.96)}.section h3{font-weight:900;color:#111827}.tag{background:#dbeafe;color:#1d4ed8;font-weight:900}.pill{background:#f8fafc;border-color:#e2e8f0;font-weight:900}.stat{border:1px solid #e7edf7;border-radius:20px;box-shadow:0 12px 30px rgba(15,23,42,.07);text-align:left}.stat .num{font-weight:900;color:#0b5cff}.stat .lbl{font-weight:800;color:#64748b}.btn{border-radius:18px;font-weight:900}.btn-primary{background:linear-gradient(135deg,#0b5cff,#0ea5e9);box-shadow:0 12px 28px rgba(11,92,255,.24)}input,select,textarea{border-radius:18px;border-color:#dbe3ef;background:#fbfdff}.bulk-table input{border-radius:14px}th{background:#f8fafc;color:#475569;font-weight:900}td{color:#334155}.toast{border-radius:18px;background:#0f172a}.loader{backdrop-filter:blur(5px)}
+@media(max-width:900px){body{padding:7px}.app-shell{position:sticky;top:6px;border-radius:20px;padding:10px;justify-content:flex-start}.brand{width:100%;text-align:left;padding-left:6px}.logo{margin-left:0;width:145px;height:48px}.brand h1{font-size:18px}.brand p{font-size:12px}.nav{padding:10px 12px;font-size:13px;border-radius:15px}.secret-panel{right:10px;top:104px}.top{top:126px;border-radius:18px}.hero,.card{border-radius:18px}.grid{gap:11px}.stat .num{font-size:24px}input,select,textarea{font-size:14px;padding:11px 13px}.hint{font-size:12px}}
+
+
+
+/* ===== Premium App-Like Bright UI v2 ===== */
+:root{
+  --primary:#155EEF;
+  --primary2:#0094FF;
+  --accent:#20C997;
+  --hot:#FFB020;
+  --ink:#0F172A;
+  --muted:#64748B;
+  --bg:#EAF2FF;
+  --card:#FFFFFF;
+  --line:#DDE7F6;
+  --shadow:0 14px 35px rgba(15,23,42,.10);
+  --shadow2:0 22px 60px rgba(15,23,42,.14);
+}
+html{background:#eaf2ff}
+body{
+  min-height:100vh;
+  padding:16px;
+  color:#0f172a;
+  background:
+    radial-gradient(circle at top left, rgba(0,148,255,.28), transparent 34%),
+    radial-gradient(circle at 84% 8%, rgba(32,201,151,.22), transparent 30%),
+    linear-gradient(180deg,#edf6ff 0%,#f9fbff 48%,#ffffff 100%) !important;
+}
+.app{max-width:1480px;position:relative}
+.app:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:linear-gradient(rgba(21,94,239,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(21,94,239,.045) 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:linear-gradient(180deg,#000 0%,transparent 75%);
+}
+.app-shell{
+  top:10px;
+  border:1px solid rgba(255,255,255,.9) !important;
+  background:linear-gradient(135deg,rgba(255,255,255,.93),rgba(238,247,255,.88)) !important;
+  box-shadow:0 22px 70px rgba(21,94,239,.16), inset 0 1px 0 rgba(255,255,255,.95) !important;
+  border-radius:30px !important;
+  padding:14px !important;
+}
+.brand{
+  position:relative;
+  background:linear-gradient(135deg,#0B1F52 0%,#155EEF 54%,#00A3FF 100%) !important;
+  color:#fff !important;
+  border-radius:26px !important;
+  padding:16px 18px 14px !important;
+  box-shadow:0 18px 45px rgba(21,94,239,.28) !important;
+  overflow:hidden;
+}
+.brand:before{
+  content:"";position:absolute;right:-52px;top:-70px;width:190px;height:190px;border-radius:50%;
+  background:rgba(255,255,255,.16);
+}
+.brand:after{
+  content:"LIVE WORK APP";
+  position:absolute;right:18px;bottom:13px;
+  font-size:10px;letter-spacing:1.4px;font-weight:900;
+  color:rgba(255,255,255,.78);
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:999px;padding:5px 9px;
+}
+.logo{
+  width:170px !important;height:56px !important;margin:0 auto 6px !important;
+  background-color:rgba(255,255,255,.96) !important;
+  border-radius:18px !important;padding:6px;box-shadow:0 10px 24px rgba(0,0,0,.18) !important;
+}
+.brand h1{color:#fff !important;font-size:24px !important;font-weight:900 !important;text-shadow:0 2px 10px rgba(0,0,0,.18)}
+.brand p{color:rgba(255,255,255,.86) !important;font-size:13px !important;font-weight:800 !important}
+.nav{
+  min-width:132px;
+  color:#0f172a !important;
+  background:linear-gradient(180deg,#ffffff,#f2f7ff) !important;
+  border:1px solid rgba(210,224,245,.9) !important;
+  border-radius:22px !important;
+  padding:13px 18px !important;
+  box-shadow:0 12px 28px rgba(15,23,42,.09), inset 0 1px 0 #fff !important;
+}
+.nav:hover,.nav.active{
+  color:#fff !important;
+  background:linear-gradient(135deg,#155EEF 0%,#0094FF 100%) !important;
+  box-shadow:0 16px 32px rgba(21,94,239,.32) !important;
+  transform:translateY(-2px) scale(1.01) !important;
+}
+.secret-trigger{
+  width:30px !important;height:30px !important;min-width:30px !important;
+  opacity:.33;background:rgba(255,255,255,.52) !important;color:#9fb0ca !important;
+  box-shadow:none !important;border:1px solid rgba(205,218,236,.45) !important;
+}
+.secret-trigger:hover{opacity:1;background:#fff !important;color:#155EEF !important}
+.secret-panel{top:128px !important;border-radius:24px !important;box-shadow:0 24px 70px rgba(15,23,42,.24) !important}
+.hint{
+  max-width:100% !important;
+  color:#075985 !important;
+  background:linear-gradient(135deg,#ECFEFF,#EFF6FF) !important;
+  border:1px solid #BAE6FD !important;
+  box-shadow:0 10px 25px rgba(14,165,233,.10) !important;
+}
+.main{padding-top:4px;position:relative;z-index:1}
+.top{
+  top:138px !important;
+  border-radius:28px !important;
+  padding:20px 22px !important;
+  border:1px solid rgba(255,255,255,.9) !important;
+  background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(241,248,255,.92)) !important;
+  box-shadow:0 18px 45px rgba(21,94,239,.12) !important;
+}
+.top h2{font-size:27px !important;letter-spacing:-.5px;color:#0B1F52 !important}
+.top p{font-weight:800 !important;color:#64748B !important}
+.pill{
+  color:#0B1F52 !important;background:#fff !important;border:1px solid #DCE8FA !important;
+  box-shadow:0 8px 22px rgba(15,23,42,.08) !important;
+}
+.hero{
+  position:relative;overflow:hidden;
+  color:#fff !important;
+  border:0 !important;
+  background:linear-gradient(135deg,#0B1F52 0%,#155EEF 52%,#00A3FF 100%) !important;
+  box-shadow:0 22px 55px rgba(21,94,239,.27) !important;
+  border-radius:30px !important;padding:24px 26px !important;
+}
+.hero:before{content:"";position:absolute;right:-60px;top:-80px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.15)}
+.hero:after{content:"";position:absolute;left:24px;bottom:-80px;width:170px;height:170px;border-radius:50%;background:rgba(32,201,151,.20)}
+.hero h3,.hero p{position:relative;z-index:1;color:#fff !important}.hero h3{font-size:25px !important}.hero p{color:rgba(255,255,255,.86) !important;font-weight:700 !important}
+.card,.table-card,.table-container{
+  border:1px solid rgba(221,231,246,.95) !important;
+  border-radius:28px !important;
+  background:rgba(255,255,255,.98) !important;
+  box-shadow:0 18px 45px rgba(15,23,42,.10), inset 0 1px 0 rgba(255,255,255,.95) !important;
+  padding:22px !important;
+}
+.card:hover{box-shadow:0 24px 60px rgba(21,94,239,.14), inset 0 1px 0 rgba(255,255,255,.95) !important}
+.section{border-bottom:1px solid #E6EEF9 !important;margin-bottom:18px !important;padding-bottom:14px !important}
+.section h3{font-size:20px !important;color:#0B1F52 !important}
+.tag{
+  color:#155EEF !important;background:#EEF5FF !important;border:1px solid #D8E7FF !important;
+  padding:7px 12px !important;border-radius:999px !important;
+}
+label{color:#334155 !important;font-weight:900 !important;font-size:13px !important;letter-spacing:.1px}
+input,select,textarea{
+  background:#F8FBFF !important;
+  border:1px solid #D8E4F4 !important;
+  border-radius:20px !important;
+  padding:14px 15px !important;
+  font-weight:700;color:#0f172a !important;
+  box-shadow:inset 0 1px 0 #fff;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#0094FF !important;
+  background:#fff !important;
+  box-shadow:0 0 0 4px rgba(0,148,255,.16),0 10px 25px rgba(21,94,239,.10) !important;
+}
+.btn{border-radius:20px !important;padding:13px 20px !important;box-shadow:0 12px 25px rgba(15,23,42,.08) !important}
+.btn-primary{background:linear-gradient(135deg,#155EEF,#00A3FF) !important;box-shadow:0 16px 34px rgba(21,94,239,.30) !important}
+.btn-soft{background:#FFFFFF !important;color:#155EEF !important;border:1px solid #D8E7FF !important}
+.btn-green{background:linear-gradient(135deg,#12B76A,#20C997) !important;color:#fff !important;border:0 !important;box-shadow:0 16px 34px rgba(18,183,106,.22) !important}
+.stat{
+  border:1px solid rgba(221,231,246,.95) !important;
+  border-radius:28px !important;
+  background:linear-gradient(180deg,#ffffff,#F6FAFF) !important;
+  padding:20px !important;
+  box-shadow:0 18px 42px rgba(15,23,42,.10) !important;
+}
+.stat:before{content:"";position:absolute;right:-28px;top:-30px;width:86px;height:86px;border-radius:50%;background:rgba(21,94,239,.10)}
+.stat .num{font-size:34px !important;color:#155EEF !important;line-height:1 !important}
+.stat.good .num{color:#12B76A !important}.stat.warn .num{color:#F79009 !important}.stat.purple .num{color:#7C3AED !important}.stat.bad .num{color:#F04438 !important}
+.stat .lbl{text-transform:uppercase;letter-spacing:.55px;font-size:11px !important;color:#64748b !important}
+.mini{
+  border:1px solid #DDE7F6 !important;background:linear-gradient(180deg,#FFFFFF,#F8FBFF) !important;
+  border-radius:22px !important;padding:17px !important;box-shadow:0 10px 24px rgba(15,23,42,.06)
+}
+.copybox{background:#0F172A !important;color:#EAF2FF !important;border:1px solid #24324A !important;border-radius:24px !important;font-weight:700}
+table{border-collapse:separate !important;border-spacing:0 8px !important;margin-top:0 !important}
+th{background:transparent !important;border:0 !important;color:#64748B !important;font-size:11px !important}
+td{border-top:1px solid #E6EEF9 !important;border-bottom:1px solid #E6EEF9 !important;background:#FFFFFF !important;font-weight:700 !important}
+td:first-child{border-left:1px solid #E6EEF9 !important;border-radius:16px 0 0 16px !important}td:last-child{border-right:1px solid #E6EEF9 !important;border-radius:0 16px 16px 0 !important}
+tbody tr:hover td{background:#F4F9FF !important;box-shadow:0 12px 25px rgba(15,23,42,.07)}
+.status,.verdict{border-radius:999px !important;padding:6px 11px !important;font-weight:900 !important}.done,.ok{background:#DCFCE7 !important;color:#166534 !important}.pending,.attention{background:#FEF3C7 !important;color:#92400E !important}.missing{background:#FEE2E2 !important;color:#991B1B !important}.check{background:#E0F2FE !important;color:#075985 !important}
+.loader{background:rgba(234,242,255,.72) !important}.spin{width:50px;height:50px;border-width:6px;border-left-color:#155EEF !important}
+.toast{background:#0B1F52 !important;border:1px solid rgba(255,255,255,.16);box-shadow:0 18px 45px rgba(11,31,82,.30) !important}
+@media(max-width:900px){
+  body{padding:8px 8px 92px !important;background:linear-gradient(180deg,#EAF4FF,#FFFFFF) !important}
+  .app-shell{position:relative !important;top:0 !important;border-radius:28px !important;margin-bottom:12px;padding:10px !important;display:grid !important;grid-template-columns:1fr auto auto auto;gap:8px !important;align-items:center !important}
+  .brand{grid-column:1/-1;text-align:left !important;border-radius:24px !important;padding:14px 16px !important}.brand:after{display:none}.logo{margin:0 0 6px 0 !important;width:138px !important;height:45px !important}.brand h1{font-size:18px !important}.brand p{font-size:11px !important}
+  .nav{min-width:0 !important;width:100% !important;padding:11px 10px !important;font-size:12px !important;border-radius:18px !important}.secret-trigger{justify-self:end}
+  .hint{grid-column:1/-1;text-align:left !important;border-radius:20px !important;font-size:12px !important;padding:10px 12px !important}
+  .secret-panel{right:8px !important;top:110px !important;left:auto !important}.top{position:relative !important;top:0 !important;border-radius:26px !important;padding:17px !important}.top h2{font-size:23px !important}
+  .hero{border-radius:27px !important;padding:20px !important}.hero h3{font-size:22px !important}.card{border-radius:26px !important;padding:17px !important}.section h3{font-size:18px !important}
+  .g2,.g3,.g4,.compare,.score-grid{grid-template-columns:1fr !important}.stat{border-radius:24px !important}.btn{width:100% !important}table{border-spacing:0 7px !important}th,td{font-size:13px !important}.bulk-total{grid-template-columns:1fr !important}
+}
+
 </style>
 </head>
 <body>
 <div class="loader" id="loader"><div class="spin"></div></div><div class="toast" id="toast"></div>
 <div class="app">
-  <aside class="side">
-    <div class="brand"><div class="logo">A</div><h1>Anik Daily Staff Work System</h1><p>Plan Lock • Actual Tracking • Account System Figures • Management Dashboard</p></div>
-    <button class="nav active" data-page="entry">📝 Staff Entry</button>
-    <button class="nav" data-page="account">🏦 Account Team</button>
-    <button class="nav" data-page="dashboard">📊 Dashboard</button>
-    <button class="nav" data-page="share">📤 Share Text</button>
-    <button class="nav" data-page="settings">⚙️ Settings</button>
+  <aside class="side app-shell">
+    <div class="brand"><div class="logo">A</div><h1>Anik Daily Staff Work System</h1><p>Plan Lock • Actual Tracking • Power View</p></div>
+    <button class="nav active" data-page="entry">📝 Entry</button>
+    <button class="nav" data-page="share">📤 Share</button>
+    <button class="secret-trigger" id="adminTrigger" title="Quick tools" aria-label="Quick tools">•</button>
+    <div class="secret-panel hidden" id="adminPanel">
+      <button class="nav admin-nav" data-page="account">🏦 Account Team</button>
+      <button class="nav admin-nav" data-page="dashboard">📊 Dashboard</button>
+    </div>
     <div class="hint">सकाळचा plan एकदाच submit होईल. त्यानंतर तो lock राहील. सायंकाळी actual entry भरता येईल.</div>
   </aside>
   <main class="main">
@@ -94,11 +304,10 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans Devan
       <div id="staffDetail" class="hidden"><div class="card"><div class="section"><h3 id="detailTitle">Staff Detail</h3><span class="tag" id="detailTag">Plan vs Actual</span></div><div class="grid g3"><div class="stat good"><div class="num" id="detailPlanCount">0</div><div class="lbl">Planning Fields</div></div><div class="stat purple"><div class="num" id="detailActualCount">0</div><div class="lbl">Actual Fields</div></div><div class="stat warn"><div class="num" id="detailScore">0/100</div><div class="lbl">Work Quality Score</div></div></div><div class="grid g2" style="margin-top:14px"><div class="mini"><h4>🌅 सकाळचे नियोजन</h4><div id="planList"></div></div><div class="mini"><h4>🌙 सायंकाळची प्रत्यक्ष कामगिरी</h4><div id="actualList"></div></div></div></div></div>
     </section>
     <section id="page-share" class="page hidden"><div class="card"><div class="section"><h3>WhatsApp / Management Share Text</h3><span class="tag">Auto generated</span></div><textarea id="shareText" class="copybox"></textarea><div class="btns" style="margin-top:12px"><button class="btn btn-green" id="copyShare">Copy Text</button><a class="btn btn-soft" id="waShare" target="_blank">Open WhatsApp</a></div></div></section>
-    <section id="page-settings" class="page hidden"><div class="card"><div class="section"><h3>Settings</h3><span class="tag">Apps Script URL</span></div><div class="field"><label>Web App URL</label><input id="apiUrlInput" placeholder="Paste Apps Script Web App URL"></div><div class="btns"><button class="btn btn-primary" id="saveApiUrl">Save URL</button><button class="btn btn-soft" id="testApi">Test Connection</button><button class="btn btn-soft" id="reloadMaster">Reload Master</button></div></div></section>
   </main>
 </div>
 <script>
-let API_URL=localStorage.getItem('DAILY_SYSTEM_API_URL')||'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+const API_URL='https://script.google.com/macros/s/AKfycbwYVMl2nT-Q2MCr1y-uBKnyL5nvIzVFkr5DakQKtnMpzwMRnewU_rjK1bvg7ScxXKU/exec';
 let staffMaster=[],allQuestions=[],entriesCache=[],dashboardRowsCache=[],unitSummaryCache=[],branchChart=null,systemChart=null,morningEntryCache=null,currentEntryLocked=false;
 const $=id=>document.getElementById(id),safe=v=>(v??'').toString().trim();
 function todayISO(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
@@ -106,12 +315,44 @@ function showLoader(v=true){$('loader').classList.toggle('active',v)}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3600)}
 function esc(str){return String(str??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]))}
 function parsePayload(entry){if(!entry||!entry.payloadJson)return {};try{return typeof entry.payloadJson==='object'?entry.payloadJson:JSON.parse(entry.payloadJson)}catch(e){return {}}}
-function jsonp(action,params={}){return new Promise((resolve,reject)=>{if(!API_URL||API_URL.includes('PASTE_YOUR')){reject(new Error('API URL set केलेला नाही. Settings मध्ये URL paste करा.'));return}const cb='cb_'+Math.random().toString(36).slice(2),script=document.createElement('script'),url=new URL(API_URL);url.searchParams.set('action',action);url.searchParams.set('callback',cb);Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));window[cb]=data=>{delete window[cb];script.remove();if(data&&data.success===false)reject(new Error(data.message||'Request failed'));else resolve(data)};script.onerror=()=>{delete window[cb];script.remove();reject(new Error('API connection failed.'))};script.src=url.toString();document.body.appendChild(script)})}
+function jsonp(action,params={}){return new Promise((resolve,reject)=>{if(!API_URL){reject(new Error('API URL code मध्ये set केलेला नाही.'));return}const cb='cb_'+Math.random().toString(36).slice(2),script=document.createElement('script'),url=new URL(API_URL);url.searchParams.set('action',action);url.searchParams.set('callback',cb);Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));window[cb]=data=>{delete window[cb];script.remove();if(data&&data.success===false)reject(new Error(data.message||'Request failed'));else resolve(data)};script.onerror=()=>{delete window[cb];script.remove();reject(new Error('API connection failed.'))};script.src=url.toString();document.body.appendChild(script)})}
 function num(v){return Number(v||0).toLocaleString('en-IN')}
 function pct(v){return (Number(v||0))+'%'}
-async function init(){document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>openPage(b.dataset.page));$('todayText').textContent=new Date().toLocaleDateString('mr-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});['entryDate','dashDate','accDate'].forEach(id=>$(id).value=todayISO());$('apiUrlInput').value=API_URL;$('saveApiUrl').onclick=saveApiUrl;$('testApi').onclick=testConnection;$('reloadMaster').onclick=()=>loadMasters(true);$('staffSelect').onchange=onStaffChange;$('shift').onchange=onShiftChange;$('entryDate').onchange=onShiftChange;$('reloadEntry').onclick=onShiftChange;$('submitBtn').onclick=submitEntry;$('resetBtn').onclick=renderDynamicForm;$('refreshDash').onclick=()=>loadDashboard(true);$('copyShare').onclick=copyShareText;$('loadAccStaff').onclick=loadAccountStaffBulk;$('saveAccBulk').onclick=saveAccountStaffBulk;$('clearAccBlank').onclick=clearBlankAccountRows;await loadMasters(false)}
-function openPage(page){document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===page));document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));$('page-'+page).classList.remove('hidden');const titles={entry:['Staff Entry','दैनंदिन नियोजन आणि प्रत्यक्ष कामगिरी'],account:['Account Team','Unit-wise system target आणि achievement'],dashboard:['Dashboard','Management power view'],share:['Share Text','WhatsApp / report-ready text'],settings:['Settings','API setup']};$('pageTitle').textContent=titles[page][0];$('pageSub').textContent=titles[page][1];if(page==='dashboard')loadDashboard(false)}
-async function saveApiUrl(){API_URL=$('apiUrlInput').value.trim();localStorage.setItem('DAILY_SYSTEM_API_URL',API_URL);toast('API URL save झाला.');await testConnection()}
+async function init(){
+  document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>openPage(b.dataset.page));
+  const adminTrigger=$('adminTrigger');
+  if(adminTrigger){adminTrigger.onclick=()=>{$('adminPanel').classList.toggle('hidden')}}
+  $('todayText').textContent=new Date().toLocaleDateString('mr-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  ['entryDate','dashDate','accDate'].forEach(id=>$(id).value=todayISO());
+  $('staffSelect').onchange=onStaffChange;
+  $('shift').onchange=onShiftChange;
+  $('entryDate').onchange=onShiftChange;
+  $('reloadEntry').onclick=onShiftChange;
+  $('submitBtn').onclick=submitEntry;
+  $('resetBtn').onclick=renderDynamicForm;
+  $('refreshDash').onclick=()=>loadDashboard(true);
+  $('copyShare').onclick=copyShareText;
+  $('loadAccStaff').onclick=loadAccountStaffBulk;
+  $('saveAccBulk').onclick=saveAccountStaffBulk;
+  $('clearAccBlank').onclick=clearBlankAccountRows;
+  await loadMasters(false);
+}
+function openPage(page){
+  if(!page)return;
+  document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===page));
+  const panel=$('adminPanel'); if(panel) panel.classList.add('hidden');
+  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+  $('page-'+page).classList.remove('hidden');
+  const titles={
+    entry:['Staff Entry','दैनंदिन नियोजन आणि प्रत्यक्ष कामगिरी'],
+    account:['Account Team','Unit-wise system target आणि achievement'],
+    dashboard:['Dashboard','Management power view'],
+    share:['Share Text','WhatsApp / report-ready text']
+  };
+  $('pageTitle').textContent=titles[page][0];
+  $('pageSub').textContent=titles[page][1];
+  if(page==='dashboard')loadDashboard(false);
+}
 async function testConnection(){showLoader(true);try{const res=await jsonp('ping');toast('Connection successful: '+(res.message||'OK'))}catch(e){toast(e.message)}showLoader(false)}
 async function loadMasters(show=true){if(show)showLoader(true);try{const res=await jsonp('getMasterData');staffMaster=res.staff||[];allQuestions=res.questions||[];renderStaffDropdown();renderFilters();renderAccountBranches();if(!staffMaster.length)toast('StaffMaster मधून data आलेला नाही.')}catch(e){toast(e.message)}if(show)showLoader(false)}
 function renderStaffDropdown(){$('staffSelect').innerHTML='<option value="">कर्मचारी निवडा</option>'+staffMaster.filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम').map(s=>`<option value="${esc(s.staffId)}">${esc(s.staffName)} — ${esc(s.role)} — ${esc(s.branch)}</option>`).join('')}
