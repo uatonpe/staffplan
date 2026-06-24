@@ -4,229 +4,250 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ANIK Power Dashboard | Branch & Staff Report Status</title>
+<title>ANIK Pro Dashboard | Staff Plan & Actual Control</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
-  --blue:#24388D;
-  --blue2:#155EEF;
-  --sky:#0094FF;
-  --red:#E31B23;
-  --green:#12B76A;
-  --orange:#F79009;
-  --yellow:#FDB022;
-  --purple:#7C3AED;
-  --dark:#07143F;
-  --ink:#0F172A;
-  --muted:#64748B;
-  --line:#DDE7F6;
-  --soft:#F4F8FF;
-  --card:#FFFFFF;
-  --bg:#EAF4FF;
-  --shadow:0 18px 45px rgba(15,23,42,.10);
-  --shadow2:0 26px 70px rgba(21,94,239,.18);
+  --brand:#233a8b;
+  --brand2:#1565d8;
+  --red:#e11d48;
+  --green:#039855;
+  --orange:#f79009;
+  --purple:#6d28d9;
+  --ink:#0f172a;
+  --muted:#667085;
+  --line:#e4e7ec;
+  --soft:#f8fafc;
+  --soft2:#f1f5f9;
+  --card:#ffffff;
+  --bg:#f5f7fb;
+  --shadow:0 14px 38px rgba(15,23,42,.08);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   margin:0;
   min-height:100vh;
-  font-family:'Noto Sans Devanagari',system-ui,sans-serif;
+  font-family:'Noto Sans Devanagari',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--ink);
-  background:
-    radial-gradient(circle at 2% 2%,rgba(0,148,255,.30),transparent 32%),
-    radial-gradient(circle at 94% 8%,rgba(18,183,106,.18),transparent 28%),
-    linear-gradient(180deg,#eaf4ff 0%,#f8fbff 48%,#ffffff 100%);
+  background:var(--bg);
   -webkit-font-smoothing:antialiased;
 }
-body:before{
-  content:"";
-  position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:
-    linear-gradient(rgba(21,94,239,.045) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(21,94,239,.045) 1px,transparent 1px);
-  background-size:34px 34px;
-  mask-image:linear-gradient(180deg,#000 0%,transparent 78%);
-}
-.app{position:relative;z-index:1;max-width:1680px;margin:auto;padding:16px}
-.header{
-  position:relative;z-index:5;
-  display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
+.app{max-width:1720px;margin:0 auto;padding:14px}
+.topbar{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:14px;
+  align-items:center;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
   padding:14px;
-  border:1px solid rgba(255,255,255,.92);
-  border-radius:30px;
-  background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(239,247,255,.88));
-  backdrop-filter:none;
-  box-shadow:0 18px 45px rgba(21,94,239,.12), inset 0 1px 0 rgba(255,255,255,.95);
+  box-shadow:var(--shadow);
 }
 .brand{
-  display:flex;align-items:center;gap:12px;
-  min-width:320px;
-  background:linear-gradient(135deg,#07143F 0%,#24388D 55%,#0094FF 100%);
-  color:#fff;
-  border-radius:24px;
-  padding:13px 16px;
-  box-shadow:0 18px 42px rgba(36,56,141,.26);
-  position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:13px;min-width:320px;
+  border-right:1px solid var(--line);
+  padding-right:16px;
 }
-.brand:after{
-  content:"LIVE POWER VIEW";
-  position:absolute;right:12px;bottom:9px;font-size:9px;letter-spacing:1.2px;font-weight:900;
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:4px 8px;
+.brand img{
+  width:146px;height:54px;object-fit:contain;display:block;
+  background:#fff;border-radius:14px;border:1px solid #eef2f7;padding:6px;
 }
-.logo{
-  width:112px;height:44px;border-radius:15px;background:#fff url('https://anikfin.com/wp-content/uploads/2024/06/anik-horizontal-1-1024x400.png') center/contain no-repeat;
-  box-shadow:0 8px 20px rgba(0,0,0,.20);
-  flex:0 0 auto;
-}
-.brand h1{margin:0;font-size:21px;line-height:1.12;font-weight:900;letter-spacing:-.35px}
-.brand p{margin:3px 0 0;color:rgba(255,255,255,.84);font-size:12px;font-weight:800}
-.header-mid{min-width:0}
-.title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.title-row h2{margin:0;color:#0B1F52;font-size:25px;font-weight:900;letter-spacing:-.45px}
-.live-pill{
-  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 11px;
-  background:#ECFDF3;color:#027A48;border:1px solid #ABEFC6;font-size:12px;font-weight:900;
-}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 6px rgba(18,183,106,.12)}
-.sub{margin:4px 0 0;color:var(--muted);font-size:13px;font-weight:800}
+.brand h1{margin:0;font-size:20px;line-height:1.12;font-weight:900;color:#102a72;letter-spacing:-.25px}
+.brand p{margin:4px 0 0;font-size:12px;font-weight:800;color:var(--muted)}
+.page-title h2{margin:0;font-size:24px;line-height:1.15;font-weight:900;color:#111827;letter-spacing:-.35px}
+.page-title p{margin:5px 0 0;color:var(--muted);font-size:13px;font-weight:700}
 .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 button,.btn{
   border:0;cursor:pointer;font-family:inherit;text-decoration:none;
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  border-radius:18px;padding:12px 16px;font-weight:900;font-size:13px;transition:.18s;
+  border-radius:14px;padding:11px 14px;font-weight:900;font-size:13px;transition:.16s ease;
 }
 button:hover,.btn:hover{transform:translateY(-1px)}
-.btn-primary{background:linear-gradient(135deg,var(--blue2),var(--sky));color:#fff;box-shadow:0 14px 30px rgba(21,94,239,.28)}
-.btn-soft{background:#fff;color:#155EEF;border:1px solid #D8E7FF;box-shadow:0 10px 24px rgba(15,23,42,.08)}
-.btn-danger{background:#FEF3F2;color:#B42318;border:1px solid #FECDCA}
-.panel{
-  margin-top:14px;border:1px solid rgba(221,231,246,.95);
-  border-radius:30px;background:rgba(255,255,255,.94);box-shadow:var(--shadow);
-  padding:18px;
+.btn-primary{background:var(--brand2);color:#fff;box-shadow:0 10px 22px rgba(21,101,216,.22)}
+.btn-soft{background:#fff;color:#175cd3;border:1px solid #d0d5dd}
+.btn-danger{background:#fff1f3;color:#be123c;border:1px solid #fecdd3}
+.btn-dark{background:#101828;color:#fff}
+.panel,.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:var(--shadow);
 }
+.panel{margin-top:12px;padding:16px}
 .filters{
-  display:grid;grid-template-columns:1.1fr 1.2fr 1.2fr 1.3fr 2fr auto;gap:12px;align-items:end;
+  display:grid;
+  grid-template-columns:1fr 1.15fr 1.15fr 1.4fr 2fr auto;
+  gap:12px;
+  align-items:end;
 }
-label{display:block;margin:0 0 7px;color:#334155;font-size:12px;font-weight:900;letter-spacing:.2px}
+label{display:block;margin:0 0 7px;color:#344054;font-size:12px;font-weight:900}
 input,select{
-  width:100%;border:1px solid #D8E4F4;background:#F8FBFF;color:#0f172a;border-radius:18px;
-  padding:13px 14px;font-family:inherit;font-size:14px;font-weight:800;outline:none;
+  width:100%;border:1px solid #d0d5dd;background:#fff;color:#111827;border-radius:14px;
+  padding:12px 13px;font-family:inherit;font-size:14px;font-weight:800;outline:none;
 }
-input:focus,select:focus{border-color:#0094FF;background:#fff;box-shadow:0 0 0 4px rgba(0,148,255,.14)}
-.grid{display:grid;gap:14px}.kpis{grid-template-columns:repeat(8,minmax(0,1fr));margin-top:14px}
-.card{
-  border:1px solid rgba(221,231,246,.95);
-  border-radius:28px;background:rgba(255,255,255,.98);
-  box-shadow:0 18px 45px rgba(15,23,42,.09), inset 0 1px 0 rgba(255,255,255,.95);
-  padding:18px;position:relative;overflow:hidden;
+input:focus,select:focus{border-color:#1570ef;box-shadow:0 0 0 4px rgba(21,112,239,.13)}
+.status-line{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:12px;padding:10px 12px;border-radius:16px;background:#f8fafc;border:1px solid #eef2f7;
 }
-.kpi{min-height:120px}
-.kpi:before{content:"";position:absolute;right:-30px;top:-35px;width:94px;height:94px;border-radius:50%;background:rgba(21,94,239,.10)}
-.kpi .ico{font-size:24px}
-.kpi .num{font-size:31px;font-weight:900;margin:8px 0 0;line-height:1;color:#155EEF}
-.kpi .lbl{font-size:11px;font-weight:900;color:#64748B;text-transform:uppercase;letter-spacing:.55px;margin-top:6px}
-.kpi.good .num{color:var(--green)}.kpi.warn .num{color:var(--orange)}.kpi.bad .num{color:var(--red)}.kpi.purple .num{color:var(--purple)}
-.main-grid{grid-template-columns:1.05fr 1.35fr .95fr;margin-top:14px}
-.section{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #E6EEF9;padding-bottom:12px;margin-bottom:14px}
-.section h3{margin:0;color:#0B1F52;font-size:19px;font-weight:900}
-.tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 11px;background:#EEF5FF;color:#155EEF;border:1px solid #D8E7FF;font-size:12px;font-weight:900;white-space:nowrap}
-.chart-box{height:310px;position:relative}
-.branch-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.tag{
+  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 10px;
+  background:#eff8ff;color:#175cd3;border:1px solid #b2ddff;font-size:12px;font-weight:900;white-space:nowrap;
+}
+.live-dot{width:8px;height:8px;border-radius:99px;background:#12b76a;box-shadow:0 0 0 5px rgba(18,183,106,.14)}
+.grid{display:grid;gap:12px}
+.kpis{grid-template-columns:repeat(10,minmax(0,1fr));margin-top:12px}
+.kpi{
+  min-height:112px;padding:14px;position:relative;overflow:hidden;cursor:pointer;transition:.16s ease;
+}
+.kpi:hover{transform:translateY(-2px);border-color:#b2ddff;box-shadow:0 18px 44px rgba(21,101,216,.13)}
+.kpi:after{content:"Click";position:absolute;right:12px;top:10px;font-size:10px;font-weight:900;color:#98a2b3;text-transform:uppercase}
+.kpi .ico{font-size:22px}
+.kpi .num{font-size:29px;line-height:1;margin-top:9px;font-weight:900;color:var(--brand2)}
+.kpi .lbl{margin-top:7px;color:#667085;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.45px}
+.kpi.good .num{color:var(--green)}.kpi.warn .num{color:var(--orange)}.kpi.bad .num{color:var(--red)}.kpi.purple .num{color:var(--purple)}.kpi.neutral .num{color:#475467}
+.main-grid{grid-template-columns:1fr 1.25fr .95fr;margin-top:12px}
+.card{padding:16px;overflow:hidden}
+.section{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #eef2f7;padding-bottom:12px;margin-bottom:14px}
+.section h3{margin:0;color:#111827;font-size:18px;font-weight:900;letter-spacing:-.2px}
+.section p{margin:3px 0 0;color:var(--muted);font-size:12px;font-weight:700}
+.chart-box{height:300px;position:relative}
+.branch-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .branch-card{
-  border:1px solid #DDE7F6;border-radius:24px;background:linear-gradient(180deg,#fff,#F8FBFF);
-  padding:15px;box-shadow:0 12px 28px rgba(15,23,42,.07);cursor:pointer;transition:.18s;
+  border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px;
+  cursor:pointer;transition:.16s ease;
 }
-.branch-card:hover{transform:translateY(-2px);box-shadow:0 20px 42px rgba(21,94,239,.13)}
-.branch-card h4{margin:0 0 8px;color:#0B1F52;font-size:16px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.branch-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
-.mini-stat{background:#fff;border:1px solid #E6EEF9;border-radius:16px;padding:9px;text-align:center}
-.mini-stat b{display:block;color:#0f172a;font-size:16px;font-weight:900}.mini-stat span{font-size:10px;color:#64748B;font-weight:900;text-transform:uppercase}
-.progress{height:10px;border-radius:999px;background:#E8EEF8;overflow:hidden}
-.progress span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#155EEF,#00A3FF)}
-.progress.good span{background:linear-gradient(90deg,#12B76A,#20C997)}
-.progress.warn span{background:linear-gradient(90deg,#F79009,#FDB022)}
-.progress.bad span{background:linear-gradient(90deg,#F04438,#E31B23)}
-.table-panel{margin-top:14px}
-.table-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.summary-text{color:#475569;font-size:13px;font-weight:800}
+.branch-card:hover{transform:translateY(-2px);border-color:#b2ddff;box-shadow:0 14px 32px rgba(21,101,216,.12)}
+.branch-card h4{margin:0 0 10px;font-size:15px;font-weight:900;color:#101828;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress{height:9px;border-radius:99px;background:#edf2f7;overflow:hidden}
+.progress span{display:block;height:100%;border-radius:99px;background:#1570ef}
+.progress.good span{background:#12b76a}.progress.warn span{background:#f79009}.progress.bad span{background:#f04438}
+.branch-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:11px}
+.mini-stat{background:#f8fafc;border:1px solid #eef2f7;border-radius:13px;padding:8px;text-align:center}
+.mini-stat b{display:block;color:#111827;font-size:15px;font-weight:900}.mini-stat span{display:block;margin-top:1px;color:#667085;font-size:9px;font-weight:900;text-transform:uppercase}
+.table-panel{margin-top:12px}
+.table-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.summary-text{color:#475467;font-size:13px;font-weight:800;margin-top:3px}
 .table-wrap{overflow:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;min-width:1120px;border-collapse:separate;border-spacing:0 8px}
-th{background:transparent;color:#64748B;font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:900;text-align:left;padding:0 10px 5px;white-space:nowrap}
-td{
-  border-top:1px solid #E6EEF9;border-bottom:1px solid #E6EEF9;background:#fff;color:#334155;
-  padding:12px 10px;font-size:13px;font-weight:800;white-space:nowrap;
+table{width:100%;min-width:1260px;border-collapse:separate;border-spacing:0 7px}
+th{
+  color:#667085;font-size:11px;text-transform:uppercase;letter-spacing:.55px;font-weight:900;text-align:left;
+  padding:0 10px 4px;white-space:nowrap;
 }
-td:first-child{border-left:1px solid #E6EEF9;border-radius:16px 0 0 16px}
-td:last-child{border-right:1px solid #E6EEF9;border-radius:0 16px 16px 0}
-tbody tr:hover td{background:#F4F9FF;box-shadow:0 12px 25px rgba(15,23,42,.06)}
-.staff-name{border:0;background:transparent;color:#155EEF;font-weight:900;text-decoration:underline;text-underline-offset:3px;padding:0;cursor:pointer}
+td{
+  border-top:1px solid #eef2f7;border-bottom:1px solid #eef2f7;background:#fff;color:#344054;
+  padding:11px 10px;font-size:13px;font-weight:800;white-space:nowrap;
+}
+td:first-child{border-left:1px solid #eef2f7;border-radius:14px 0 0 14px}
+td:last-child{border-right:1px solid #eef2f7;border-radius:0 14px 14px 0}
+tbody tr:hover td{background:#f8fbff}
+.staff-name{border:0;background:transparent;color:#175cd3;font-weight:900;text-decoration:underline;text-underline-offset:3px;padding:0;cursor:pointer}
+small{color:#98a2b3;font-weight:800}
 .badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}
-.done{background:#DCFCE7;color:#166534}.pending{background:#FEF3C7;color:#92400E}.missing{background:#FEE2E2;color:#991B1B}.check{background:#E0F2FE;color:#075985}.neutral{background:#EEF2F7;color:#475467}
-.heat{width:84px;text-align:center}
+.done{background:#dcfae6;color:#067647}.pending{background:#fff6db;color:#93370d}.missing{background:#ffe4e8;color:#a11043}.check{background:#e0f2fe;color:#075985}.neutral{background:#eef2f7;color:#475467}.leave{background:#eef4ff;color:#3538cd}.low{background:#fef3f2;color:#b42318}
+.score-pill{min-width:72px;justify-content:center}
+.drawer,.modal{
+  position:fixed;z-index:100;background:#fff;border:1px solid #d0d5dd;border-radius:22px;box-shadow:0 28px 90px rgba(16,24,40,.24);
+  overflow:hidden;
+}
 .drawer{
-  position:fixed;right:18px;top:18px;bottom:18px;width:min(560px,calc(100vw - 36px));z-index:100;
-  background:#fff;border:1px solid #DDE7F6;border-radius:30px;box-shadow:0 30px 90px rgba(7,20,63,.26);
-  transform:translateX(115%);transition:.25s;display:flex;flex-direction:column;overflow:hidden;
+  right:16px;top:16px;bottom:16px;width:min(590px,calc(100vw - 32px));
+  transform:translateX(115%);transition:.22s ease;display:flex;flex-direction:column;
 }
 .drawer.open{transform:translateX(0)}
-.drawer-head{padding:18px;background:linear-gradient(135deg,#07143F,#24388D,#0094FF);color:#fff}
-.drawer-head h3{margin:0;font-size:20px;font-weight:900}.drawer-head p{margin:5px 0 0;color:rgba(255,255,255,.84);font-weight:800;font-size:13px}
-.close-x{position:absolute;right:16px;top:16px;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:8px 11px}
+.drawer-head,.modal-head{padding:17px;background:#101828;color:#fff;position:relative}
+.drawer-head h3,.modal-head h3{margin:0;font-size:20px;font-weight:900}.drawer-head p,.modal-head p{margin:5px 0 0;color:rgba(255,255,255,.78);font-weight:800;font-size:13px}
+.close-x{position:absolute;right:14px;top:14px;z-index:8;background:#fff;color:#101828;border:1px solid rgba(16,24,40,.12);border-radius:12px;padding:8px 12px;min-width:40px;height:38px;box-shadow:0 8px 20px rgba(16,24,40,.18)}
+.close-x:hover{background:#f2f4f7;transform:none}
 .drawer-body{padding:16px;overflow:auto}
-.kv{padding:10px 0;border-bottom:1px dashed #DDE7F6}.kv b{display:block;font-size:12px;color:#334155;font-weight:900}.kv span{display:block;margin-top:4px;color:#64748B;font-size:13px;font-weight:700;white-space:pre-wrap}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}.small-card{border:1px solid #DDE7F6;border-radius:22px;background:#F8FBFF;padding:13px}
-.small-card h4{margin:0 0 9px;color:#0B1F52;font-weight:900}
+.drawer-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #e4e7ec;padding:12px 16px;display:flex;justify-content:flex-end;gap:10px}
+.score-explain-card{margin-bottom:12px;background:#fffef7;border-color:#fde68a}
+.score-explain-card h4{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.score-line{display:grid;gap:7px;margin-top:8px}.score-line div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #e4e7ec;padding:6px 0;font-size:12px;font-weight:900;color:#475467}.score-line b{color:#101828}
+.perf-progress{font-size:12px;font-weight:900;color:#175cd3;margin-top:6px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.small-card{border:1px solid #e4e7ec;border-radius:18px;background:#f8fafc;padding:13px}.small-card h4{margin:0 0 9px;color:#111827;font-weight:900}
+.kv{padding:10px 0;border-bottom:1px dashed #d0d5dd}.kv b{display:block;font-size:12px;color:#344054;font-weight:900}.kv span{display:block;margin-top:4px;color:#667085;font-size:13px;font-weight:700;white-space:pre-wrap}
+.empty{padding:22px;border:1px dashed #d0d5dd;border-radius:17px;background:#f8fafc;color:#667085;font-weight:800;text-align:center}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.problem-list{display:grid;gap:8px;max-height:320px;overflow:auto;padding-right:4px}
+.problem-item{border:1px solid #eef2f7;border-radius:15px;padding:10px;background:#fff;cursor:pointer}
+.problem-item:hover{background:#f8fbff;border-color:#b2ddff}
+.problem-item b{display:block;color:#101828;font-size:13px}.problem-item span{display:block;color:#667085;font-size:12px;font-weight:800;margin-top:2px}
 .toast{
   position:fixed;right:20px;bottom:20px;z-index:200;display:none;
-  max-width:440px;background:#07143F;color:#fff;border:1px solid rgba(255,255,255,.16);
-  border-radius:18px;padding:13px 16px;box-shadow:0 18px 45px rgba(7,20,63,.30);font-weight:800
+  max-width:460px;background:#101828;color:#fff;border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;padding:13px 16px;box-shadow:0 18px 45px rgba(7,20,63,.30);font-weight:800
 }
 .toast.show{display:block}
 .loader{
-  position:fixed;inset:0;display:none;place-items:center;z-index:180;background:rgba(234,244,255,.72);backdrop-filter:blur(5px)
+  position:fixed;inset:0;display:none;place-items:center;z-index:180;background:rgba(248,250,252,.76);backdrop-filter:blur(4px)
 }
-.loader.active{display:grid}.spin{width:54px;height:54px;border-radius:50%;border:6px solid rgba(21,94,239,.13);border-left-color:#155EEF;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-.empty{padding:22px;border:1px dashed #D8E4F4;border-radius:22px;background:#F8FBFF;color:#64748B;font-weight:800;text-align:center}
-@media(max-width:1250px){
-  .header{grid-template-columns:1fr}.brand{min-width:0}.actions{justify-content:flex-start}.filters{grid-template-columns:repeat(3,1fr)}.kpis{grid-template-columns:repeat(4,1fr)}.main-grid{grid-template-columns:1fr}.branch-grid{grid-template-columns:repeat(2,1fr)}
+.loader.active{display:grid}.spin{width:52px;height:52px;border-radius:50%;border:6px solid rgba(21,101,216,.13);border-left-color:#1565d8;animation:spin .85s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.modal-backdrop{
+  position:fixed;inset:0;z-index:90;background:rgba(16,24,40,.44);display:none;
 }
-@media(max-width:760px){
-  .app{padding:8px}.header,.panel,.card{border-radius:24px}.brand{border-radius:22px;padding:13px}.brand h1{font-size:17px}.brand:after{display:none}.logo{width:96px;height:38px}
-  .title-row h2{font-size:21px}.filters{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.branch-grid{grid-template-columns:1fr}.split{grid-template-columns:1fr}.actions button{width:100%}.chart-box{height:270px}
+.modal-backdrop.open{display:block}
+.modal{
+  left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;pointer-events:none;
+  width:min(1180px,calc(100vw - 28px));max-height:90vh;display:flex;flex-direction:column;transition:.18s ease;
+}
+.modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.modal-body{padding:16px;overflow:auto}
+.perf-filters{display:grid;grid-template-columns:1fr 1fr 1.3fr 1.5fr auto;gap:12px;align-items:end}
+.legend{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.legend .mini-stat{padding:10px}.legend b{font-size:18px}
+.footer-note{margin-top:10px;color:#667085;font-size:12px;font-weight:800;line-height:1.5}
+@media(max-width:1400px){
+  .kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .main-grid{grid-template-columns:1fr}
+  .branch-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:980px){
+  .topbar{grid-template-columns:1fr}.brand{border-right:0;border-bottom:1px solid var(--line);padding:0 0 12px;min-width:0}.actions{justify-content:flex-start}
+  .filters{grid-template-columns:repeat(2,1fr)}
+  .branch-grid{grid-template-columns:repeat(2,1fr)}
+  .problem-grid{grid-template-columns:1fr}
+  .perf-filters{grid-template-columns:1fr 1fr}
+  .legend{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .app{padding:8px}.topbar,.panel,.card{border-radius:18px}.brand img{width:118px;height:46px}.brand h1{font-size:17px}.page-title h2{font-size:20px}
+  .filters,.perf-filters{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.branch-grid{grid-template-columns:1fr}
+  .actions button{width:100%}.chart-box{height:260px}.split{grid-template-columns:1fr}
 }
 @media print{
-  body{background:#fff}.header .actions,.filters,.table-toolbar button,.drawer,.toast,.loader{display:none!important}.header{position:static;box-shadow:none}.card,.panel{box-shadow:none;break-inside:avoid}
+  body{background:#fff}.actions,.filters,.drawer,.toast,.loader,.modal,.modal-backdrop{display:none!important}.topbar,.panel,.card{box-shadow:none;break-inside:avoid}
 }
 </style>
 </head>
 <body>
 <div class="loader" id="loader"><div class="spin"></div></div>
 <div class="toast" id="toast"></div>
+<div class="modal-backdrop" id="modalBackdrop"></div>
 
 <div class="app">
-  <header class="header">
+  <header class="topbar">
     <div class="brand">
-      <div class="logo" aria-label="ANIK Logo"></div>
+      <img src="https://anikfin.com/wp-content/uploads/2024/06/anik-horizontal-1-1024x400.png" alt="ANIK Financial Services" referrerpolicy="no-referrer">
       <div>
-        <h1>ANIK Power Dashboard</h1>
-        <p>Branch-wise Staff Report Status</p>
+        <h1>ANIK Pro Dashboard</h1>
+        <p>Plan • Actual • Leave • Performance</p>
       </div>
     </div>
 
-    <div class="header-mid">
-      <div class="title-row">
-        <h2>📊 Live Management Control Room</h2>
-        <span class="live-pill"><span class="live-dot"></span> LIVE</span>
-        <span class="tag" id="lastRefresh">Refresh pending</span>
-      </div>
-      <p class="sub">कुठली शाखा strong आहे, कोणता staff report pending आहे, morning/evening status आणि system performance एका ठिकाणी.</p>
+    <div class="page-title">
+      <h2>Staff Report Control Room</h2>
+      <p>रजा staff pending मध्ये count होणार नाही. Pending, report quality, plan-vs-actual आणि problematic staff एकाच dashboard वर.</p>
     </div>
 
     <div class="actions">
+      <button class="btn-dark" id="performanceBtn">🏆 Staff Performance</button>
       <button class="btn-soft" id="copySummary">📋 Copy Summary</button>
       <button class="btn-soft" id="exportCsv">⬇️ CSV</button>
       <button class="btn-soft" onclick="window.print()">🖨️ Print</button>
@@ -252,77 +273,104 @@ tbody tr:hover td{background:#F4F9FF;box-shadow:0 12px 25px rgba(15,23,42,.06)}
         <label>🚦 Report Status</label>
         <select id="statusFilter">
           <option value="">All Status</option>
+          <option value="required">Report Required Staff</option>
+          <option value="leave">On Leave - Not Pending</option>
           <option value="complete">Complete - Morning + Evening Done</option>
           <option value="pending">Pending - Any Report Pending</option>
           <option value="morningPending">Morning Pending</option>
           <option value="eveningPending">Evening Pending</option>
           <option value="missing">Both Missing</option>
           <option value="check">Check - Evening Done, Morning Missing</option>
+          <option value="lowQuality">Low Quality / Low Achievement</option>
+          <option value="red">Red Attention</option>
         </select>
       </div>
       <div>
         <label>🔎 Staff Search</label>
-        <input type="search" id="searchBox" placeholder="नाव / शाखा / role शोधा">
+        <input type="search" id="searchBox" placeholder="नाव / शाखा / role / remark शोधा">
       </div>
       <button class="btn-primary" id="applyBtn">Apply</button>
     </div>
 
+    <div class="status-line">
+      <span class="tag"><span class="live-dot"></span> LIVE DASHBOARD</span>
+      <span class="tag" id="lastRefresh">Refresh pending</span>
+      <span class="tag" id="leaveNote">Leave logic active</span>
+    </div>
+
     <div class="grid kpis">
-      <div class="card kpi"><div class="ico">👥</div><div class="num" id="kTotal">0</div><div class="lbl">Total Active Staff</div></div>
-      <div class="card kpi good"><div class="ico">✅</div><div class="num" id="kComplete">0</div><div class="lbl">Full Report Done</div></div>
-      <div class="card kpi warn"><div class="ico">⏳</div><div class="num" id="kPending">0</div><div class="lbl">Any Pending</div></div>
-      <div class="card kpi"><div class="ico">🌅</div><div class="num" id="kMorning">0</div><div class="lbl">Morning Done</div></div>
-      <div class="card kpi purple"><div class="ico">🌙</div><div class="num" id="kEvening">0</div><div class="lbl">Evening Done</div></div>
-      <div class="card kpi good"><div class="ico">📈</div><div class="num" id="kCompletion">0%</div><div class="lbl">Completion Rate</div></div>
-      <div class="card kpi"><div class="ico">🎯</div><div class="num" id="kSystem">0%</div><div class="lbl">Avg System Achievement</div></div>
-      <div class="card kpi bad"><div class="ico">🚨</div><div class="num" id="kRed">0</div><div class="lbl">Red Attention</div></div>
+      <div class="card kpi" data-kpi="all"><div class="ico">👥</div><div class="num" id="kTotal">0</div><div class="lbl">Total Active Staff</div></div>
+      <div class="card kpi neutral" data-kpi="leave"><div class="ico">🏖️</div><div class="num" id="kLeave">0</div><div class="lbl">On Leave Today</div></div>
+      <div class="card kpi" data-kpi="required"><div class="ico">📝</div><div class="num" id="kRequired">0</div><div class="lbl">Report Required</div></div>
+      <div class="card kpi good" data-kpi="complete"><div class="ico">✅</div><div class="num" id="kComplete">0</div><div class="lbl">Full Report Done</div></div>
+      <div class="card kpi warn" data-kpi="pending"><div class="ico">⏳</div><div class="num" id="kPending">0</div><div class="lbl">Real Pending</div></div>
+      <div class="card kpi" data-kpi="morningPending"><div class="ico">🌅</div><div class="num" id="kMorningPending">0</div><div class="lbl">Morning Pending</div></div>
+      <div class="card kpi purple" data-kpi="eveningPending"><div class="ico">🌙</div><div class="num" id="kEveningPending">0</div><div class="lbl">Evening Pending</div></div>
+      <div class="card kpi good" data-kpi="complete"><div class="ico">📈</div><div class="num" id="kCompletion">0%</div><div class="lbl">Completion Rate</div></div>
+      <div class="card kpi" data-kpi="lowQuality"><div class="ico">🎯</div><div class="num" id="kAvgScore">0</div><div class="lbl">Avg Staff Score</div></div>
+      <div class="card kpi bad" data-kpi="red"><div class="ico">🚨</div><div class="num" id="kRed">0</div><div class="lbl">Red Attention</div></div>
     </div>
   </section>
 
   <section class="grid main-grid">
     <div class="card">
       <div class="section">
-        <h3>🏦 Branch Completion</h3>
-        <span class="tag">Done vs Pending</span>
+        <div><h3>🏦 Branch Completion</h3><p>Leave staff separate; pending count मध्ये नाही.</p></div>
+        <span class="tag">Done / Pending / Leave</span>
       </div>
       <div class="chart-box"><canvas id="branchChart"></canvas></div>
     </div>
 
     <div class="card">
       <div class="section">
-        <h3>🎯 Branch System Performance</h3>
-        <span class="tag">OD / Collection / Disbursement / NC</span>
+        <div><h3>🎯 Branch System Performance</h3><p>OD, Collection, Disbursement, NC achievement.</p></div>
+        <span class="tag">System KPI</span>
       </div>
       <div class="chart-box"><canvas id="systemChart"></canvas></div>
     </div>
 
     <div class="card">
       <div class="section">
-        <h3>🚦 Report Mix</h3>
+        <div><h3>🚦 Report Mix</h3><p>Complete, pending, missing, check and leave split.</p></div>
         <span class="tag">Status Split</span>
       </div>
       <div class="chart-box"><canvas id="statusChart"></canvas></div>
     </div>
   </section>
 
-  <section class="card" style="margin-top:14px">
-    <div class="section">
-      <h3>⚡ Branch-wise Fast Position</h3>
-      <span class="tag" id="branchCountTag">0 Branches</span>
+  <section class="grid" style="grid-template-columns:1.2fr .8fr;margin-top:12px">
+    <div class="card">
+      <div class="section">
+        <div><h3>⚡ Branch-wise Fast Position</h3><p>Click branch card to filter full dashboard.</p></div>
+        <span class="tag" id="branchCountTag">0 Branches</span>
+      </div>
+      <div class="branch-grid" id="branchCards"></div>
     </div>
-    <div class="branch-grid" id="branchCards"></div>
+
+    <div class="card">
+      <div class="section">
+        <div><h3>🚨 Problematic Staff</h3><p>Pending, missing report, low quality / low achievement.</p></div>
+        <span class="tag">Top Risk</span>
+      </div>
+      <div class="chart-box" style="height:230px"><canvas id="problemChart"></canvas></div>
+      <div class="problem-list" id="problemList"></div>
+    </div>
   </section>
 
   <section class="card table-panel">
     <div class="table-toolbar">
       <div>
         <div class="section" style="border:0;margin:0;padding:0">
-          <h3>👥 Staff-wise Done / Pending Control Table</h3>
+          <div>
+            <h3>👥 Staff-wise Done / Pending Control Table</h3>
+            <p>Leave status असल्यास final status “On Leave” येईल आणि pending मध्ये count होणार नाही.</p>
+          </div>
         </div>
         <div class="summary-text" id="tableSummary">No data loaded.</div>
       </div>
       <div class="actions">
-        <button class="btn-danger" id="showPending">🚨 Show Pending Only</button>
+        <button class="btn-danger" id="showPending">🚨 Pending Only</button>
+        <button class="btn-soft" id="showLeave">🏖️ Leave Only</button>
         <button class="btn-soft" id="clearFilter">Clear Filter</button>
       </div>
     </div>
@@ -333,16 +381,17 @@ tbody tr:hover td{background:#F4F9FF;box-shadow:0 12px 25px rgba(15,23,42,.06)}
             <th>Staff</th>
             <th>Role</th>
             <th>Branch</th>
+            <th>Leave</th>
             <th>Morning</th>
             <th>Evening</th>
             <th>Final Status</th>
-            <th>Quality</th>
+            <th>Score</th>
             <th>Remark</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody id="staffTable">
-          <tr><td colspan="9">Loading...</td></tr>
+          <tr><td colspan="10">Loading...</td></tr>
         </tbody>
       </table>
     </div>
@@ -350,44 +399,131 @@ tbody tr:hover td{background:#F4F9FF;box-shadow:0 12px 25px rgba(15,23,42,.06)}
 </div>
 
 <aside class="drawer" id="drawer">
-  <button class="close-x" id="closeDrawer">✕</button>
+  <button class="close-x" id="closeDrawer" type="button" title="Close">✕</button>
   <div class="drawer-head">
     <h3 id="drawerTitle">Staff Detail</h3>
-    <p id="drawerSub">Morning planning + evening actual</p>
+    <p id="drawerSub">Morning plan + evening actual + leave status</p>
   </div>
   <div class="drawer-body">
-    <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+      <div class="mini-stat"><b id="dLeave">-</b><span>Leave</span></div>
       <div class="mini-stat"><b id="dMorning">-</b><span>Morning</span></div>
       <div class="mini-stat"><b id="dEvening">-</b><span>Evening</span></div>
-      <div class="mini-stat"><b id="dQuality">-</b><span>Quality</span></div>
+      <div class="mini-stat"><b id="dQuality">-</b><span>Score</span></div>
+    </div>
+    <div class="small-card" id="leaveBox" style="margin-bottom:12px;display:none">
+      <h4>🏖️ Leave Remark</h4>
+      <div id="leaveText"></div>
+    </div>
+    <div class="small-card score-explain-card" id="scoreBox">
+      <h4>🧮 Score का दिला? <span class="badge neutral" id="scoreBadge">-</span></h4>
+      <div id="scoreReason"></div>
     </div>
     <div class="split">
       <div class="small-card"><h4>🌅 सकाळचे नियोजन</h4><div id="morningList"></div></div>
       <div class="small-card"><h4>🌙 सायंकाळची कामगिरी</h4><div id="eveningList"></div></div>
     </div>
   </div>
+  <div class="drawer-actions">
+    <button class="btn-soft" id="closeDrawerBottom" type="button">✕ Close</button>
+  </div>
 </aside>
+
+<section class="modal" id="perfModal">
+  <div class="modal-head">
+    <button class="close-x" id="closePerf">✕</button>
+    <h3>🏆 Staff Performance Score</h3>
+    <p>Date range, unit and staff-wise score out of 100. Leave days excluded from pending/report requirement.</p>
+  </div>
+  <div class="modal-body">
+    <div class="perf-filters">
+      <div>
+        <label>From Date</label>
+        <input type="date" id="perfFrom">
+      </div>
+      <div>
+        <label>To Date</label>
+        <input type="date" id="perfTo">
+      </div>
+      <div>
+        <label>Unit / Branch</label>
+        <select id="perfBranch"><option value="">All Units</option></select>
+      </div>
+      <div>
+        <label>Staff</label>
+        <select id="perfStaff"><option value="">All Staff</option></select>
+      </div>
+      <button class="btn-primary" id="generatePerf">Generate</button>
+    </div>
+
+    <div class="legend">
+      <div class="mini-stat"><b>35%</b><span>Report Count</span></div>
+      <div class="mini-stat"><b>25%</b><span>Report Quality</span></div>
+      <div class="mini-stat"><b>25%</b><span>Plan vs Actual</span></div>
+      <div class="mini-stat"><b>15%</b><span>Consistency</span></div>
+    </div>
+
+    <div class="summary-text" id="perfSummary">Select date range and click Generate.</div>
+    <div class="perf-progress" id="perfProgress"></div>
+    <div class="table-wrap" style="margin-top:10px">
+      <table>
+        <thead>
+          <tr>
+            <th>Staff</th>
+            <th>Branch</th>
+            <th>Role</th>
+            <th>Required Days</th>
+            <th>Leave Days</th>
+            <th>Full Reports</th>
+            <th>Pending Days</th>
+            <th>Report %</th>
+            <th>Quality</th>
+            <th>Plan Achievement</th>
+            <th>Final Score</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="perfTable">
+          <tr><td colspan="12">No performance data generated.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer-note">
+      Score formula: Report Count 35 + Report Quality 25 + Plan-vs-Actual Achievement 25 + Consistency 15. Leave day असल्यास त्या दिवशी staff pending/report-required मध्ये count होत नाही.
+    </div>
+  </div>
+</section>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbwYVMl2nT-Q2MCr1y-uBKnyL5nvIzVFkr5DakQKtnMpzwMRnewU_rjK1bvg7ScxXKU/exec';
 
 let staffMaster=[], allQuestions=[], entriesCache=[], unitSummaryCache=[], accountStaffSystemCache=[];
 let allRows=[], viewRows=[];
-let branchChart=null, systemChart=null, statusChart=null;
+let dashboardDateCache=new Map();
+let branchChart=null, systemChart=null, statusChart=null, problemChart=null;
 
 const $ = id => document.getElementById(id);
 const safe = v => (v ?? '').toString().trim();
 const esc = str => String(str ?? '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]));
 const num = v => Number(v || 0).toLocaleString('en-IN');
-const pct = v => (Number(v || 0)) + '%';
 
 function todayISO(){
   const d = new Date();
   return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
 }
+function addDaysISO(iso, days){
+  const d = new Date(iso + 'T00:00:00');
+  d.setDate(d.getDate()+days);
+  return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+}
+function dateRange(from,to){
+  const list=[]; let d=from;
+  while(d<=to && list.length<370){ list.push(d); d=addDaysISO(d,1); }
+  return list;
+}
 function toast(msg){
   const el=$('toast'); el.textContent=msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),3500);
+  setTimeout(()=>el.classList.remove('show'),3800);
 }
 function showLoader(v=true){ $('loader').classList.toggle('active', v); }
 
@@ -424,28 +560,35 @@ function parsePayload(entry){
   try { return typeof entry.payloadJson === 'object' ? entry.payloadJson : JSON.parse(entry.payloadJson); }
   catch(e){ return {}; }
 }
+function truthyLeave(v){
+  const t=safe(v).toLowerCase();
+  return ['होय','yes','y','true','1','on leave','leave','rja','raja','रजा आहे','आज रजा आहे'].some(x => t === x || t.includes(x));
+}
+function findLeaveInfo(staff, morning, evening, account){
+  const mp=parsePayload(morning), ep=parsePayload(evening);
+  const sources=[staff, morning, evening, account, mp, ep].filter(Boolean);
+  let found=false, status='', remark='';
+  for(const src of sources){
+    const leaveToday = src.leaveToday ?? src.leave_today ?? src.onLeave ?? src.on_leave ?? src.leave;
+    const leaveStatus = src.leaveStatus ?? src.leave_status ?? src.leave_status_today;
+    const leaveRemark = src.leaveRemark ?? src.leave_remark ?? src.remarkLeave ?? src.leaveReason ?? src.leave_reason;
+    if(truthyLeave(leaveToday) || truthyLeave(leaveStatus)){
+      found=true;
+      status=safe(leaveStatus) || 'आज रजा आहे';
+      remark=safe(leaveRemark) || safe(leaveStatus) || 'आज कर्मचारी रजेवर आहे. त्यामुळे सकाळचा Plan / सायंकाळची Actual भरणे आवश्यक नाही.';
+    }
+    if(safe(leaveRemark) && (truthyLeave(leaveRemark) || safe(leaveRemark).includes('रजेवर'))){
+      found=true;
+      status=status || 'आज रजा आहे';
+      remark=remark || safe(leaveRemark);
+    }
+  }
+  return {onLeave:found, status:status || (found?'आज रजा आहे':''), remark:remark || ''};
+}
 function metricScore(achieved,target){
   const t=Number(target||0), a=Number(achieved||0);
   if(!t || t<=0) return null;
   return Math.max(0, Math.min(100, Math.round((a/t)*100)));
-}
-function effectiveWorkQuality(obj){
-  if(!obj) return 0;
-  const existing=Number(obj.workQuality||0);
-  if(existing>0) return Math.min(100,Math.max(0,Math.round(existing)));
-  return calculateStaffWorkScore(obj);
-}
-function calculateStaffWorkScore(r){
-  if(!r) return 0;
-  const metrics=[
-    {score:metricScore(r.odAchieved,r.odTarget),weight:25},
-    {score:metricScore(r.collectionAchieved,r.collectionTarget),weight:35},
-    {score:metricScore(r.disbursementAchieved,r.disbursementTarget),weight:25},
-    {score:metricScore(r.newCustomerAchieved,r.newCustomerTarget),weight:15}
-  ].filter(m=>m.score!==null);
-  if(!metrics.length) return 0;
-  const w=metrics.reduce((s,m)=>s+m.weight,0);
-  return Math.round(metrics.reduce((s,m)=>s+(m.score*m.weight),0)/w);
 }
 function firstNumFromPayload(payload, keys){
   for(const k of keys){
@@ -453,14 +596,32 @@ function firstNumFromPayload(payload, keys){
   }
   return 0;
 }
+function calculateStaffWorkScore(obj){
+  if(!obj) return 0;
+  const metrics=[
+    {score:metricScore(obj.odAchieved,obj.odTarget),weight:25},
+    {score:metricScore(obj.collectionAchieved,obj.collectionTarget),weight:35},
+    {score:metricScore(obj.disbursementAchieved,obj.disbursementTarget),weight:25},
+    {score:metricScore(obj.newCustomerAchieved,obj.newCustomerTarget),weight:15}
+  ].filter(m=>m.score!==null);
+  if(!metrics.length) return 0;
+  const w=metrics.reduce((s,m)=>s+m.weight,0);
+  return Math.round(metrics.reduce((s,m)=>s+(m.score*m.weight),0)/w);
+}
+function effectiveWorkQuality(obj){
+  if(!obj) return 0;
+  const existing=Number(obj.workQuality||obj.score||obj.staffScore||0);
+  if(existing>0) return Math.min(100,Math.max(0,Math.round(existing)));
+  return calculateStaffWorkScore(obj);
+}
 function calculateEntryWorkScore(row){
   if(!row || !row.morning || !row.evening) return 0;
   const mp=parsePayload(row.morning), ep=parsePayload(row.evening);
   const metrics=[
-    {target:firstNumFromPayload(mp,['od_target','od_collection_target','overdue_target']), achieved:firstNumFromPayload(ep,['od_actual','od_received','od_collection_actual']), weight:25},
-    {target:firstNumFromPayload(mp,['loan_demand_target','collection_target','regular_collection_target']), achieved:firstNumFromPayload(ep,['loan_demand_actual','collection_actual','collection_done']), weight:35},
-    {target:firstNumFromPayload(mp,['disbursement_target','autodebit_target','appraisal_target']), achieved:firstNumFromPayload(ep,['disbursement_actual','disbursement_done','autodebit_actual','appraisal_done']), weight:25},
-    {target:firstNumFromPayload(mp,['new_customer_target','meeting_target','equifax_plan']), achieved:firstNumFromPayload(ep,['new_customer_added','meeting_actual','equifax_done']), weight:15}
+    {target:firstNumFromPayload(mp,['od_target','od_collection_target','overdue_target','odTarget']), achieved:firstNumFromPayload(ep,['od_actual','od_received','od_collection_actual','odAchieved']), weight:25},
+    {target:firstNumFromPayload(mp,['loan_demand_target','collection_target','regular_collection_target','collectionTarget']), achieved:firstNumFromPayload(ep,['loan_demand_actual','collection_actual','collection_done','collectionAchieved']), weight:35},
+    {target:firstNumFromPayload(mp,['disbursement_target','autodebit_target','appraisal_target','disbursementTarget']), achieved:firstNumFromPayload(ep,['disbursement_actual','disbursement_done','autodebit_actual','appraisal_done','disbursementAchieved']), weight:25},
+    {target:firstNumFromPayload(mp,['new_customer_target','meeting_target','equifax_plan','newCustomerTarget']), achieved:firstNumFromPayload(ep,['new_customer_added','meeting_actual','equifax_done','newCustomerAchieved']), weight:15}
   ].map(m=>({score:metricScore(m.achieved,m.target),weight:m.weight})).filter(m=>m.score!==null);
   if(!metrics.length) return 0;
   const w=metrics.reduce((s,m)=>s+m.weight,0);
@@ -472,24 +633,51 @@ function cleanRemark(v){
   return t;
 }
 function rowRemark(r){
+  if(r.leave && r.leave.onLeave) return r.leave.remark || 'आज कर्मचारी रजेवर आहे. Report required नाही.';
   const ep=parsePayload(r.evening);
-  return cleanRemark(r.account && r.account.remark) || cleanRemark(ep.remark) || cleanRemark(ep.important_note) || '-';
+  const mp=parsePayload(r.morning);
+  return cleanRemark(r.account && r.account.remark) || cleanRemark(ep.remark) || cleanRemark(ep.important_note) || cleanRemark(mp.remark) || '-';
 }
-function rowQuality(r){ return effectiveWorkQuality(r.account) || calculateEntryWorkScore(r); }
-function qualityClass(q){ return q>=75?'done':(q>0?'pending':'missing'); }
-function rowStatus(st,m,e){
+function rowQuality(r){
+  if(r.leave && r.leave.onLeave) return 100;
+  const direct = effectiveWorkQuality(r.account);
+  const entry = calculateEntryWorkScore(r);
+  if(direct && entry) return Math.round((direct + entry)/2);
+  return direct || entry || 0;
+}
+function qualityClass(q){
+  if(q>=80) return 'done';
+  if(q>=60) return 'pending';
+  if(q>0) return 'low';
+  return 'missing';
+}
+function rowStatus(st,m,e,leave){
+  if(leave && leave.onLeave) return {key:'leave', text:'On Leave', cls:'leave'};
   if(m && e) return {key:'complete', text:'Complete', cls:'done'};
   if(!m && !e) return {key:'missing', text:'Both Missing', cls:'missing'};
   if(!m && e) return {key:'check', text:'Check Morning', cls:'check'};
   return {key:'pending', text:'Evening Pending', cls:'pending'};
 }
 function getQuestions(role,shift){
-  return allQuestions.filter(q=>safe(q.role)===safe(role) && safe(q.shift)===safe(shift) && String(q.active).toLowerCase()!=='no')
+  return allQuestions.filter(q=>safe(q.role)===safe(role) && safe(q.shift).toLowerCase()===safe(shift).toLowerCase() && String(q.active).toLowerCase()!=='no')
     .sort((a,b)=>Number(a.order||0)-Number(b.order||0));
 }
+function riskScore(r){
+  if(r.leave && r.leave.onLeave) return 0;
+  let score=0;
+  if(!r.morning) score+=24;
+  if(!r.evening) score+=24;
+  if(r.status.key==='missing') score+=22;
+  if(r.status.key==='check') score+=10;
+  if(r.quality>0 && r.quality<60) score += (60-r.quality);
+  if(!r.quality && r.morning && r.evening) score += 8;
+  return Math.round(score);
+}
+function reportRequired(r){ return !(r.leave && r.leave.onLeave); }
 
 async function init(){
   $('dashDate').value = todayISO();
+
   $('refreshBtn').onclick = () => refreshAll(true);
   $('applyBtn').onclick = applyFilters;
   $('dashDate').onchange = () => refreshAll(true);
@@ -497,14 +685,27 @@ async function init(){
   $('roleFilter').onchange = applyFilters;
   $('statusFilter').onchange = applyFilters;
   $('searchBox').oninput = applyFilters;
-  $('showPending').onclick = () => { $('statusFilter').value='pending'; applyFilters(); };
+  $('showPending').onclick = () => setQuickFilter('pending');
+  $('showLeave').onclick = () => setQuickFilter('leave');
   $('clearFilter').onclick = () => { $('branchFilter').value=''; $('roleFilter').value=''; $('statusFilter').value=''; $('searchBox').value=''; applyFilters(); };
   $('exportCsv').onclick = exportCSV;
   $('copySummary').onclick = copySummary;
-  $('closeDrawer').onclick = () => $('drawer').classList.remove('open');
+  $('closeDrawer').onclick = closeDrawer;
+  $('closeDrawerBottom').onclick = closeDrawer;
+  document.addEventListener('keydown', e => {
+    if(e.key==='Escape'){ closeDrawer(); closePerformanceModal(); }
+  });
+
+  document.querySelectorAll('.kpi').forEach(k => k.addEventListener('click', () => setQuickFilter(k.dataset.kpi || 'all')));
+
+  $('performanceBtn').onclick = openPerformanceModal;
+  $('closePerf').onclick = closePerformanceModal;
+  $('modalBackdrop').onclick = closePerformanceModal;
+  $('perfBranch').onchange = renderPerfStaffOptions;
+  $('generatePerf').onclick = generatePerformance;
+
   await refreshAll(true);
 }
-
 async function refreshAll(show=true){
   if(show) showLoader(true);
   try{
@@ -512,17 +713,19 @@ async function refreshAll(show=true){
     staffMaster = master.staff || [];
     allQuestions = master.questions || [];
     renderFilterOptions();
+    renderPerformanceFilters();
 
     const res = await jsonp('getDashboard', {date:$('dashDate').value});
     entriesCache = res.entries || [];
     unitSummaryCache = res.unitSummary || [];
     accountStaffSystemCache = res.accountStaffSystem || [];
+    dashboardDateCache.set($('dashDate').value, {entries:entriesCache, accountStaffSystem:accountStaffSystemCache, unitSummary:unitSummaryCache, ts:Date.now()});
     buildRows();
     applyFilters(false);
     $('lastRefresh').textContent = 'Last refresh: ' + new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
   }catch(e){
     toast(e.message);
-    $('staffTable').innerHTML='<tr><td colspan="9">Data load failed. API / Internet तपासा.</td></tr>';
+    $('staffTable').innerHTML='<tr><td colspan="10">Data load failed. API / Internet तपासा.</td></tr>';
   }
   if(show) showLoader(false);
 }
@@ -532,82 +735,134 @@ function renderFilterOptions(){
   $('roleFilter').innerHTML='<option value="">All Roles</option>'+roles().map(r=>`<option>${esc(r)}</option>`).join('');
   $('branchFilter').value=currentB; $('roleFilter').value=currentR;
 }
+function renderPerformanceFilters(){
+  const currentB=$('perfBranch').value;
+  $('perfBranch').innerHTML='<option value="">All Units</option>'+branches().map(b=>`<option>${esc(b)}</option>`).join('');
+  $('perfBranch').value=currentB;
+  renderPerfStaffOptions();
+}
+function renderPerfStaffOptions(){
+  const b=safe($('perfBranch').value);
+  const current=safe($('perfStaff').value);
+  const staff=staffMaster
+    .filter(s=>String(s.active).toLowerCase()!=='no' && safe(s.role)!=='अकाउंट टीम')
+    .filter(s=>!b || safe(s.branch)===b)
+    .sort((a,b)=>safe(a.staffName).localeCompare(safe(b.staffName)));
+  $('perfStaff').innerHTML='<option value="">All Staff</option>'+staff.map(s=>`<option value="${esc(s.staffId)}">${esc(s.staffName)} - ${esc(s.branch)}</option>`).join('');
+  $('perfStaff').value=current;
+}
 function buildRows(){
+  allRows = buildRowsFromData(entriesCache, accountStaffSystemCache);
+}
+function buildRowsFromData(entries, accountRows){
   const entryMap={}, accMap={};
-  entriesCache.forEach(e => entryMap[safe(e.staffId)+'_'+safe(e.shift).toLowerCase()] = e);
-  accountStaffSystemCache.forEach(r => accMap[safe(r.staffId)] = r);
+  (entries||[]).forEach(e => entryMap[safe(e.staffId)+'_'+safe(e.shift).toLowerCase()] = e);
+  (accountRows||[]).forEach(r => accMap[safe(r.staffId)] = r);
 
-  allRows = staffMaster
+  return staffMaster
     .filter(s => String(s.active).toLowerCase() !== 'no' && safe(s.role) !== 'अकाउंट टीम')
     .map(s => {
       const morning = entryMap[safe(s.staffId)+'_morning'];
       const evening = entryMap[safe(s.staffId)+'_evening'];
-      const status = rowStatus(s, morning, evening);
       const account = accMap[safe(s.staffId)] || {};
-      return {staff:s, morning, evening, account, status, quality:0, remark:'-'};
-    })
-    .map(r => ({...r, quality:rowQuality(r), remark:rowRemark(r)}));
+      const leave = findLeaveInfo(s, morning, evening, account);
+      const status = rowStatus(s, morning, evening, leave);
+      const base = {staff:s, morning, evening, account, leave, status, quality:0, remark:'-'};
+      base.quality = rowQuality(base);
+      base.remark = rowRemark(base);
+      base.risk = riskScore(base);
+      return base;
+    });
 }
-function applyFilters(render=true){
+function setQuickFilter(kind){
+  const statusMap={
+    all:'',
+    leave:'leave',
+    required:'required',
+    complete:'complete',
+    pending:'pending',
+    morningPending:'morningPending',
+    eveningPending:'eveningPending',
+    lowQuality:'lowQuality',
+    red:'red'
+  };
+  $('statusFilter').value = statusMap[kind] ?? '';
+  applyFilters();
+  document.querySelector('.table-panel')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function applyFilters(){
   const bf=safe($('branchFilter').value), rf=safe($('roleFilter').value), sf=safe($('statusFilter').value), q=safe($('searchBox').value).toLowerCase();
   viewRows = allRows.filter(r => {
     if(bf && safe(r.staff.branch)!==bf) return false;
     if(rf && safe(r.staff.role)!==rf) return false;
+
+    if(sf==='required' && !reportRequired(r)) return false;
+    if(sf==='leave' && r.status.key!=='leave') return false;
     if(sf==='complete' && r.status.key!=='complete') return false;
-    if(sf==='pending' && r.status.key==='complete') return false;
-    if(sf==='morningPending' && r.morning) return false;
-    if(sf==='eveningPending' && r.evening) return false;
+    if(sf==='pending' && (!reportRequired(r) || r.status.key==='complete')) return false;
+    if(sf==='morningPending' && (!reportRequired(r) || r.morning)) return false;
+    if(sf==='eveningPending' && (!reportRequired(r) || r.evening)) return false;
     if(sf==='missing' && r.status.key!=='missing') return false;
     if(sf==='check' && r.status.key!=='check') return false;
+    if(sf==='lowQuality' && !(reportRequired(r) && r.quality>0 && r.quality<60)) return false;
+    if(sf==='red' && !(reportRequired(r) && (r.risk>0 || (r.quality>0 && r.quality<60)))) return false;
+
     if(q){
-      const hay=[r.staff.staffName,r.staff.role,r.staff.branch,r.status.text,r.remark].join(' ').toLowerCase();
+      const hay=[r.staff.staffName,r.staff.role,r.staff.branch,r.status.text,r.remark,r.leave?.remark].join(' ').toLowerCase();
       if(!hay.includes(q)) return false;
     }
     return true;
   });
   renderDashboard();
 }
-
 function renderDashboard(){
   renderKPIs();
   renderBranchCards();
   renderStaffTable();
+  renderProblems();
   setTimeout(renderCharts, 50);
 }
 function renderKPIs(){
   const total=viewRows.length;
-  const complete=viewRows.filter(r=>r.morning && r.evening).length;
-  const pending=total-complete;
-  const morning=viewRows.filter(r=>r.morning).length;
-  const evening=viewRows.filter(r=>r.evening).length;
-  const red=viewRows.filter(r=>!r.morning || !r.evening || (r.quality>0 && r.quality<60)).length;
-
-  const filteredUnits = unitSummaryCache.filter(u => !$('branchFilter').value || safe(u.branch)===safe($('branchFilter').value));
-  const avg = filteredUnits.length ? Math.round(filteredUnits.reduce((s,u)=>s+Number((u.system||{}).overallPercent||0),0)/filteredUnits.length) : 0;
+  const leave=viewRows.filter(r=>r.leave.onLeave).length;
+  const required=viewRows.filter(reportRequired).length;
+  const complete=viewRows.filter(r=>reportRequired(r) && r.status.key==='complete').length;
+  const pending=viewRows.filter(r=>reportRequired(r) && r.status.key!=='complete').length;
+  const mPending=viewRows.filter(r=>reportRequired(r) && !r.morning).length;
+  const ePending=viewRows.filter(r=>reportRequired(r) && !r.evening).length;
+  const scored=viewRows.filter(r=>reportRequired(r) && r.quality>0);
+  const avgScore=scored.length ? Math.round(scored.reduce((s,r)=>s+r.quality,0)/scored.length) : 0;
+  const red=viewRows.filter(r=>reportRequired(r) && (r.risk>0 || (r.quality>0 && r.quality<60))).length;
 
   $('kTotal').textContent=total;
+  $('kLeave').textContent=leave;
+  $('kRequired').textContent=required;
   $('kComplete').textContent=complete;
   $('kPending').textContent=pending;
-  $('kMorning').textContent=morning;
-  $('kEvening').textContent=evening;
-  $('kCompletion').textContent=total ? Math.round((complete/total)*100)+'%' : '0%';
-  $('kSystem').textContent=avg+'%';
+  $('kMorningPending').textContent=mPending;
+  $('kEveningPending').textContent=ePending;
+  $('kCompletion').textContent=required ? Math.round((complete/required)*100)+'%' : '0%';
+  $('kAvgScore').textContent=avgScore || '-';
   $('kRed').textContent=red;
+  $('leaveNote').textContent=`Leave excluded from pending: ${leave}`;
 }
 function branchSummary(){
   const map={};
   allRows.forEach(r=>{
     const b=safe(r.staff.branch)||'Other';
-    if(!map[b]) map[b]={branch:b,total:0,complete:0,pending:0,morning:0,evening:0,missing:0,check:0,qualitySum:0,qualityCount:0};
+    if(!map[b]) map[b]={branch:b,total:0,leave:0,required:0,complete:0,pending:0,morning:0,evening:0,missing:0,check:0,red:0,qualitySum:0,qualityCount:0};
     const x=map[b]; x.total++;
+    if(r.leave.onLeave){ x.leave++; return; }
+    x.required++;
     if(r.morning && r.evening) x.complete++; else x.pending++;
     if(r.morning) x.morning++;
     if(r.evening) x.evening++;
     if(r.status.key==='missing') x.missing++;
     if(r.status.key==='check') x.check++;
+    if(r.risk>0 || (r.quality>0 && r.quality<60)) x.red++;
     if(r.quality>0){x.qualitySum+=r.quality; x.qualityCount++;}
   });
-  return Object.values(map).map(x=>({...x, percent:x.total?Math.round((x.complete/x.total)*100):0, avgQuality:x.qualityCount?Math.round(x.qualitySum/x.qualityCount):0}))
+  return Object.values(map).map(x=>({...x, percent:x.required?Math.round((x.complete/x.required)*100):100, avgQuality:x.qualityCount?Math.round(x.qualitySum/x.qualityCount):0}))
     .sort((a,b)=>a.percent-b.percent || b.pending-a.pending);
 }
 function renderBranchCards(){
@@ -618,22 +873,25 @@ function renderBranchCards(){
 
   if(!list.length){ $('branchCards').innerHTML='<div class="empty">Branch data उपलब्ध नाही.</div>'; return; }
   $('branchCards').innerHTML=list.map(b=>{
-    const cls=b.percent>=85?'good':b.percent>=50?'warn':'bad';
-    return `<div class="branch-card" onclick="filterBranch('${esc(b.branch).replace(/'/g,'&#039;')}')">
+    const cls=b.percent>=85?'good':b.percent>=55?'warn':'bad';
+    const branchAttr=esc(b.branch).replace(/'/g,'&#039;');
+    return `<div class="branch-card" onclick="filterBranch('${branchAttr}')">
       <h4>🏦 ${esc(b.branch)}</h4>
-      <div class="progress ${cls}"><span style="width:${b.percent}%"></span></div>
-      <div style="display:flex;justify-content:space-between;margin-top:7px;color:#64748B;font-size:12px;font-weight:900">
-        <span>${b.percent}% Complete</span><span>${b.pending} Pending</span>
+      <div class="progress ${cls}"><span style="width:${Math.min(100,b.percent)}%"></span></div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;color:#667085;font-size:12px;font-weight:900">
+        <span>${b.percent}% Done</span><span>${b.pending} Pending</span>
       </div>
       <div class="branch-meta">
         <div class="mini-stat"><b>${b.total}</b><span>Total</span></div>
-        <div class="mini-stat"><b>${b.complete}</b><span>Done</span></div>
-        <div class="mini-stat"><b>${b.pending}</b><span>Pending</span></div>
+        <div class="mini-stat"><b>${b.leave}</b><span>Leave</span></div>
+        <div class="mini-stat"><b>${b.required}</b><span>Req.</span></div>
+        <div class="mini-stat"><b>${b.red}</b><span>Red</span></div>
       </div>
       <div class="branch-meta">
+        <div class="mini-stat"><b>${b.complete}</b><span>Done</span></div>
+        <div class="mini-stat"><b>${b.pending}</b><span>Pending</span></div>
         <div class="mini-stat"><b>${b.morning}</b><span>Morning</span></div>
-        <div class="mini-stat"><b>${b.evening}</b><span>Evening</span></div>
-        <div class="mini-stat"><b>${b.avgQuality || '-'}</b><span>Quality</span></div>
+        <div class="mini-stat"><b>${b.avgQuality || '-'}</b><span>Score</span></div>
       </div>
     </div>`;
   }).join('');
@@ -644,46 +902,94 @@ window.filterBranch = function(branch){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function renderStaffTable(){
-  $('tableSummary').textContent=`Showing ${viewRows.length} staff | Complete: ${viewRows.filter(r=>r.status.key==='complete').length} | Pending: ${viewRows.filter(r=>r.status.key!=='complete').length}`;
-  if(!viewRows.length){ $('staffTable').innerHTML='<tr><td colspan="9">या filter मध्ये staff data नाही.</td></tr>'; return; }
-  $('staffTable').innerHTML=viewRows.map((r,i)=>{
+  const complete=viewRows.filter(r=>reportRequired(r) && r.status.key==='complete').length;
+  const pending=viewRows.filter(r=>reportRequired(r) && r.status.key!=='complete').length;
+  const leave=viewRows.filter(r=>r.leave.onLeave).length;
+  $('tableSummary').textContent=`Showing ${viewRows.length} staff | Required: ${viewRows.filter(reportRequired).length} | Complete: ${complete} | Real Pending: ${pending} | Leave: ${leave}`;
+  if(!viewRows.length){ $('staffTable').innerHTML='<tr><td colspan="10">या filter मध्ये staff data नाही.</td></tr>'; return; }
+  $('staffTable').innerHTML=viewRows.map((r)=>{
+    const idx=allRows.indexOf(r);
     const q=r.quality||0;
+    const leaveBadge=r.leave.onLeave ? `<span class="badge leave">🏖️ Leave</span>` : `<span class="badge neutral">Working</span>`;
+    const morningBadge=r.leave.onLeave ? `<span class="badge neutral">Not Required</span>` : `<span class="badge ${r.morning?'done':'pending'}">${r.morning?'✅ Done':'⏳ Pending'}</span>`;
+    const eveningBadge=r.leave.onLeave ? `<span class="badge neutral">Not Required</span>` : `<span class="badge ${r.evening?'done':'pending'}">${r.evening?'✅ Done':'⏳ Pending'}</span>`;
+    const scoreText=r.leave.onLeave?'Leave':(q ? q+'/100' : '-');
     return `<tr>
-      <td><button class="staff-name" onclick="openStaff(${allRows.indexOf(r)})">${esc(r.staff.staffName)}</button><br><small>${esc(r.staff.staffId||'')}</small></td>
+      <td><button class="staff-name" onclick="openStaff(${idx})">${esc(r.staff.staffName)}</button><br><small>${esc(r.staff.staffId||'')}</small></td>
       <td>${esc(r.staff.role)}</td>
       <td>${esc(r.staff.branch)}</td>
-      <td><span class="badge ${r.morning?'done':'pending'}">${r.morning?'✅ Done':'⏳ Pending'}</span></td>
-      <td><span class="badge ${r.evening?'done':'pending'}">${r.evening?'✅ Done':'⏳ Pending'}</span></td>
+      <td>${leaveBadge}</td>
+      <td>${morningBadge}</td>
+      <td>${eveningBadge}</td>
       <td><span class="badge ${r.status.cls}">${esc(r.status.text)}</span></td>
-      <td class="heat"><span class="badge ${qualityClass(q)}">${q ? q+'/100' : '-'}</span></td>
+      <td><span class="badge score-pill ${qualityClass(q)}">${scoreText}</span></td>
       <td>${esc(r.remark)}</td>
-      <td><button class="btn-soft" onclick="openStaff(${allRows.indexOf(r)})">Open</button></td>
+      <td><button class="btn-soft" onclick="openStaff(${idx})">Open</button></td>
     </tr>`;
+  }).join('');
+}
+function renderProblems(){
+  const list=viewRows
+    .filter(r=>reportRequired(r) && (r.risk>0 || (r.quality>0 && r.quality<60)))
+    .sort((a,b)=>b.risk-a.risk || a.quality-b.quality)
+    .slice(0,10);
+
+  if(!list.length){
+    $('problemList').innerHTML='<div class="empty">आज problematic staff नाही.</div>';
+    return;
+  }
+  $('problemList').innerHTML=list.map(r=>{
+    const idx=allRows.indexOf(r);
+    const issue=[
+      !r.morning?'Morning pending':'',
+      !r.evening?'Evening pending':'',
+      r.quality>0 && r.quality<60?'Low score '+r.quality+'/100':''
+    ].filter(Boolean).join(' • ');
+    return `<div class="problem-item" onclick="openStaff(${idx})">
+      <b>${esc(r.staff.staffName)} <span class="badge low" style="float:right">${r.risk}</span></b>
+      <span>${esc(r.staff.branch)} | ${esc(issue || r.status.text)}</span>
+    </div>`;
   }).join('');
 }
 window.openStaff = function(index){
   const r=allRows[index]; if(!r) return;
   $('drawerTitle').textContent = r.staff.staffName;
   $('drawerSub').textContent = `${r.staff.role} | ${r.staff.branch} | ${$('dashDate').value}`;
-  $('dMorning').textContent = r.morning ? 'Done' : 'Pending';
-  $('dEvening').textContent = r.evening ? 'Done' : 'Pending';
-  $('dQuality').textContent = r.quality ? r.quality+'/100' : '-';
+  $('dLeave').textContent = r.leave.onLeave ? 'Yes' : 'No';
+  $('dMorning').textContent = r.leave.onLeave ? 'Not Req.' : (r.morning ? 'Done' : 'Pending');
+  $('dEvening').textContent = r.leave.onLeave ? 'Not Req.' : (r.evening ? 'Done' : 'Pending');
+  $('dQuality').textContent = r.leave.onLeave ? 'Leave' : (r.quality ? r.quality+'/100' : '-');
+  $('scoreBadge').textContent = r.leave.onLeave ? 'Leave' : ((r.quality || 0) + '/100');
+  $('scoreBadge').className = 'badge ' + (r.leave.onLeave ? 'leave' : qualityClass(r.quality || 0));
+  $('scoreReason').innerHTML = scoreReasonDaily(r);
+
+  if(r.leave.onLeave){
+    $('leaveBox').style.display='block';
+    $('leaveText').innerHTML = `<div class="kv"><b>${esc(r.leave.status || 'आज रजा आहे')}</b><span>${esc(r.leave.remark || 'Report required नाही.')}</span></div>`;
+  }else{
+    $('leaveBox').style.display='none';
+    $('leaveText').innerHTML='';
+  }
 
   const mPayload=parsePayload(r.morning), ePayload=parsePayload(r.evening);
   const mQs=getQuestions(r.staff.role,'morning'), eQs=getQuestions(r.staff.role,'evening');
 
-  $('morningList').innerHTML = r.morning
-    ? (mQs.length ? mQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(mPayload[q.key]||'-')}</span></div>`).join('') : payloadFallback(mPayload))
-    : '<div class="empty">सकाळचे planning pending आहे.</div>';
+  $('morningList').innerHTML = r.leave.onLeave
+    ? '<div class="empty">आज कर्मचारी रजेवर आहे. सकाळचा Plan required नाही.</div>'
+    : (r.morning
+      ? (mQs.length ? mQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(mPayload[q.key]||'-')}</span></div>`).join('') : payloadFallback(mPayload))
+      : '<div class="empty">सकाळचे planning pending आहे.</div>');
 
-  $('eveningList').innerHTML = r.evening
-    ? (eQs.length ? eQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(ePayload[q.key]||'-')}</span></div>`).join('') : payloadFallback(ePayload))
-    : '<div class="empty">सायंकाळची actual report pending आहे.</div>';
+  $('eveningList').innerHTML = r.leave.onLeave
+    ? '<div class="empty">आज कर्मचारी रजेवर आहे. सायंकाळची Actual required नाही.</div>'
+    : (r.evening
+      ? (eQs.length ? eQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(ePayload[q.key]||'-')}</span></div>`).join('') : payloadFallback(ePayload))
+      : '<div class="empty">सायंकाळची actual report pending आहे.</div>');
 
   $('drawer').classList.add('open');
 }
 function payloadFallback(p){
-  const keys=Object.keys(p||{});
+  const keys=Object.keys(p||{}).filter(k=>!['leaveToday','leaveStatus','leaveRemark'].includes(k));
   if(!keys.length) return '<div class="empty">Details उपलब्ध नाहीत.</div>';
   return keys.map(k=>`<div class="kv"><b>${esc(k)}</b><span>${esc(p[k]||'-')}</span></div>`).join('');
 }
@@ -692,14 +998,15 @@ function renderCharts(){
   if(!window.Chart) return;
   const bsum=branchSummary();
   const labels=bsum.map(x=>x.branch);
-  const done=bsum.map(x=>x.complete), pend=bsum.map(x=>x.pending);
+  const done=bsum.map(x=>x.complete), pend=bsum.map(x=>x.pending), leave=bsum.map(x=>x.leave);
 
   if(branchChart) branchChart.destroy();
   branchChart=new Chart($('branchChart'),{
     type:'bar',
     data:{labels,datasets:[
-      {label:'Complete',data:done,borderRadius:10},
-      {label:'Pending',data:pend,borderRadius:10}
+      {label:'Complete',data:done,borderRadius:8},
+      {label:'Pending',data:pend,borderRadius:8},
+      {label:'Leave',data:leave,borderRadius:8}
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}
   });
@@ -709,51 +1016,259 @@ function renderCharts(){
   systemChart=new Chart($('systemChart'),{
     type:'bar',
     data:{labels:units.map(u=>u.branch),datasets:[
-      {label:'OD %',data:units.map(u=>Number((u.system||{}).odPercent||0)),borderRadius:9},
-      {label:'Collection %',data:units.map(u=>Number((u.system||{}).collectionPercent||0)),borderRadius:9},
-      {label:'Disbursement %',data:units.map(u=>Number((u.system||{}).disbursementPercent||0)),borderRadius:9},
-      {label:'NC %',data:units.map(u=>Number((u.system||{}).newCustomerPercent||0)),borderRadius:9}
+      {label:'OD %',data:units.map(u=>Number((u.system||{}).odPercent||0)),borderRadius:8},
+      {label:'Collection %',data:units.map(u=>Number((u.system||{}).collectionPercent||0)),borderRadius:8},
+      {label:'Disbursement %',data:units.map(u=>Number((u.system||{}).disbursementPercent||0)),borderRadius:8},
+      {label:'NC %',data:units.map(u=>Number((u.system||{}).newCustomerPercent||0)),borderRadius:8}
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,max:120}}}
   });
 
-  const complete=viewRows.filter(r=>r.status.key==='complete').length;
-  const eveningPending=viewRows.filter(r=>r.morning && !r.evening).length;
-  const missing=viewRows.filter(r=>r.status.key==='missing').length;
-  const check=viewRows.filter(r=>r.status.key==='check').length;
+  const complete=viewRows.filter(r=>reportRequired(r) && r.status.key==='complete').length;
+  const eveningPending=viewRows.filter(r=>reportRequired(r) && r.morning && !r.evening).length;
+  const missing=viewRows.filter(r=>reportRequired(r) && r.status.key==='missing').length;
+  const check=viewRows.filter(r=>reportRequired(r) && r.status.key==='check').length;
+  const leaveCount=viewRows.filter(r=>r.leave.onLeave).length;
   if(statusChart) statusChart.destroy();
   statusChart=new Chart($('statusChart'),{
     type:'doughnut',
-    data:{labels:['Complete','Evening Pending','Both Missing','Check Morning'],datasets:[{data:[complete,eveningPending,missing,check]}]},
+    data:{labels:['Complete','Evening Pending','Both Missing','Check Morning','Leave'],datasets:[{data:[complete,eveningPending,missing,check,leaveCount]}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},cutout:'62%'}
+  });
+
+  const problem=viewRows.filter(r=>reportRequired(r) && r.risk>0).sort((a,b)=>b.risk-a.risk).slice(0,8);
+  if(problemChart) problemChart.destroy();
+  problemChart=new Chart($('problemChart'),{
+    type:'bar',
+    data:{labels:problem.map(r=>r.staff.staffName),datasets:[{label:'Risk Score',data:problem.map(r=>r.risk),borderRadius:8}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0}}}}
   });
 }
 
 function exportCSV(){
-  const headers=['Staff','Role','Branch','Morning','Evening','Status','Quality','Remark'];
+  const headers=['Staff','Role','Branch','Leave','Morning','Evening','Status','Score','Risk','Remark'];
   const rows=viewRows.map(r=>[
     r.staff.staffName,r.staff.role,r.staff.branch,
-    r.morning?'Done':'Pending',r.evening?'Done':'Pending',
-    r.status.text,r.quality || '',r.remark
+    r.leave.onLeave?'Leave':'Working',
+    r.leave.onLeave?'Not Required':(r.morning?'Done':'Pending'),
+    r.leave.onLeave?'Not Required':(r.evening?'Done':'Pending'),
+    r.status.text,r.leave.onLeave?'Leave':(r.quality || ''),r.risk || '',r.remark
   ]);
   const csv=[headers,...rows].map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url; a.download=`ANIK_Dashboard_${$('dashDate').value}.csv`; a.click();
+  a.href=url; a.download=`ANIK_Pro_Dashboard_${$('dashDate').value}.csv`; a.click();
   URL.revokeObjectURL(url);
 }
 async function copySummary(){
-  const pending=viewRows.filter(r=>r.status.key!=='complete');
+  const required=viewRows.filter(reportRequired);
+  const pending=required.filter(r=>r.status.key!=='complete');
+  const leave=viewRows.filter(r=>r.leave.onLeave);
   const branchLines=branchSummary()
     .filter(b=>!$('branchFilter').value || b.branch===$('branchFilter').value)
-    .map(b=>`• ${b.branch}: ${b.complete}/${b.total} done (${b.percent}%), Pending ${b.pending}`).join('\n');
+    .map(b=>`• ${b.branch}: ${b.complete}/${b.required} done (${b.percent}%), Pending ${b.pending}, Leave ${b.leave}`).join('\n');
 
-  const pendingLines=pending.slice(0,40).map(r=>`• ${r.staff.staffName} - ${r.staff.branch} - ${r.status.text}`).join('\n') || '• Pending नाही.';
-  const msg=`📊 ANIK Staff Report Dashboard\n📅 Date: ${$('dashDate').value}\n\nTotal Staff: ${viewRows.length}\nComplete: ${viewRows.filter(r=>r.status.key==='complete').length}\nPending: ${pending.length}\nMorning Done: ${viewRows.filter(r=>r.morning).length}\nEvening Done: ${viewRows.filter(r=>r.evening).length}\n\n🏦 Branch Position:\n${branchLines}\n\n🚨 Pending Staff:\n${pendingLines}\n\n— ANIK Power Dashboard`;
+  const problem=viewRows.filter(r=>reportRequired(r) && r.risk>0).sort((a,b)=>b.risk-a.risk).slice(0,20)
+    .map(r=>`• ${r.staff.staffName} - ${r.staff.branch} - ${r.status.text} - Score ${r.quality || '-'}`).join('\n') || '• Problematic staff नाही.';
+
+  const leaveLines=leave.slice(0,20).map(r=>`• ${r.staff.staffName} - ${r.staff.branch} - ${r.leave.status}`).join('\n') || '• Leave staff नाही.';
+
+  const msg=`📊 ANIK Pro Dashboard\n📅 Date: ${$('dashDate').value}\n\nTotal Staff: ${viewRows.length}\nReport Required: ${required.length}\nLeave Today: ${leave.length}\nComplete: ${required.filter(r=>r.status.key==='complete').length}\nReal Pending: ${pending.length}\nCompletion: ${required.length ? Math.round((required.filter(r=>r.status.key==='complete').length/required.length)*100) : 0}%\n\n🏦 Branch Position:\n${branchLines}\n\n🏖️ Leave Staff:\n${leaveLines}\n\n🚨 Problematic Staff:\n${problem}\n\n— ANIK Pro Dashboard`;
   await navigator.clipboard.writeText(msg);
   toast('Dashboard summary copied.');
 }
+
+function closeDrawer(){
+  $('drawer').classList.remove('open');
+}
+
+function scoreReasonDaily(r){
+  if(!r) return '<div class="empty">Score details उपलब्ध नाहीत.</div>';
+  if(r.leave && r.leave.onLeave){
+    return `<div class="kv"><b>Leave Day</b><span>आज रजा असल्यामुळे report pending count केला नाही. Score dashboard average मध्ये penalty म्हणून धरला नाही.</span></div>`;
+  }
+  const reportScore = (r.morning && r.evening) ? 100 : (r.morning || r.evening ? 50 : 0);
+  const quality = r.quality || 0;
+  const achievement = calculateEntryWorkScore(r) || effectiveWorkQuality(r.account) || 0;
+  const consistency = r.risk>0 ? Math.max(0, 100-r.risk) : 100;
+  const final = Math.round((reportScore*.35) + (quality*.25) + (achievement*.25) + (consistency*.15));
+  const weak=[];
+  if(!r.morning) weak.push('Morning Plan missing');
+  if(!r.evening) weak.push('Evening Actual missing');
+  if(quality>0 && quality<60) weak.push('Quality low');
+  if(achievement>0 && achievement<60) weak.push('Plan vs Actual low');
+  if(!quality && r.morning && r.evening) weak.push('Quality data not found');
+  const reason = weak.length ? weak.join(', ') : 'Report आणि achievement ठीक आहे.';
+  return `
+    <div class="score-line">
+      <div><span>Report Count 35%</span><b>${reportScore}/100</b></div>
+      <div><span>Report Quality 25%</span><b>${quality || '-'}/100</b></div>
+      <div><span>Plan vs Actual 25%</span><b>${achievement || '-'}/100</b></div>
+      <div><span>Consistency 15%</span><b>${consistency}/100</b></div>
+      <div><span>Final explain score</span><b>${final}/100</b></div>
+    </div>
+    <div class="kv"><b>System Note</b><span>${esc(reason)}</span></div>`;
+}
+
+async function getDashboardCached(date){
+  const cached=dashboardDateCache.get(date);
+  if(cached) return cached;
+  const res=await jsonp('getDashboard',{date});
+  const pack={entries:res.entries||[], accountStaffSystem:res.accountStaffSystem||[], unitSummary:res.unitSummary||[], ts:Date.now()};
+  dashboardDateCache.set(date, pack);
+  return pack;
+}
+async function fetchDatePacksFast(dates){
+  const results=[];
+  const concurrency=6;
+  let cursor=0, completed=0;
+  const update=()=>{ $('perfProgress').textContent = `Loading ${completed}/${dates.length} days... cached dates instant वापरले जात आहेत.`; };
+  update();
+  async function worker(){
+    while(cursor<dates.length){
+      const idx=cursor++;
+      const date=dates[idx];
+      results[idx]=await getDashboardCached(date);
+      completed++;
+      update();
+    }
+  }
+  await Promise.all(Array.from({length:Math.min(concurrency,dates.length)}, worker));
+  $('perfProgress').textContent = `Loaded ${dates.length}/${dates.length} days. Calculating score...`;
+  return results;
+}
+
+function openPerformanceModal(){
+  $('perfFrom').value = $('dashDate').value || todayISO();
+  $('perfTo').value = $('dashDate').value || todayISO();
+  renderPerformanceFilters();
+  $('modalBackdrop').classList.add('open');
+  $('perfModal').classList.add('open');
+}
+function closePerformanceModal(){
+  $('modalBackdrop').classList.remove('open');
+  $('perfModal').classList.remove('open');
+}
+function performanceNote(score){
+  if(score>=90) return {text:'Excellent - PP Unlock Level', cls:'done'};
+  if(score>=80) return {text:'Good', cls:'done'};
+  if(score>=70) return {text:'Average - Watch', cls:'pending'};
+  if(score>=60) return {text:'Weak - Follow-up', cls:'low'};
+  return {text:'Problematic - Action Needed', cls:'missing'};
+}
+async function generatePerformance(){
+  const from=$('perfFrom').value, to=$('perfTo').value;
+  if(!from || !to){ toast('From आणि To date निवडा.'); return; }
+  if(from>to){ toast('From date To date पेक्षा मोठा आहे.'); return; }
+  const dates=dateRange(from,to);
+  if(dates.length>62){ toast('Speed साठी एकावेळी maximum 62 days select करा. मोठ्या report साठी month-wise run करा.'); return; }
+
+  const branch=safe($('perfBranch').value);
+  const staffId=safe($('perfStaff').value);
+  const btn=$('generatePerf');
+  btn.disabled=true;
+  btn.textContent='Generating...';
+  $('perfTable').innerHTML='<tr><td colspan="12">Fast report loading चालू आहे...</td></tr>';
+  $('perfSummary').textContent='Please wait: cached + parallel loading वापरत आहे.';
+  showLoader(true);
+  try{
+    const eligibleStaff=staffMaster
+      .filter(s=>String(s.active).toLowerCase()!=='no' && safe(s.role)!=='अकाउंट टीम')
+      .filter(s=>!branch || safe(s.branch)===branch)
+      .filter(s=>!staffId || safe(s.staffId)===staffId);
+
+    const agg={};
+    eligibleStaff.forEach(s=>{
+      agg[safe(s.staffId)]={staff:s, days:0, leaveDays:0, requiredDays:0, fullReports:0, pendingDays:0, morningDone:0, eveningDone:0, missingDays:0, checkDays:0, qualitySum:0, qualityCount:0, achievementSum:0, achievementCount:0, redDays:0};
+    });
+
+    const packs=await fetchDatePacksFast(dates);
+    packs.forEach(pack=>{
+      const rows = buildRowsFromData(pack.entries||[], pack.accountStaffSystem||[]);
+      rows.forEach(r=>{
+        const id=safe(r.staff.staffId);
+        if(!agg[id]) return;
+        const a=agg[id]; a.days++;
+        if(r.leave.onLeave){ a.leaveDays++; return; }
+        a.requiredDays++;
+        if(r.status.key==='complete') a.fullReports++; else a.pendingDays++;
+        if(r.morning) a.morningDone++;
+        if(r.evening) a.eveningDone++;
+        if(r.status.key==='missing') a.missingDays++;
+        if(r.status.key==='check') a.checkDays++;
+        if(r.quality>0){ a.qualitySum+=r.quality; a.qualityCount++; }
+        const ach=calculateEntryWorkScore(r) || effectiveWorkQuality(r.account);
+        if(ach>0){ a.achievementSum+=ach; a.achievementCount++; }
+        if(r.risk>0 || (r.quality>0 && r.quality<60)) a.redDays++;
+      });
+    });
+
+    const rows=Object.values(agg).map(a=>{
+      const reportScore = a.requiredDays ? Math.round((a.fullReports/a.requiredDays)*100) : (a.leaveDays ? 100 : 0);
+      const quality = a.qualityCount ? Math.round(a.qualitySum/a.qualityCount) : 0;
+      const achievement = a.achievementCount ? Math.round(a.achievementSum/a.achievementCount) : 0;
+      const consistency = a.requiredDays ? Math.round(((a.requiredDays-a.redDays)/a.requiredDays)*100) : (a.leaveDays ? 100 : 0);
+      const finalScore = Math.round((reportScore*.35) + (quality*.25) + (achievement*.25) + (consistency*.15));
+      return {...a, reportScore, quality, achievement, consistency, finalScore};
+    }).sort((a,b)=>a.finalScore-b.finalScore || b.pendingDays-a.pendingDays);
+
+    renderPerformanceRows(rows, dates.length);
+    $('perfProgress').textContent = `Done. ${dates.length} days calculated. पुढच्या वेळी same dates fast open होतील.`;
+  }catch(e){
+    toast(e.message);
+    $('perfTable').innerHTML='<tr><td colspan="12">Performance data load failed.</td></tr>';
+    $('perfProgress').textContent='Report failed. API / internet तपासा.';
+  }
+  btn.disabled=false;
+  btn.textContent='Generate';
+  showLoader(false);
+}
+function performanceReason(r){
+  if(!r.requiredDays && r.leaveDays){ return 'All selected working days leave मध्ये आहेत; pending penalty नाही.'; }
+  const parts=[
+    `Report ${r.reportScore}% (${r.fullReports}/${r.requiredDays} full)`,
+    `Quality ${r.quality || '-'} /100`,
+    `Plan ${r.achievement || '-'} /100`,
+    `Consistency ${r.consistency}%`
+  ];
+  const weak=[];
+  if(r.pendingDays>0) weak.push(`${r.pendingDays} pending day`);
+  if(r.missingDays>0) weak.push(`${r.missingDays} both missing`);
+  if(r.checkDays>0) weak.push(`${r.checkDays} morning missing but evening done`);
+  if(r.quality>0 && r.quality<60) weak.push('low report quality');
+  if(r.achievement>0 && r.achievement<60) weak.push('low plan achievement');
+  return parts.join(' | ') + (weak.length ? ' | कारण: '+weak.join(', ') : ' | कारण: performance stable.');
+}
+function renderPerformanceRows(rows, totalDays){
+  if(!rows.length){
+    $('perfSummary').textContent='No staff found for selected filter.';
+    $('perfTable').innerHTML='<tr><td colspan="12">No performance data.</td></tr>';
+    return;
+  }
+  const avg=Math.round(rows.reduce((s,r)=>s+r.finalScore,0)/rows.length);
+  const problem=rows.filter(r=>r.finalScore<70 && r.requiredDays>0).length;
+  $('perfSummary').textContent=`${rows.length} staff | ${totalDays} days | Avg Score: ${avg}/100 | Problematic below 70: ${problem}`;
+
+  $('perfTable').innerHTML=rows.map(r=>{
+    const note=performanceNote(r.finalScore);
+    return `<tr>
+      <td>${esc(r.staff.staffName)}<br><small>${esc(r.staff.staffId||'')}</small></td>
+      <td>${esc(r.staff.branch)}</td>
+      <td>${esc(r.staff.role)}</td>
+      <td>${r.requiredDays}</td>
+      <td>${r.leaveDays}</td>
+      <td>${r.fullReports}</td>
+      <td>${r.pendingDays}</td>
+      <td><span class="badge ${qualityClass(r.reportScore)}">${r.reportScore}%</span></td>
+      <td><span class="badge ${qualityClass(r.quality)}">${r.quality || '-'}</span></td>
+      <td><span class="badge ${qualityClass(r.achievement)}">${r.achievement || '-'}</span></td>
+      <td><span class="badge score-pill ${note.cls}">${r.finalScore}/100</span></td>
+      <td><span class="badge ${note.cls}">${esc(note.text)}</span><br><small>${esc(performanceReason(r))}</small></td>
+    </tr>`;
+  }).join('');
+}
+
 window.addEventListener('load', init);
 </script>
 </body>
