@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="mr">
 <head>
@@ -141,8 +143,13 @@ th{
 }
 td{
   border-top:1px solid #eef2f7;border-bottom:1px solid #eef2f7;background:#fff;color:#344054;
-  padding:11px 10px;font-size:13px;font-weight:800;white-space:nowrap;
+  padding:11px 10px;font-size:13px;font-weight:800;white-space:nowrap;vertical-align:top;
 }
+.remark-cell,.reason-cell{
+  white-space:normal!important;line-height:1.45;word-break:break-word;overflow-wrap:anywhere;
+  min-width:340px;max-width:560px;color:#243b64;
+}
+.remark-text{font-weight:900;color:#102a72}.score-mini{display:block;margin-top:5px;line-height:1.4;color:#667085;white-space:normal}.score-reason{display:block;margin-top:5px;color:#667085;font-weight:800;white-space:normal;line-height:1.4}
 td:first-child{border-left:1px solid #eef2f7;border-radius:14px 0 0 14px}
 td:last-child{border-right:1px solid #eef2f7;border-radius:0 14px 14px 0}
 tbody tr:hover td{background:#f8fbff}
@@ -629,21 +636,142 @@ function calculateEntryWorkScore(row){
 }
 function cleanRemark(v){
   const t=safe(v);
-  if(!t || t==='0' || t.toLowerCase()==='null' || t.toLowerCase()==='undefined') return '';
-  return t;
+  if(!t || t==='0' || t==='-' || t==='--' || t.toLowerCase()==='null' || t.toLowerCase()==='undefined') return '';
+  return t.replace(/\s+/g,' ').trim();
+}
+function clampScore(v){ return Math.max(0, Math.min(100, Math.round(Number(v)||0))); }
+function textLower(v){ return safe(v).toLowerCase(); }
+function countMatches(text, words){ return words.reduce((n,w)=> n + (text.includes(w.toLowerCase()) ? 1 : 0), 0); }
+function payloadText(payload){
+  return Object.entries(payload||{})
+    .filter(([k])=>!['leavetoday','leavestatus','leaveremark'].includes(String(k).toLowerCase()))
+    .map(([k,v])=>cleanRemark(v)).filter(Boolean).join(' ');
+}
+function pickBestRemark(values){
+  const list=(values||[]).map(cleanRemark).filter(Boolean);
+  if(!list.length) return '';
+  const bad=['na','n/a','nil','no','ok','done','yes','हो','होय','नाही'];
+  const scored=list.map(t=>{
+    const low=t.toLowerCase();
+    const wordBonus=(low.match(/[0-9]/g)||[]).length>0?20:0;
+    const lengthBonus=Math.min(120,t.length);
+    const weakPenalty=bad.includes(low)?100:0;
+    return {t,score:lengthBonus+wordBonus-weakPenalty};
+  }).sort((a,b)=>b.score-a.score);
+  return scored[0].t;
 }
 function rowRemark(r){
   if(r.leave && r.leave.onLeave) return r.leave.remark || 'आज कर्मचारी रजेवर आहे. Report required नाही.';
   const ep=parsePayload(r.evening);
   const mp=parsePayload(r.morning);
-  return cleanRemark(r.account && r.account.remark) || cleanRemark(ep.remark) || cleanRemark(ep.important_note) || cleanRemark(mp.remark) || '-';
+  return pickBestRemark([
+    r.account && r.account.remark,
+    r.account && r.account.workRemark,
+    r.account && r.account.staffRemark,
+    r.account && r.account.systemRemark,
+    ep.remark, ep.remarks, ep.important_note, ep.work_done, ep.actual_remark, ep.today_work, ep.note,
+    mp.remark, mp.remarks, mp.plan_remark, mp.today_plan, mp.note,
+    payloadText(ep), payloadText(mp)
+  ]) || '-';
+}
+function remarkQualityScore(text, r){
+  const t=cleanRemark(text);
+  const low=textLower(t);
+  if(!r.morning && !r.evening) return 0;
+  let score = (r.morning && r.evening) ? 58 : 34;
+  if(!t){ return (r.morning && r.evening) ? 55 : score; }
+
+  const actionWords=[
+    'appraisal','apraisal','loan','renewal','grt','meeting','staff meeting','office','process','document','online','recovery','collection','emi','demand','follow','visit','field','customer','member','group','cash','receipt','call','verification','training','camp',
+    'अप्रेजल','अपरेजल','कर्ज','नूतनीकरण','बैठक','ऑफिस','प्रोसेस','प्रक्रिया','कागदपत्र','ऑनलाइन','वसुल','वसुली','भरणा','हप्ता','मागणी','फॉलोअप','भेट','फील्ड','ग्राहक','सदस्य','गट','रोख','पावती','फोन','तपासणी','प्रशिक्षण','शिबीर','पूर्ण','केले','केली','झाले','झाली','सहभागी','जमा'
+  ];
+  const negativeWords=[
+    'pending','not done','not complete','failed','problem','issue','missing','no work','not found','delay','late','reject','rejected','नाही झाले','पूर्ण नाही','प्रलंबित','अडचण','समस्या','मिसिंग','उशीर','रिजेक्ट','काम नाही','भेट झाली नाही'
+  ];
+  const vagueOnly=['ok','done','yes','हो','होय','केले','झाले'];
+  const actionCount=countMatches(low, actionWords);
+  const negativeCount=countMatches(low, negativeWords);
+
+  if(t.length>=18) score+=8;
+  if(t.length>=45) score+=10;
+  if(t.length>=90) score+=6;
+  if(/[0-9०-९]/.test(t)) score+=5;
+  if(actionCount>=1) score+=10;
+  if(actionCount>=3) score+=7;
+  if(actionCount>=5) score+=4;
+  if(vagueOnly.includes(low) || t.length<8) score-=18;
+  if(negativeCount>=1) score-=15;
+  if(negativeCount>=2) score-=10;
+
+  if(r.morning && r.evening && actionCount>=2 && t.length>=35) score=Math.max(score,86);
+  if(r.morning && r.evening && actionCount>=1 && t.length>=20) score=Math.max(score,74);
+  if(r.morning && !r.evening) score=Math.min(score,58);
+  if(!r.morning && r.evening) score=Math.min(score,72);
+  return clampScore(score);
+}
+function entryAchievementInfo(row){
+  if(!row || !row.morning || !row.evening) return {score:0, hasNumeric:false, label:'Target/Actual उपलब्ध नाही'};
+  const mp=parsePayload(row.morning), ep=parsePayload(row.evening);
+  const metricDefs=[
+    {name:'OD', target:firstNumFromPayload(mp,['od_target','od_collection_target','overdue_target','odTarget']), achieved:firstNumFromPayload(ep,['od_actual','od_received','od_collection_actual','odAchieved']), weight:25},
+    {name:'Collection', target:firstNumFromPayload(mp,['loan_demand_target','collection_target','regular_collection_target','collectionTarget']), achieved:firstNumFromPayload(ep,['loan_demand_actual','collection_actual','collection_done','collectionAchieved']), weight:35},
+    {name:'Disbursement/Appraisal', target:firstNumFromPayload(mp,['disbursement_target','autodebit_target','appraisal_target','disbursementTarget']), achieved:firstNumFromPayload(ep,['disbursement_actual','disbursement_done','autodebit_actual','appraisal_done','disbursementAchieved']), weight:25},
+    {name:'New Customer/Meeting', target:firstNumFromPayload(mp,['new_customer_target','meeting_target','equifax_plan','newCustomerTarget']), achieved:firstNumFromPayload(ep,['new_customer_added','meeting_actual','equifax_done','newCustomerAchieved']), weight:15}
+  ];
+  const metrics=metricDefs.map(m=>({...m,score:metricScore(m.achieved,m.target)})).filter(m=>m.score!==null);
+  if(!metrics.length) return {score:0, hasNumeric:false, label:'Target/Actual number मिळाले नाहीत'};
+  const w=metrics.reduce((s,m)=>s+m.weight,0);
+  const score=clampScore(metrics.reduce((s,m)=>s+(m.score*m.weight),0)/w);
+  const label=metrics.map(m=>`${m.name} ${m.achieved}/${m.target}`).join(', ');
+  return {score, hasNumeric:true, label};
+}
+function calculateEntryWorkScore(row){
+  return entryAchievementInfo(row).score;
+}
+function dailyScoreDetails(r){
+  if(!r) return {finalScore:0, reportScore:0, remarkScore:0, achievementScore:0, consistencyScore:0, shortReason:'Data उपलब्ध नाही.', detailReason:'Data उपलब्ध नाही.'};
+  if(r.leave && r.leave.onLeave){
+    return {finalScore:100, reportScore:100, remarkScore:100, achievementScore:100, consistencyScore:100, shortReason:'रजा असल्यामुळे pending penalty नाही.', detailReason:'आज कर्मचारी रजेवर आहे. त्यामुळे Plan/Actual report required नाही आणि score मध्ये penalty धरलेली नाही.', achievementLabel:'Leave day'};
+  }
+  const remarkText = cleanRemark(r.remark && r.remark!=='-' ? r.remark : rowRemark(r));
+  const reportScore = (r.morning && r.evening) ? 100 : (r.morning || r.evening ? 50 : 0);
+  const remarkScore = remarkQualityScore(remarkText, r);
+  const direct = effectiveWorkQuality(r.account);
+  const entry = entryAchievementInfo(r);
+  let achievementScore = entry.hasNumeric ? entry.score : (direct>0 ? direct : 0);
+  let achievementLabel = entry.hasNumeric ? entry.label : (direct>0 ? 'System score वापरला' : 'Remark based अंदाज');
+  if(!achievementScore){
+    if(r.morning && r.evening) achievementScore = Math.max(45, Math.min(95, remarkScore - 3));
+    else if(r.morning || r.evening) achievementScore = Math.max(25, Math.min(60, remarkScore));
+  }
+  let consistencyScore = 100;
+  if(!r.morning && !r.evening) consistencyScore=0;
+  else if(r.morning && !r.evening) consistencyScore=48;
+  else if(!r.morning && r.evening) consistencyScore=62;
+  if(remarkScore>0 && remarkScore<55) consistencyScore=Math.min(consistencyScore,65);
+
+  const finalScore = clampScore((reportScore*.35) + (remarkScore*.25) + (achievementScore*.25) + (consistencyScore*.15));
+  const reasons=[];
+  if(r.morning && r.evening) reasons.push('सकाळचा Plan आणि सायंकाळची Actual दोन्ही भरले आहेत');
+  else if(!r.morning && !r.evening) reasons.push('सकाळचा व सायंकाळचा दोन्ही report missing आहेत');
+  else if(!r.morning) reasons.push('Morning Plan missing आहे');
+  else if(!r.evening) reasons.push('Evening Actual pending आहे');
+
+  if(!remarkText) reasons.push('Remark रिकामा / “-” आहे, त्यामुळे quality कमी धरली');
+  else if(remarkScore>=85) reasons.push('Remark मध्ये कामाचे स्पष्ट तपशील, संख्या/ग्राहक/प्रोसेस माहिती आहे');
+  else if(remarkScore>=70) reasons.push('Remark मध्ये कामाचा तपशील आहे पण अजून थोडा स्पष्टपणा हवा');
+  else reasons.push('Remark कमी/अस्पष्ट आहे, त्यामुळे quality score कमी आहे');
+
+  if(entry.hasNumeric) reasons.push('Target vs Actual numbers वरून achievement मोजले');
+  else if(direct>0) reasons.push('System मध्ये असलेला staff/work score वापरला');
+  else reasons.push('Target/Actual number नसल्यामुळे remark व report status वरून achievement अंदाज घेतला');
+
+  return {finalScore, reportScore, remarkScore, achievementScore:clampScore(achievementScore), consistencyScore:clampScore(consistencyScore), shortReason:reasons[0] + '. ' + reasons[1], detailReason:reasons.join(' • '), remarkText, achievementLabel};
 }
 function rowQuality(r){
-  if(r.leave && r.leave.onLeave) return 100;
-  const direct = effectiveWorkQuality(r.account);
-  const entry = calculateEntryWorkScore(r);
-  if(direct && entry) return Math.round((direct + entry)/2);
-  return direct || entry || 0;
+  const d=dailyScoreDetails(r);
+  r.scoreParts=d;
+  return d.finalScore;
 }
 function qualityClass(q){
   if(q>=80) return 'done';
@@ -669,8 +797,8 @@ function riskScore(r){
   if(!r.evening) score+=24;
   if(r.status.key==='missing') score+=22;
   if(r.status.key==='check') score+=10;
-  if(r.quality>0 && r.quality<60) score += (60-r.quality);
-  if(!r.quality && r.morning && r.evening) score += 8;
+  if(r.quality<60) score += (60-r.quality);
+  if((r.scoreParts?.remarkScore||0)<55 && (r.morning || r.evening)) score+=8;
   return Math.round(score);
 }
 function reportRequired(r){ return !(r.leave && r.leave.onLeave); }
@@ -767,9 +895,9 @@ function buildRowsFromData(entries, accountRows){
       const account = accMap[safe(s.staffId)] || {};
       const leave = findLeaveInfo(s, morning, evening, account);
       const status = rowStatus(s, morning, evening, leave);
-      const base = {staff:s, morning, evening, account, leave, status, quality:0, remark:'-'};
-      base.quality = rowQuality(base);
+      const base = {staff:s, morning, evening, account, leave, status, quality:0, remark:'-', scoreParts:null};
       base.remark = rowRemark(base);
+      base.quality = rowQuality(base);
       base.risk = riskScore(base);
       return base;
     });
@@ -909,11 +1037,12 @@ function renderStaffTable(){
   if(!viewRows.length){ $('staffTable').innerHTML='<tr><td colspan="10">या filter मध्ये staff data नाही.</td></tr>'; return; }
   $('staffTable').innerHTML=viewRows.map((r)=>{
     const idx=allRows.indexOf(r);
-    const q=r.quality||0;
+    const q=Number(r.quality||0);
+    const parts=r.scoreParts || dailyScoreDetails(r);
     const leaveBadge=r.leave.onLeave ? `<span class="badge leave">🏖️ Leave</span>` : `<span class="badge neutral">Working</span>`;
     const morningBadge=r.leave.onLeave ? `<span class="badge neutral">Not Required</span>` : `<span class="badge ${r.morning?'done':'pending'}">${r.morning?'✅ Done':'⏳ Pending'}</span>`;
     const eveningBadge=r.leave.onLeave ? `<span class="badge neutral">Not Required</span>` : `<span class="badge ${r.evening?'done':'pending'}">${r.evening?'✅ Done':'⏳ Pending'}</span>`;
-    const scoreText=r.leave.onLeave?'Leave':(q ? q+'/100' : '-');
+    const scoreText=r.leave.onLeave?'Leave':(q + '/100');
     return `<tr>
       <td><button class="staff-name" onclick="openStaff(${idx})">${esc(r.staff.staffName)}</button><br><small>${esc(r.staff.staffId||'')}</small></td>
       <td>${esc(r.staff.role)}</td>
@@ -923,14 +1052,15 @@ function renderStaffTable(){
       <td>${eveningBadge}</td>
       <td><span class="badge ${r.status.cls}">${esc(r.status.text)}</span></td>
       <td><span class="badge score-pill ${qualityClass(q)}">${scoreText}</span></td>
-      <td>${esc(r.remark)}</td>
+      <td class="remark-cell"><div class="remark-text">${esc(r.remark)}</div><small class="score-mini">${esc(parts.shortReason || '')}</small></td>
       <td><button class="btn-soft" onclick="openStaff(${idx})">Open</button></td>
     </tr>`;
   }).join('');
 }
+
 function renderProblems(){
   const list=viewRows
-    .filter(r=>reportRequired(r) && (r.risk>0 || (r.quality>0 && r.quality<60)))
+    .filter(r=>reportRequired(r) && (r.risk>0 || r.quality<60))
     .sort((a,b)=>b.risk-a.risk || a.quality-b.quality)
     .slice(0,10);
 
@@ -940,17 +1070,20 @@ function renderProblems(){
   }
   $('problemList').innerHTML=list.map(r=>{
     const idx=allRows.indexOf(r);
+    const parts=r.scoreParts || dailyScoreDetails(r);
     const issue=[
       !r.morning?'Morning pending':'',
       !r.evening?'Evening pending':'',
-      r.quality>0 && r.quality<60?'Low score '+r.quality+'/100':''
+      r.quality<60?'Low score '+r.quality+'/100':'',
+      (parts.remarkScore>0 && parts.remarkScore<55)?'Remark कमी/अस्पष्ट':''
     ].filter(Boolean).join(' • ');
     return `<div class="problem-item" onclick="openStaff(${idx})">
       <b>${esc(r.staff.staffName)} <span class="badge low" style="float:right">${r.risk}</span></b>
-      <span>${esc(r.staff.branch)} | ${esc(issue || r.status.text)}</span>
+      <span>${esc(r.staff.branch)} | Score ${r.quality}/100 | ${esc(issue || r.status.text)}</span>
     </div>`;
   }).join('');
 }
+
 window.openStaff = function(index){
   const r=allRows[index]; if(!r) return;
   $('drawerTitle').textContent = r.staff.staffName;
@@ -958,7 +1091,7 @@ window.openStaff = function(index){
   $('dLeave').textContent = r.leave.onLeave ? 'Yes' : 'No';
   $('dMorning').textContent = r.leave.onLeave ? 'Not Req.' : (r.morning ? 'Done' : 'Pending');
   $('dEvening').textContent = r.leave.onLeave ? 'Not Req.' : (r.evening ? 'Done' : 'Pending');
-  $('dQuality').textContent = r.leave.onLeave ? 'Leave' : (r.quality ? r.quality+'/100' : '-');
+  $('dQuality').textContent = r.leave.onLeave ? 'Leave' : ((r.quality || 0) + '/100');
   $('scoreBadge').textContent = r.leave.onLeave ? 'Leave' : ((r.quality || 0) + '/100');
   $('scoreBadge').className = 'badge ' + (r.leave.onLeave ? 'leave' : qualityClass(r.quality || 0));
   $('scoreReason').innerHTML = scoreReasonDaily(r);
@@ -1046,13 +1179,13 @@ function renderCharts(){
 }
 
 function exportCSV(){
-  const headers=['Staff','Role','Branch','Leave','Morning','Evening','Status','Score','Risk','Remark'];
+  const headers=['Staff','Role','Branch','Leave','Morning','Evening','Status','Score','Risk','Remark','Score Reason'];
   const rows=viewRows.map(r=>[
     r.staff.staffName,r.staff.role,r.staff.branch,
     r.leave.onLeave?'Leave':'Working',
     r.leave.onLeave?'Not Required':(r.morning?'Done':'Pending'),
     r.leave.onLeave?'Not Required':(r.evening?'Done':'Pending'),
-    r.status.text,r.leave.onLeave?'Leave':(r.quality || ''),r.risk || '',r.remark
+    r.status.text,r.leave.onLeave?'Leave':((r.quality||0) + '/100'),r.risk || '',r.remark,(r.scoreParts||dailyScoreDetails(r)).detailReason
   ]);
   const csv=[headers,...rows].map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
@@ -1069,8 +1202,8 @@ async function copySummary(){
     .filter(b=>!$('branchFilter').value || b.branch===$('branchFilter').value)
     .map(b=>`• ${b.branch}: ${b.complete}/${b.required} done (${b.percent}%), Pending ${b.pending}, Leave ${b.leave}`).join('\n');
 
-  const problem=viewRows.filter(r=>reportRequired(r) && r.risk>0).sort((a,b)=>b.risk-a.risk).slice(0,20)
-    .map(r=>`• ${r.staff.staffName} - ${r.staff.branch} - ${r.status.text} - Score ${r.quality || '-'}`).join('\n') || '• Problematic staff नाही.';
+  const problem=viewRows.filter(r=>reportRequired(r) && (r.risk>0 || r.quality<60)).sort((a,b)=>b.risk-a.risk).slice(0,20)
+    .map(r=>`• ${r.staff.staffName} - ${r.staff.branch} - ${r.status.text} - Score ${r.quality}/100 - ${(r.scoreParts||dailyScoreDetails(r)).shortReason}`).join('\n') || '• Problematic staff नाही.';
 
   const leaveLines=leave.slice(0,20).map(r=>`• ${r.staff.staffName} - ${r.staff.branch} - ${r.leave.status}`).join('\n') || '• Leave staff नाही.';
 
@@ -1085,30 +1218,21 @@ function closeDrawer(){
 
 function scoreReasonDaily(r){
   if(!r) return '<div class="empty">Score details उपलब्ध नाहीत.</div>';
+  const d = r.scoreParts || dailyScoreDetails(r);
   if(r.leave && r.leave.onLeave){
-    return `<div class="kv"><b>Leave Day</b><span>आज रजा असल्यामुळे report pending count केला नाही. Score dashboard average मध्ये penalty म्हणून धरला नाही.</span></div>`;
+    return `<div class="kv"><b>रजा दिवस</b><span>${esc(d.detailReason)}</span></div>`;
   }
-  const reportScore = (r.morning && r.evening) ? 100 : (r.morning || r.evening ? 50 : 0);
-  const quality = r.quality || 0;
-  const achievement = calculateEntryWorkScore(r) || effectiveWorkQuality(r.account) || 0;
-  const consistency = r.risk>0 ? Math.max(0, 100-r.risk) : 100;
-  const final = Math.round((reportScore*.35) + (quality*.25) + (achievement*.25) + (consistency*.15));
-  const weak=[];
-  if(!r.morning) weak.push('Morning Plan missing');
-  if(!r.evening) weak.push('Evening Actual missing');
-  if(quality>0 && quality<60) weak.push('Quality low');
-  if(achievement>0 && achievement<60) weak.push('Plan vs Actual low');
-  if(!quality && r.morning && r.evening) weak.push('Quality data not found');
-  const reason = weak.length ? weak.join(', ') : 'Report आणि achievement ठीक आहे.';
   return `
     <div class="score-line">
-      <div><span>Report Count 35%</span><b>${reportScore}/100</b></div>
-      <div><span>Report Quality 25%</span><b>${quality || '-'}/100</b></div>
-      <div><span>Plan vs Actual 25%</span><b>${achievement || '-'}/100</b></div>
-      <div><span>Consistency 15%</span><b>${consistency}/100</b></div>
-      <div><span>Final explain score</span><b>${final}/100</b></div>
+      <div><span>Report Count 35%</span><b>${d.reportScore}/100</b></div>
+      <div><span>Remark Quality 25%</span><b>${d.remarkScore}/100</b></div>
+      <div><span>Plan vs Actual 25%</span><b>${d.achievementScore}/100</b></div>
+      <div><span>Consistency 15%</span><b>${d.consistencyScore}/100</b></div>
+      <div><span>Final Staff Score</span><b>${d.finalScore}/100</b></div>
     </div>
-    <div class="kv"><b>System Note</b><span>${esc(reason)}</span></div>`;
+    <div class="kv"><b>मराठी कारण</b><span>${esc(d.detailReason)}</span></div>
+    <div class="kv"><b>Remark वाचन</b><span>${esc(d.remarkText || 'Remark उपलब्ध नाही.')}</span></div>
+    <div class="kv"><b>Achievement आधार</b><span>${esc(d.achievementLabel || '-')}</span></div>`;
 }
 
 async function getDashboardCached(date){
@@ -1151,11 +1275,11 @@ function closePerformanceModal(){
   $('perfModal').classList.remove('open');
 }
 function performanceNote(score){
-  if(score>=90) return {text:'Excellent - PP Unlock Level', cls:'done'};
-  if(score>=80) return {text:'Good', cls:'done'};
-  if(score>=70) return {text:'Average - Watch', cls:'pending'};
-  if(score>=60) return {text:'Weak - Follow-up', cls:'low'};
-  return {text:'Problematic - Action Needed', cls:'missing'};
+  if(score>=90) return {text:'उत्कृष्ट - PP Unlock Level', cls:'done'};
+  if(score>=80) return {text:'चांगले काम', cls:'done'};
+  if(score>=70) return {text:'ठीक - लक्ष ठेवावे', cls:'pending'};
+  if(score>=60) return {text:'कमकुवत - Follow-up हवा', cls:'low'};
+  return {text:'समस्या - Action आवश्यक', cls:'missing'};
 }
 async function generatePerformance(){
   const from=$('perfFrom').value, to=$('perfTo').value;
@@ -1180,7 +1304,7 @@ async function generatePerformance(){
 
     const agg={};
     eligibleStaff.forEach(s=>{
-      agg[safe(s.staffId)]={staff:s, days:0, leaveDays:0, requiredDays:0, fullReports:0, pendingDays:0, morningDone:0, eveningDone:0, missingDays:0, checkDays:0, qualitySum:0, qualityCount:0, achievementSum:0, achievementCount:0, redDays:0};
+      agg[safe(s.staffId)]={staff:s, days:0, leaveDays:0, requiredDays:0, fullReports:0, pendingDays:0, morningDone:0, eveningDone:0, missingDays:0, checkDays:0, qualitySum:0, qualityCount:0, achievementSum:0, achievementCount:0, dailyScoreSum:0, dailyScoreCount:0, redDays:0, reasonSamples:[]};
     });
 
     const packs=await fetchDatePacksFast(dates);
@@ -1197,10 +1321,12 @@ async function generatePerformance(){
         if(r.evening) a.eveningDone++;
         if(r.status.key==='missing') a.missingDays++;
         if(r.status.key==='check') a.checkDays++;
-        if(r.quality>0){ a.qualitySum+=r.quality; a.qualityCount++; }
-        const ach=calculateEntryWorkScore(r) || effectiveWorkQuality(r.account);
-        if(ach>0){ a.achievementSum+=ach; a.achievementCount++; }
-        if(r.risk>0 || (r.quality>0 && r.quality<60)) a.redDays++;
+        const parts=r.scoreParts || dailyScoreDetails(r);
+        a.qualitySum += parts.remarkScore; a.qualityCount++;
+        a.achievementSum += parts.achievementScore; a.achievementCount++;
+        a.dailyScoreSum += parts.finalScore; a.dailyScoreCount++;
+        if((r.risk>0 || parts.finalScore<60) && a.reasonSamples.length<3) a.reasonSamples.push(parts.shortReason);
+        if(r.risk>0 || parts.finalScore<60) a.redDays++;
       });
     });
 
@@ -1225,21 +1351,23 @@ async function generatePerformance(){
   showLoader(false);
 }
 function performanceReason(r){
-  if(!r.requiredDays && r.leaveDays){ return 'All selected working days leave मध्ये आहेत; pending penalty नाही.'; }
+  if(!r.requiredDays && r.leaveDays){ return 'निवडलेल्या कालावधीत कामाचे दिवस रजा मध्ये आहेत; pending penalty नाही.'; }
   const parts=[
     `Report ${r.reportScore}% (${r.fullReports}/${r.requiredDays} full)`,
-    `Quality ${r.quality || '-'} /100`,
-    `Plan ${r.achievement || '-'} /100`,
+    `Remark Quality ${r.quality || 0}/100`,
+    `Plan/Achievement ${r.achievement || 0}/100`,
     `Consistency ${r.consistency}%`
   ];
   const weak=[];
-  if(r.pendingDays>0) weak.push(`${r.pendingDays} pending day`);
-  if(r.missingDays>0) weak.push(`${r.missingDays} both missing`);
-  if(r.checkDays>0) weak.push(`${r.checkDays} morning missing but evening done`);
-  if(r.quality>0 && r.quality<60) weak.push('low report quality');
-  if(r.achievement>0 && r.achievement<60) weak.push('low plan achievement');
-  return parts.join(' | ') + (weak.length ? ' | कारण: '+weak.join(', ') : ' | कारण: performance stable.');
+  if(r.pendingDays>0) weak.push(`${r.pendingDays} दिवस report pending`);
+  if(r.missingDays>0) weak.push(`${r.missingDays} दिवस दोन्ही report missing`);
+  if(r.checkDays>0) weak.push(`${r.checkDays} दिवस morning missing पण evening done`);
+  if(r.quality>0 && r.quality<60) weak.push('remark quality कमी/अस्पष्ट');
+  if(r.achievement>0 && r.achievement<60) weak.push('plan achievement कमी');
+  if(r.reasonSamples && r.reasonSamples.length) weak.push(r.reasonSamples.join(' / '));
+  return parts.join(' | ') + (weak.length ? ' | कारण: '+weak.join(', ') : ' | कारण: report व remark दोन्ही stable आहेत.');
 }
+
 function renderPerformanceRows(rows, totalDays){
   if(!rows.length){
     $('perfSummary').textContent='No staff found for selected filter.';
@@ -1261,10 +1389,10 @@ function renderPerformanceRows(rows, totalDays){
       <td>${r.fullReports}</td>
       <td>${r.pendingDays}</td>
       <td><span class="badge ${qualityClass(r.reportScore)}">${r.reportScore}%</span></td>
-      <td><span class="badge ${qualityClass(r.quality)}">${r.quality || '-'}</span></td>
-      <td><span class="badge ${qualityClass(r.achievement)}">${r.achievement || '-'}</span></td>
+      <td><span class="badge ${qualityClass(r.quality)}">${r.quality || 0}</span></td>
+      <td><span class="badge ${qualityClass(r.achievement)}">${r.achievement || 0}</span></td>
       <td><span class="badge score-pill ${note.cls}">${r.finalScore}/100</span></td>
-      <td><span class="badge ${note.cls}">${esc(note.text)}</span><br><small>${esc(performanceReason(r))}</small></td>
+      <td class="reason-cell"><span class="badge ${note.cls}">${esc(note.text)}</span><small class="score-reason">${esc(performanceReason(r))}</small></td>
     </tr>`;
   }).join('');
 }
