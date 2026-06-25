@@ -210,6 +210,32 @@ small{color:#98a2b3;font-weight:800}
 .legend{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
 .legend .mini-stat{padding:10px}.legend b{font-size:18px}
 .footer-note{margin-top:10px;color:#667085;font-size:12px;font-weight:800;line-height:1.5}
+
+/* Full-screen fast monthly performance page */
+.perf-page{
+  position:fixed;inset:0;z-index:120;background:#f5f7fb;display:none;
+  flex-direction:column;overflow:hidden;
+}
+.perf-page.open{display:flex}
+.perf-page .modal-head{
+  flex:0 0 auto;border-radius:0;position:relative;padding:14px 62px 14px 18px;
+  box-shadow:0 10px 26px rgba(16,24,40,.16)
+}
+.perf-page .modal-body{
+  flex:1;overflow:auto;padding:14px;width:100%;max-width:1720px;margin:0 auto;
+}
+.perf-top-panel{margin:0 0 12px;padding:14px;border-radius:20px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.perf-filters.quick{grid-template-columns:220px 1.1fr 1.25fr auto auto;align-items:end}
+.perf-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}
+.perf-kpi-grid .mini-stat{background:#f8fafc;border:1px solid #eef2f7;border-radius:16px;padding:12px}
+.perf-kpi-grid b{font-size:22px}.perf-kpi-grid span{font-size:10px}
+.perf-table table{min-width:1040px}
+.perf-table th,.perf-table td{padding:10px 9px}
+.perf-sticky-note{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;color:#475467;font-size:12px;font-weight:800;line-height:1.55}
+.perf-sticky-note span{background:#f8fafc;border:1px solid #eef2f7;border-radius:999px;padding:6px 10px}
+@media(max-width:980px){.perf-filters.quick{grid-template-columns:1fr 1fr}.perf-kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.perf-filters.quick{grid-template-columns:1fr}.perf-kpi-grid{grid-template-columns:1fr}.perf-page .modal-body{padding:8px}}
+
 @media(max-width:1400px){
   .kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
   .main-grid{grid-template-columns:1fr}
@@ -229,7 +255,7 @@ small{color:#98a2b3;font-weight:800}
   .actions button{width:100%}.chart-box{height:260px}.split{grid-template-columns:1fr}
 }
 @media print{
-  body{background:#fff}.actions,.filters,.drawer,.toast,.loader,.modal,.modal-backdrop{display:none!important}.topbar,.panel,.card{box-shadow:none;break-inside:avoid}
+  body{background:#fff}.actions,.filters,.drawer,.toast,.loader,.modal,.modal-backdrop,.perf-page{display:none!important}.topbar,.panel,.card{box-shadow:none;break-inside:avoid}
 }
 </style>
 </head>
@@ -254,7 +280,7 @@ small{color:#98a2b3;font-weight:800}
     </div>
 
     <div class="actions">
-      <button class="btn-dark" id="performanceBtn">🏆 Staff Performance</button>
+      <button class="btn-dark" id="performanceBtn">🏆 Monthly Staff Score</button>
       <button class="btn-soft" id="copySummary">📋 Copy Summary</button>
       <button class="btn-soft" id="exportCsv">⬇️ CSV</button>
       <button class="btn-soft" onclick="window.print()">🖨️ Print</button>
@@ -436,67 +462,67 @@ small{color:#98a2b3;font-weight:800}
   </div>
 </aside>
 
-<section class="modal" id="perfModal">
+<section class="perf-page" id="perfModal" aria-label="Monthly Staff Performance">
   <div class="modal-head">
-    <button class="close-x" id="closePerf">✕</button>
-    <h3>🏆 Staff Performance Score</h3>
-    <p>Date range, unit and staff-wise score out of 100. Leave days excluded from pending/report requirement.</p>
+    <button class="close-x" id="closePerf" type="button" title="Close">✕</button>
+    <h3>🏆 Monthly Staff Performance Score</h3>
+    <p>Popup नाही — full screen quick monthly score. Daily score सारखेच कारण clear Marathi मध्ये दिसेल.</p>
   </div>
   <div class="modal-body">
-    <div class="perf-filters">
-      <div>
-        <label>From Date</label>
-        <input type="date" id="perfFrom">
+    <div class="perf-top-panel">
+      <div class="perf-filters quick">
+        <div>
+          <label>📅 महिना</label>
+          <input type="month" id="perfMonth">
+        </div>
+        <div>
+          <label>🏦 शाखा / Unit</label>
+          <select id="perfBranch"><option value="">All Units</option></select>
+        </div>
+        <div>
+          <label>👤 Staff</label>
+          <select id="perfStaff"><option value="">All Staff</option></select>
+        </div>
+        <button class="btn-primary" id="generatePerf">⚡ Quick Score</button>
+        <button class="btn-soft" id="closePerf2" type="button">⬅ Dashboard</button>
       </div>
-      <div>
-        <label>To Date</label>
-        <input type="date" id="perfTo">
+
+      <div class="perf-kpi-grid">
+        <div class="mini-stat"><b id="mPerfStaff">0</b><span>Staff</span></div>
+        <div class="mini-stat"><b id="mPerfAvg">0</b><span>Avg Monthly Score</span></div>
+        <div class="mini-stat"><b id="mPerfPending">0</b><span>Pending Days</span></div>
+        <div class="mini-stat"><b id="mPerfProblem">0</b><span>Below 70</span></div>
       </div>
-      <div>
-        <label>Unit / Branch</label>
-        <select id="perfBranch"><option value="">All Units</option></select>
+
+      <div class="summary-text" id="perfSummary">Monthly score open केल्यावर current month auto load होईल.</div>
+      <div class="perf-progress" id="perfProgress"></div>
+      <div class="perf-sticky-note">
+        <span>Formula: Report 35 + Remark 25 + Plan/Actual 25 + Consistency 15</span>
+        <span>रजा दिवस pending मध्ये count नाही</span>
+        <span>Data दिवसागणिक येताच table लगेच update होईल</span>
       </div>
-      <div>
-        <label>Staff</label>
-        <select id="perfStaff"><option value="">All Staff</option></select>
-      </div>
-      <button class="btn-primary" id="generatePerf">Generate</button>
     </div>
 
-    <div class="legend">
-      <div class="mini-stat"><b>35%</b><span>Report Count</span></div>
-      <div class="mini-stat"><b>25%</b><span>Report Quality</span></div>
-      <div class="mini-stat"><b>25%</b><span>Plan vs Actual</span></div>
-      <div class="mini-stat"><b>15%</b><span>Consistency</span></div>
-    </div>
-
-    <div class="summary-text" id="perfSummary">Select date range and click Generate.</div>
-    <div class="perf-progress" id="perfProgress"></div>
-    <div class="table-wrap" style="margin-top:10px">
+    <div class="table-wrap perf-table">
       <table>
         <thead>
           <tr>
             <th>Staff</th>
             <th>Branch</th>
-            <th>Role</th>
-            <th>Required Days</th>
-            <th>Leave Days</th>
-            <th>Full Reports</th>
-            <th>Pending Days</th>
+            <th>Req.</th>
+            <th>Done</th>
+            <th>Pending</th>
             <th>Report %</th>
-            <th>Quality</th>
-            <th>Plan Achievement</th>
-            <th>Final Score</th>
-            <th>Note</th>
+            <th>Remark</th>
+            <th>Plan</th>
+            <th>Monthly Score</th>
+            <th>Score कमी / जास्त का?</th>
           </tr>
         </thead>
         <tbody id="perfTable">
-          <tr><td colspan="12">No performance data generated.</td></tr>
+          <tr><td colspan="10">Monthly score अजून generate केलेला नाही.</td></tr>
         </tbody>
       </table>
-    </div>
-    <div class="footer-note">
-      Score formula: Report Count 35 + Report Quality 25 + Plan-vs-Actual Achievement 25 + Consistency 15. Leave day असल्यास त्या दिवशी staff pending/report-required मध्ये count होत नाही.
     </div>
   </div>
 </section>
@@ -828,6 +854,7 @@ async function init(){
 
   $('performanceBtn').onclick = openPerformanceModal;
   $('closePerf').onclick = closePerformanceModal;
+  if($('closePerf2')) $('closePerf2').onclick = closePerformanceModal;
   $('modalBackdrop').onclick = closePerformanceModal;
   $('perfBranch').onchange = renderPerfStaffOptions;
   $('generatePerf').onclick = generatePerformance;
@@ -1243,36 +1270,64 @@ async function getDashboardCached(date){
   dashboardDateCache.set(date, pack);
   return pack;
 }
-async function fetchDatePacksFast(dates){
-  const results=[];
-  const concurrency=6;
-  let cursor=0, completed=0;
-  const update=()=>{ $('perfProgress').textContent = `Loading ${completed}/${dates.length} days... cached dates instant वापरले जात आहेत.`; };
+async function fetchDatePacksMonthlyFast(dates, onPack){
+  const concurrency=10; // old monthly report was slow because it loaded one full dashboard per day. Now 10 days load parallel + progressive render.
+  let cursor=0, completed=0, failed=0;
+  const update=()=>{
+    $('perfProgress').textContent = `Loading ${completed}/${dates.length} days... ${failed ? failed+' day failed; बाकी data घेत आहे.' : 'table live update होत आहे.'}`;
+  };
   update();
   async function worker(){
     while(cursor<dates.length){
       const idx=cursor++;
       const date=dates[idx];
-      results[idx]=await getDashboardCached(date);
+      try{
+        const pack=await getDashboardCached(date);
+        onPack(pack, date, idx);
+      }catch(e){
+        failed++;
+      }
       completed++;
-      update();
+      if(completed===1 || completed%3===0 || completed===dates.length) update();
+      await new Promise(r=>setTimeout(r,0));
     }
   }
   await Promise.all(Array.from({length:Math.min(concurrency,dates.length)}, worker));
-  $('perfProgress').textContent = `Loaded ${dates.length}/${dates.length} days. Calculating score...`;
-  return results;
+  $('perfProgress').textContent = `Done: ${dates.length-failed}/${dates.length} days loaded. ${failed ? failed+' days API failed.' : 'Monthly score ready.'}`;
+  return {completed,failed};
+}
+
+function monthFromISO(iso){ return safe(iso || todayISO()).slice(0,7); }
+function perfMonthDates(monthVal){
+  const mv=safe(monthVal) || monthFromISO(todayISO());
+  const [yy,mm]=mv.split('-').map(Number);
+  if(!yy || !mm) return [];
+  const first=new Date(yy, mm-1, 1);
+  const last=new Date(yy, mm, 0);
+  const today=new Date(todayISO()+'T00:00:00');
+  const end=last>today ? today : last;
+  if(first>today) return [];
+  const list=[];
+  for(let d=new Date(first); d<=end && list.length<31; d.setDate(d.getDate()+1)){
+    list.push(new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10));
+  }
+  return list;
 }
 
 function openPerformanceModal(){
-  $('perfFrom').value = $('dashDate').value || todayISO();
-  $('perfTo').value = $('dashDate').value || todayISO();
+  $('perfMonth').value = monthFromISO($('dashDate').value || todayISO());
   renderPerformanceFilters();
-  $('modalBackdrop').classList.add('open');
+  $('modalBackdrop').classList.remove('open');
   $('perfModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  $('perfTable').innerHTML='<tr><td colspan="10">Current month quick score loading...</td></tr>';
+  $('perfSummary').textContent='Opening full screen monthly score...';
+  setTimeout(()=>generatePerformance(), 80);
 }
 function closePerformanceModal(){
   $('modalBackdrop').classList.remove('open');
   $('perfModal').classList.remove('open');
+  document.body.style.overflow='';
 }
 function performanceNote(score){
   if(score>=90) return {text:'उत्कृष्ट - PP Unlock Level', cls:'done'};
@@ -1281,121 +1336,152 @@ function performanceNote(score){
   if(score>=60) return {text:'कमकुवत - Follow-up हवा', cls:'low'};
   return {text:'समस्या - Action आवश्यक', cls:'missing'};
 }
+
+function createMonthlyAgg(branch, staffId){
+  const agg={};
+  staffMaster
+    .filter(s=>String(s.active).toLowerCase()!=='no' && safe(s.role)!=='अकाउंट टीम')
+    .filter(s=>!branch || safe(s.branch)===branch)
+    .filter(s=>!staffId || safe(s.staffId)===staffId)
+    .forEach(s=>{
+      agg[safe(s.staffId)]={
+        staff:s, days:0, leaveDays:0, requiredDays:0, fullReports:0, pendingDays:0,
+        morningDone:0, eveningDone:0, missingDays:0, checkDays:0,
+        reportScore:0, quality:0, achievement:0, consistency:0, finalScore:0,
+        remarkScoreSum:0, remarkScoreCount:0, achievementSum:0, achievementCount:0,
+        dailyScoreSum:0, dailyScoreCount:0, redDays:0, reasonSamples:[]
+      };
+    });
+  return agg;
+}
+function addMonthlyRow(agg, r, date){
+  const id=safe(r.staff.staffId);
+  if(!agg[id]) return;
+  const a=agg[id];
+  a.days++;
+  if(r.leave.onLeave){ a.leaveDays++; return; }
+  a.requiredDays++;
+  if(r.status.key==='complete') a.fullReports++; else a.pendingDays++;
+  if(r.morning) a.morningDone++;
+  if(r.evening) a.eveningDone++;
+  if(r.status.key==='missing') a.missingDays++;
+  if(r.status.key==='check') a.checkDays++;
+  const parts=r.scoreParts || dailyScoreDetails(r);
+  a.remarkScoreSum += parts.remarkScore; a.remarkScoreCount++;
+  a.achievementSum += parts.achievementScore; a.achievementCount++;
+  a.dailyScoreSum += parts.finalScore; a.dailyScoreCount++;
+  if(r.risk>0 || parts.finalScore<70){
+    a.redDays++;
+    if(a.reasonSamples.length<3) a.reasonSamples.push(`${date}: ${parts.shortReason}`);
+  }
+}
+function finalizeMonthlyRows(agg){
+  return Object.values(agg).map(a=>{
+    const reportScore = a.requiredDays ? Math.round((a.fullReports/a.requiredDays)*100) : (a.leaveDays ? 100 : 0);
+    const quality = a.remarkScoreCount ? Math.round(a.remarkScoreSum/a.remarkScoreCount) : 0;
+    const achievement = a.achievementCount ? Math.round(a.achievementSum/a.achievementCount) : 0;
+    const consistency = a.requiredDays ? Math.round(((a.requiredDays-a.redDays)/a.requiredDays)*100) : (a.leaveDays ? 100 : 0);
+    const finalScore = Math.round((reportScore*.35) + (quality*.25) + (achievement*.25) + (consistency*.15));
+    return {...a, reportScore, quality, achievement, consistency, finalScore};
+  }).sort((a,b)=>a.finalScore-b.finalScore || b.pendingDays-a.pendingDays || safe(a.staff.staffName).localeCompare(safe(b.staff.staffName)));
+}
+
 async function generatePerformance(){
-  const from=$('perfFrom').value, to=$('perfTo').value;
-  if(!from || !to){ toast('From आणि To date निवडा.'); return; }
-  if(from>to){ toast('From date To date पेक्षा मोठा आहे.'); return; }
-  const dates=dateRange(from,to);
-  if(dates.length>62){ toast('Speed साठी एकावेळी maximum 62 days select करा. मोठ्या report साठी month-wise run करा.'); return; }
+  const month=safe($('perfMonth').value) || monthFromISO($('dashDate').value || todayISO());
+  $('perfMonth').value=month;
+  const dates=perfMonthDates(month);
+  if(!dates.length){ toast('या महिन्यासाठी आजपर्यंत data नाही.'); return; }
 
   const branch=safe($('perfBranch').value);
   const staffId=safe($('perfStaff').value);
   const btn=$('generatePerf');
   btn.disabled=true;
-  btn.textContent='Generating...';
-  $('perfTable').innerHTML='<tr><td colspan="12">Fast report loading चालू आहे...</td></tr>';
-  $('perfSummary').textContent='Please wait: cached + parallel loading वापरत आहे.';
-  showLoader(true);
+  btn.textContent='Loading...';
+  $('perfTable').innerHTML='<tr><td colspan="10">Quick monthly score loading... कृपया थांबा.</td></tr>';
+  $('perfSummary').textContent=`${month} month | ${dates.length} days | Full screen score loading...`;
+  $('perfProgress').textContent='Starting monthly quick load...';
+
+  const agg=createMonthlyAgg(branch, staffId);
+  let renderedAt=0;
+  const renderLive=(force=false)=>{
+    const rows=finalizeMonthlyRows(agg);
+    const loadedDays=Math.max(...Object.values(agg).map(a=>a.days),0);
+    if(force || loadedDays!==renderedAt){
+      renderedAt=loadedDays;
+      renderPerformanceRows(rows, dates.length, loadedDays);
+    }
+  };
+
   try{
-    const eligibleStaff=staffMaster
-      .filter(s=>String(s.active).toLowerCase()!=='no' && safe(s.role)!=='अकाउंट टीम')
-      .filter(s=>!branch || safe(s.branch)===branch)
-      .filter(s=>!staffId || safe(s.staffId)===staffId);
-
-    const agg={};
-    eligibleStaff.forEach(s=>{
-      agg[safe(s.staffId)]={staff:s, days:0, leaveDays:0, requiredDays:0, fullReports:0, pendingDays:0, morningDone:0, eveningDone:0, missingDays:0, checkDays:0, qualitySum:0, qualityCount:0, achievementSum:0, achievementCount:0, dailyScoreSum:0, dailyScoreCount:0, redDays:0, reasonSamples:[]};
+    await fetchDatePacksMonthlyFast(dates, (pack,date)=>{
+      const rows=buildRowsFromData(pack.entries||[], pack.accountStaffSystem||[]);
+      rows.forEach(r=>addMonthlyRow(agg, r, date));
+      const loadedDays=Math.max(...Object.values(agg).map(a=>a.days),0);
+      if(loadedDays===1 || loadedDays%3===0 || loadedDays===dates.length) renderLive(true);
     });
-
-    const packs=await fetchDatePacksFast(dates);
-    packs.forEach(pack=>{
-      const rows = buildRowsFromData(pack.entries||[], pack.accountStaffSystem||[]);
-      rows.forEach(r=>{
-        const id=safe(r.staff.staffId);
-        if(!agg[id]) return;
-        const a=agg[id]; a.days++;
-        if(r.leave.onLeave){ a.leaveDays++; return; }
-        a.requiredDays++;
-        if(r.status.key==='complete') a.fullReports++; else a.pendingDays++;
-        if(r.morning) a.morningDone++;
-        if(r.evening) a.eveningDone++;
-        if(r.status.key==='missing') a.missingDays++;
-        if(r.status.key==='check') a.checkDays++;
-        const parts=r.scoreParts || dailyScoreDetails(r);
-        a.qualitySum += parts.remarkScore; a.qualityCount++;
-        a.achievementSum += parts.achievementScore; a.achievementCount++;
-        a.dailyScoreSum += parts.finalScore; a.dailyScoreCount++;
-        if((r.risk>0 || parts.finalScore<60) && a.reasonSamples.length<3) a.reasonSamples.push(parts.shortReason);
-        if(r.risk>0 || parts.finalScore<60) a.redDays++;
-      });
-    });
-
-    const rows=Object.values(agg).map(a=>{
-      const reportScore = a.requiredDays ? Math.round((a.fullReports/a.requiredDays)*100) : (a.leaveDays ? 100 : 0);
-      const quality = a.qualityCount ? Math.round(a.qualitySum/a.qualityCount) : 0;
-      const achievement = a.achievementCount ? Math.round(a.achievementSum/a.achievementCount) : 0;
-      const consistency = a.requiredDays ? Math.round(((a.requiredDays-a.redDays)/a.requiredDays)*100) : (a.leaveDays ? 100 : 0);
-      const finalScore = Math.round((reportScore*.35) + (quality*.25) + (achievement*.25) + (consistency*.15));
-      return {...a, reportScore, quality, achievement, consistency, finalScore};
-    }).sort((a,b)=>a.finalScore-b.finalScore || b.pendingDays-a.pendingDays);
-
-    renderPerformanceRows(rows, dates.length);
-    $('perfProgress').textContent = `Done. ${dates.length} days calculated. पुढच्या वेळी same dates fast open होतील.`;
+    renderLive(true);
   }catch(e){
-    toast(e.message);
-    $('perfTable').innerHTML='<tr><td colspan="12">Performance data load failed.</td></tr>';
+    toast(e.message || 'Monthly report failed.');
     $('perfProgress').textContent='Report failed. API / internet तपासा.';
   }
   btn.disabled=false;
-  btn.textContent='Generate';
-  showLoader(false);
+  btn.textContent='⚡ Quick Score';
 }
 function performanceReason(r){
-  if(!r.requiredDays && r.leaveDays){ return 'निवडलेल्या कालावधीत कामाचे दिवस रजा मध्ये आहेत; pending penalty नाही.'; }
-  const parts=[
-    `Report ${r.reportScore}% (${r.fullReports}/${r.requiredDays} full)`,
-    `Remark Quality ${r.quality || 0}/100`,
-    `Plan/Achievement ${r.achievement || 0}/100`,
-    `Consistency ${r.consistency}%`
-  ];
+  if(!r.requiredDays && r.leaveDays){ return 'निवडलेल्या महिन्यात कामाचे दिवस रजा मध्ये आहेत; pending penalty नाही.'; }
+  if(!r.requiredDays){ return 'या महिन्यात या staff साठी report-required data उपलब्ध नाही.'; }
   const weak=[];
   if(r.pendingDays>0) weak.push(`${r.pendingDays} दिवस report pending`);
   if(r.missingDays>0) weak.push(`${r.missingDays} दिवस दोन्ही report missing`);
   if(r.checkDays>0) weak.push(`${r.checkDays} दिवस morning missing पण evening done`);
-  if(r.quality>0 && r.quality<60) weak.push('remark quality कमी/अस्पष्ट');
-  if(r.achievement>0 && r.achievement<60) weak.push('plan achievement कमी');
+  if(r.quality<60) weak.push('remark quality कमी/अस्पष्ट');
+  if(r.achievement<60) weak.push('plan/actual achievement कमी किंवा number उपलब्ध नाही');
+  if(r.consistency<75) weak.push('consistency कमी');
   if(r.reasonSamples && r.reasonSamples.length) weak.push(r.reasonSamples.join(' / '));
-  return parts.join(' | ') + (weak.length ? ' | कारण: '+weak.join(', ') : ' | कारण: report व remark दोन्ही stable आहेत.');
+  const good=[];
+  if(r.reportScore>=90) good.push('report count चांगला');
+  if(r.quality>=80) good.push('remark स्पष्ट');
+  if(r.achievement>=80) good.push('कामगिरी/achievement चांगली');
+  const why = weak.length ? weak.join(', ') : (good.length ? good.join(', ') : 'performance stable');
+  return `Report ${r.reportScore}% (${r.fullReports}/${r.requiredDays}), Remark ${r.quality}/100, Plan ${r.achievement}/100, Consistency ${r.consistency}%. कारण: ${why}.`;
 }
 
-function renderPerformanceRows(rows, totalDays){
+function renderPerformanceRows(rows, totalDays, loadedDays=totalDays){
   if(!rows.length){
-    $('perfSummary').textContent='No staff found for selected filter.';
-    $('perfTable').innerHTML='<tr><td colspan="12">No performance data.</td></tr>';
+    $('perfSummary').textContent='Selected filter मध्ये staff मिळाला नाही.';
+    $('perfTable').innerHTML='<tr><td colspan="10">No performance data.</td></tr>';
+    ['mPerfStaff','mPerfAvg','mPerfPending','mPerfProblem'].forEach(id=>$(id).textContent='0');
     return;
   }
-  const avg=Math.round(rows.reduce((s,r)=>s+r.finalScore,0)/rows.length);
-  const problem=rows.filter(r=>r.finalScore<70 && r.requiredDays>0).length;
-  $('perfSummary').textContent=`${rows.length} staff | ${totalDays} days | Avg Score: ${avg}/100 | Problematic below 70: ${problem}`;
+  const activeRows=rows.filter(r=>r.days>0 || loadedDays>0);
+  const useRows=activeRows.length ? activeRows : rows;
+  const avg=Math.round(useRows.reduce((s,r)=>s+(r.finalScore||0),0)/useRows.length);
+  const pending=useRows.reduce((s,r)=>s+(r.pendingDays||0),0);
+  const problem=useRows.filter(r=>r.finalScore<70 && r.requiredDays>0).length;
+  $('mPerfStaff').textContent=useRows.length;
+  $('mPerfAvg').textContent=(avg || 0)+'/100';
+  $('mPerfPending').textContent=pending;
+  $('mPerfProblem').textContent=problem;
+  $('perfSummary').textContent=`${$('perfMonth').value} | Loaded ${loadedDays}/${totalDays} days | ${useRows.length} staff | Avg ${avg || 0}/100 | Below 70: ${problem}`;
 
-  $('perfTable').innerHTML=rows.map(r=>{
-    const note=performanceNote(r.finalScore);
+  $('perfTable').innerHTML=useRows.map(r=>{
+    const note=performanceNote(r.finalScore || 0);
+    const reason=performanceReason(r);
     return `<tr>
-      <td>${esc(r.staff.staffName)}<br><small>${esc(r.staff.staffId||'')}</small></td>
+      <td><b>${esc(r.staff.staffName)}</b><br><small>${esc(r.staff.staffId||'')}</small></td>
       <td>${esc(r.staff.branch)}</td>
-      <td>${esc(r.staff.role)}</td>
       <td>${r.requiredDays}</td>
-      <td>${r.leaveDays}</td>
       <td>${r.fullReports}</td>
       <td>${r.pendingDays}</td>
-      <td><span class="badge ${qualityClass(r.reportScore)}">${r.reportScore}%</span></td>
+      <td><span class="badge ${qualityClass(r.reportScore)}">${r.reportScore || 0}%</span></td>
       <td><span class="badge ${qualityClass(r.quality)}">${r.quality || 0}</span></td>
       <td><span class="badge ${qualityClass(r.achievement)}">${r.achievement || 0}</span></td>
-      <td><span class="badge score-pill ${note.cls}">${r.finalScore}/100</span></td>
-      <td class="reason-cell"><span class="badge ${note.cls}">${esc(note.text)}</span><small class="score-reason">${esc(performanceReason(r))}</small></td>
+      <td><span class="badge score-pill ${note.cls}">${r.finalScore || 0}/100</span><br><small>${esc(note.text)}</small></td>
+      <td class="reason-cell"><small class="score-reason">${esc(reason)}</small></td>
     </tr>`;
   }).join('');
 }
+
 
 window.addEventListener('load', init);
 </script>
