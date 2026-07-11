@@ -1,1489 +1,344 @@
 
-
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="mr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ANIK Pro Dashboard | Staff Plan & Actual Control</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173a8c">
+<title>ANIK Command Center | KPI Branch Control</title>
 <style>
 :root{
-  --brand:#233a8b;
-  --brand2:#1565d8;
-  --red:#e11d48;
-  --green:#039855;
-  --orange:#f79009;
-  --purple:#6d28d9;
-  --ink:#0f172a;
-  --muted:#667085;
-  --line:#e4e7ec;
-  --soft:#f8fafc;
-  --soft2:#f1f5f9;
-  --card:#ffffff;
-  --bg:#f5f7fb;
-  --shadow:0 14px 38px rgba(15,23,42,.08);
+  --navy:#173a8c;--navy2:#0f2f74;--brand:#1f5fd1;--brand2:#4f8dff;--accent:#f4b400;
+  --bg:#f3f7ff;--card:#fff;--ink:#10212f;--muted:#667786;--line:#dbe6f5;
+  --good:#0f8a5f;--warn:#d97706;--bad:#d92d20;--info:#1d4ed8;--leave:#6941c6;
+  --shadow:0 12px 32px rgba(23,58,140,.08);--radius:20px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  margin:0;
-  min-height:100vh;
-  font-family:'Noto Sans Devanagari',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--ink);
-  background:var(--bg);
-  -webkit-font-smoothing:antialiased;
-}
-.app{max-width:1720px;margin:0 auto;padding:14px}
-.topbar{
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:14px;
-  align-items:center;
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:14px;
-  box-shadow:var(--shadow);
-}
-.brand{
-  display:flex;align-items:center;gap:13px;min-width:320px;
-  border-right:1px solid var(--line);
-  padding-right:16px;
-}
-.brand img{
-  width:146px;height:54px;object-fit:contain;display:block;
-  background:#fff;border-radius:14px;border:1px solid #eef2f7;padding:6px;
-}
-.brand h1{margin:0;font-size:20px;line-height:1.12;font-weight:900;color:#102a72;letter-spacing:-.25px}
-.brand p{margin:4px 0 0;font-size:12px;font-weight:800;color:var(--muted)}
-.page-title h2{margin:0;font-size:24px;line-height:1.15;font-weight:900;color:#111827;letter-spacing:-.35px}
-.page-title p{margin:5px 0 0;color:var(--muted);font-size:13px;font-weight:700}
-.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-button,.btn{
-  border:0;cursor:pointer;font-family:inherit;text-decoration:none;
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  border-radius:14px;padding:11px 14px;font-weight:900;font-size:13px;transition:.16s ease;
-}
-button:hover,.btn:hover{transform:translateY(-1px)}
-.btn-primary{background:var(--brand2);color:#fff;box-shadow:0 10px 22px rgba(21,101,216,.22)}
-.btn-soft{background:#fff;color:#175cd3;border:1px solid #d0d5dd}
-.btn-danger{background:#fff1f3;color:#be123c;border:1px solid #fecdd3}
-.btn-dark{background:#101828;color:#fff}
-.panel,.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:22px;
-  box-shadow:var(--shadow);
-}
-.panel{margin-top:12px;padding:16px}
-.filters{
-  display:grid;
-  grid-template-columns:1fr 1.15fr 1.15fr 1.4fr 2fr auto;
-  gap:12px;
-  align-items:end;
-}
-label{display:block;margin:0 0 7px;color:#344054;font-size:12px;font-weight:900}
-input,select{
-  width:100%;border:1px solid #d0d5dd;background:#fff;color:#111827;border-radius:14px;
-  padding:12px 13px;font-family:inherit;font-size:14px;font-weight:800;outline:none;
-}
-input:focus,select:focus{border-color:#1570ef;box-shadow:0 0 0 4px rgba(21,112,239,.13)}
-.status-line{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-  margin-top:12px;padding:10px 12px;border-radius:16px;background:#f8fafc;border:1px solid #eef2f7;
-}
-.tag{
-  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 10px;
-  background:#eff8ff;color:#175cd3;border:1px solid #b2ddff;font-size:12px;font-weight:900;white-space:nowrap;
-}
-.live-dot{width:8px;height:8px;border-radius:99px;background:#12b76a;box-shadow:0 0 0 5px rgba(18,183,106,.14)}
-.grid{display:grid;gap:12px}
-.kpis{grid-template-columns:repeat(10,minmax(0,1fr));margin-top:12px}
-.kpi{
-  min-height:112px;padding:14px;position:relative;overflow:hidden;cursor:pointer;transition:.16s ease;
-}
-.kpi:hover{transform:translateY(-2px);border-color:#b2ddff;box-shadow:0 18px 44px rgba(21,101,216,.13)}
-.kpi:after{content:"Click";position:absolute;right:12px;top:10px;font-size:10px;font-weight:900;color:#98a2b3;text-transform:uppercase}
-.kpi .ico{font-size:22px}
-.kpi .num{font-size:29px;line-height:1;margin-top:9px;font-weight:900;color:var(--brand2)}
-.kpi .lbl{margin-top:7px;color:#667085;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.45px}
-.kpi.good .num{color:var(--green)}.kpi.warn .num{color:var(--orange)}.kpi.bad .num{color:var(--red)}.kpi.purple .num{color:var(--purple)}.kpi.neutral .num{color:#475467}
-.main-grid{grid-template-columns:1fr 1.25fr .95fr;margin-top:12px}
-.card{padding:16px;overflow:hidden}
-.section{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #eef2f7;padding-bottom:12px;margin-bottom:14px}
-.section h3{margin:0;color:#111827;font-size:18px;font-weight:900;letter-spacing:-.2px}
-.section p{margin:3px 0 0;color:var(--muted);font-size:12px;font-weight:700}
-.chart-box{height:300px;position:relative}
-.branch-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.branch-card{
-  border:1px solid var(--line);border-radius:18px;background:#fff;padding:14px;
-  cursor:pointer;transition:.16s ease;
-}
-.branch-card:hover{transform:translateY(-2px);border-color:#b2ddff;box-shadow:0 14px 32px rgba(21,101,216,.12)}
-.branch-card h4{margin:0 0 10px;font-size:15px;font-weight:900;color:#101828;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.progress{height:9px;border-radius:99px;background:#edf2f7;overflow:hidden}
-.progress span{display:block;height:100%;border-radius:99px;background:#1570ef}
-.progress.good span{background:#12b76a}.progress.warn span{background:#f79009}.progress.bad span{background:#f04438}
-.branch-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:11px}
-.mini-stat{background:#f8fafc;border:1px solid #eef2f7;border-radius:13px;padding:8px;text-align:center}
-.mini-stat b{display:block;color:#111827;font-size:15px;font-weight:900}.mini-stat span{display:block;margin-top:1px;color:#667085;font-size:9px;font-weight:900;text-transform:uppercase}
-.table-panel{margin-top:12px}
-.table-toolbar{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.summary-text{color:#475467;font-size:13px;font-weight:800;margin-top:3px}
-.table-wrap{overflow:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;min-width:1260px;border-collapse:separate;border-spacing:0 7px}
-th{
-  color:#667085;font-size:11px;text-transform:uppercase;letter-spacing:.55px;font-weight:900;text-align:left;
-  padding:0 10px 4px;white-space:nowrap;
-}
-td{
-  border-top:1px solid #eef2f7;border-bottom:1px solid #eef2f7;background:#fff;color:#344054;
-  padding:11px 10px;font-size:13px;font-weight:800;white-space:nowrap;vertical-align:top;
-}
-.remark-cell,.reason-cell{
-  white-space:normal!important;line-height:1.45;word-break:break-word;overflow-wrap:anywhere;
-  min-width:340px;max-width:560px;color:#243b64;
-}
-.remark-text{font-weight:900;color:#102a72}.score-mini{display:block;margin-top:5px;line-height:1.4;color:#667085;white-space:normal}.score-reason{display:block;margin-top:5px;color:#667085;font-weight:800;white-space:normal;line-height:1.4}
-td:first-child{border-left:1px solid #eef2f7;border-radius:14px 0 0 14px}
-td:last-child{border-right:1px solid #eef2f7;border-radius:0 14px 14px 0}
-tbody tr:hover td{background:#f8fbff}
-.staff-name{border:0;background:transparent;color:#175cd3;font-weight:900;text-decoration:underline;text-underline-offset:3px;padding:0;cursor:pointer}
-small{color:#98a2b3;font-weight:800}
-.badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}
-.done{background:#dcfae6;color:#067647}.pending{background:#fff6db;color:#93370d}.missing{background:#ffe4e8;color:#a11043}.check{background:#e0f2fe;color:#075985}.neutral{background:#eef2f7;color:#475467}.leave{background:#eef4ff;color:#3538cd}.low{background:#fef3f2;color:#b42318}
-.score-pill{min-width:72px;justify-content:center}
-.drawer,.modal{
-  position:fixed;z-index:100;background:#fff;border:1px solid #d0d5dd;border-radius:22px;box-shadow:0 28px 90px rgba(16,24,40,.24);
-  overflow:hidden;
-}
-.drawer{
-  right:16px;top:16px;bottom:16px;width:min(590px,calc(100vw - 32px));
-  transform:translateX(115%);transition:.22s ease;display:flex;flex-direction:column;
-}
-.drawer.open{transform:translateX(0)}
-.drawer-head,.modal-head{padding:17px;background:#101828;color:#fff;position:relative}
-.drawer-head h3,.modal-head h3{margin:0;font-size:20px;font-weight:900}.drawer-head p,.modal-head p{margin:5px 0 0;color:rgba(255,255,255,.78);font-weight:800;font-size:13px}
-.close-x{position:absolute;right:14px;top:14px;z-index:8;background:#fff;color:#101828;border:1px solid rgba(16,24,40,.12);border-radius:12px;padding:8px 12px;min-width:40px;height:38px;box-shadow:0 8px 20px rgba(16,24,40,.18)}
-.close-x:hover{background:#f2f4f7;transform:none}
-.drawer-body{padding:16px;overflow:auto}
-.drawer-actions{position:sticky;bottom:0;background:#fff;border-top:1px solid #e4e7ec;padding:12px 16px;display:flex;justify-content:flex-end;gap:10px}
-.score-explain-card{margin-bottom:12px;background:#fffef7;border-color:#fde68a}
-.score-explain-card h4{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.score-line{display:grid;gap:7px;margin-top:8px}.score-line div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #e4e7ec;padding:6px 0;font-size:12px;font-weight:900;color:#475467}.score-line b{color:#101828}
-.perf-progress{font-size:12px;font-weight:900;color:#175cd3;margin-top:6px}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.small-card{border:1px solid #e4e7ec;border-radius:18px;background:#f8fafc;padding:13px}.small-card h4{margin:0 0 9px;color:#111827;font-weight:900}
-.kv{padding:10px 0;border-bottom:1px dashed #d0d5dd}.kv b{display:block;font-size:12px;color:#344054;font-weight:900}.kv span{display:block;margin-top:4px;color:#667085;font-size:13px;font-weight:700;white-space:pre-wrap}
-.empty{padding:22px;border:1px dashed #d0d5dd;border-radius:17px;background:#f8fafc;color:#667085;font-weight:800;text-align:center}
-.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.problem-list{display:grid;gap:8px;max-height:320px;overflow:auto;padding-right:4px}
-.problem-item{border:1px solid #eef2f7;border-radius:15px;padding:10px;background:#fff;cursor:pointer}
-.problem-item:hover{background:#f8fbff;border-color:#b2ddff}
-.problem-item b{display:block;color:#101828;font-size:13px}.problem-item span{display:block;color:#667085;font-size:12px;font-weight:800;margin-top:2px}
-.toast{
-  position:fixed;right:20px;bottom:20px;z-index:200;display:none;
-  max-width:460px;background:#101828;color:#fff;border:1px solid rgba(255,255,255,.14);
-  border-radius:16px;padding:13px 16px;box-shadow:0 18px 45px rgba(7,20,63,.30);font-weight:800
-}
-.toast.show{display:block}
-.loader{
-  position:fixed;inset:0;display:none;place-items:center;z-index:180;background:rgba(248,250,252,.76);backdrop-filter:blur(4px)
-}
-.loader.active{display:grid}.spin{width:52px;height:52px;border-radius:50%;border:6px solid rgba(21,101,216,.13);border-left-color:#1565d8;animation:spin .85s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-.modal-backdrop{
-  position:fixed;inset:0;z-index:90;background:rgba(16,24,40,.44);display:none;
-}
-.modal-backdrop.open{display:block}
-.modal{
-  left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;pointer-events:none;
-  width:min(1180px,calc(100vw - 28px));max-height:90vh;display:flex;flex-direction:column;transition:.18s ease;
-}
-.modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
-.modal-body{padding:16px;overflow:auto}
-.perf-filters{display:grid;grid-template-columns:1fr 1fr 1.3fr 1.5fr auto;gap:12px;align-items:end}
-.legend{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
-.legend .mini-stat{padding:10px}.legend b{font-size:18px}
-.footer-note{margin-top:10px;color:#667085;font-size:12px;font-weight:800;line-height:1.5}
-
-/* Full-screen fast monthly performance page */
-.perf-page{
-  position:fixed;inset:0;z-index:120;background:#f5f7fb;display:none;
-  flex-direction:column;overflow:hidden;
-}
-.perf-page.open{display:flex}
-.perf-page .modal-head{
-  flex:0 0 auto;border-radius:0;position:relative;padding:14px 62px 14px 18px;
-  box-shadow:0 10px 26px rgba(16,24,40,.16)
-}
-.perf-page .modal-body{
-  flex:1;overflow:auto;padding:14px;width:100%;max-width:1720px;margin:0 auto;
-}
-.perf-top-panel{margin:0 0 12px;padding:14px;border-radius:20px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
-.perf-filters.quick{grid-template-columns:220px 1.1fr 1.25fr auto auto;align-items:end}
-.perf-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}
-.perf-kpi-grid .mini-stat{background:#f8fafc;border:1px solid #eef2f7;border-radius:16px;padding:12px}
-.perf-kpi-grid b{font-size:22px}.perf-kpi-grid span{font-size:10px}
-.perf-table table{min-width:1040px}
-.perf-table th,.perf-table td{padding:10px 9px}
-.perf-sticky-note{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;color:#475467;font-size:12px;font-weight:800;line-height:1.55}
-.perf-sticky-note span{background:#f8fafc;border:1px solid #eef2f7;border-radius:999px;padding:6px 10px}
-@media(max-width:980px){.perf-filters.quick{grid-template-columns:1fr 1fr}.perf-kpi-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.perf-filters.quick{grid-template-columns:1fr}.perf-kpi-grid{grid-template-columns:1fr}.perf-page .modal-body{padding:8px}}
-
-@media(max-width:1400px){
-  .kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
-  .main-grid{grid-template-columns:1fr}
-  .branch-grid{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:980px){
-  .topbar{grid-template-columns:1fr}.brand{border-right:0;border-bottom:1px solid var(--line);padding:0 0 12px;min-width:0}.actions{justify-content:flex-start}
-  .filters{grid-template-columns:repeat(2,1fr)}
-  .branch-grid{grid-template-columns:repeat(2,1fr)}
-  .problem-grid{grid-template-columns:1fr}
-  .perf-filters{grid-template-columns:1fr 1fr}
-  .legend{grid-template-columns:repeat(2,1fr)}
-}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Devanagari",sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{cursor:wait;opacity:.65}
+.hidden{display:none!important}
+.app{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:238px;background:linear-gradient(180deg,#173a8c 0%,#102f75 58%,#0a2359 100%);color:#fff;padding:20px 16px;z-index:40;display:flex;flex-direction:column}
+.brand{display:grid;gap:11px;padding:0 4px 22px}
+.brand-logo-box{background:#fff;border-radius:16px;padding:9px 10px;border:1px solid rgba(255,255,255,.48);box-shadow:0 12px 28px rgba(4,20,61,.24)}
+.brand-logo{width:100%;height:54px;object-fit:contain;display:block}
+.brand-copy{display:flex;flex-direction:column;justify-content:center;padding:0 5px}
+.brand-name{font-size:17px;font-weight:950;letter-spacing:.2px}.brand-sub{font-size:11px;color:#cbd9ff;font-weight:750;margin-top:3px}
+.top-logo-box{display:none;width:98px;height:38px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:4px 7px;box-shadow:0 4px 14px rgba(23,58,140,.08);flex:0 0 auto}
+.top-logo-box img{width:100%;height:100%;display:block;object-fit:contain}
+.side-nav{display:grid;gap:7px}
+.nav-btn{border:0;background:transparent;color:#b8c9d4;border-radius:14px;padding:12px 13px;display:flex;align-items:center;gap:11px;text-align:left;font-weight:850;transition:.16s}
+.nav-btn:hover{background:rgba(255,255,255,.07);color:#fff}.nav-btn.active{background:#fff;color:var(--navy);box-shadow:0 8px 22px rgba(0,0,0,.14)}
+.nav-ico{font-size:18px;width:22px;text-align:center}
+.side-foot{margin-top:auto;padding:15px 12px;border-radius:16px;background:rgba(255,255,255,.07);color:#c8d5de;font-size:12px;line-height:1.55;font-weight:700}
+.main-shell{margin-left:238px;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(242,245,249,.9);backdrop-filter:blur(16px);border-bottom:1px solid rgba(223,231,238,.9);padding:14px 22px;display:flex;align-items:center;gap:12px}
+.page-title{min-width:0;flex:1}.page-title h1{margin:0;font-size:22px;letter-spacing:-.4px}.page-title p{margin:3px 0 0;color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-actions{display:flex;align-items:center;gap:8px}
+.date-box{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:7px 10px;box-shadow:0 4px 14px rgba(11,31,51,.04)}
+.date-box input{border:0;outline:0;background:transparent;color:var(--ink);font-weight:850;min-width:124px}
+.icon-btn,.primary-btn,.soft-btn,.danger-btn{border:0;border-radius:13px;min-height:42px;padding:0 14px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.15s}
+.icon-btn{width:42px;padding:0;background:#fff;color:var(--navy);border:1px solid var(--line)}
+.primary-btn{background:var(--navy);color:#fff;box-shadow:0 8px 18px rgba(11,31,51,.17)}
+.soft-btn{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.danger-btn{background:#fff0f2;color:var(--bad);border:1px solid #ffd3d9}
+.icon-btn:hover,.primary-btn:hover,.soft-btn:hover,.danger-btn:hover{transform:translateY(-1px)}
+.content{padding:20px 22px 100px;max-width:1600px;margin:0 auto}
+.view{display:none}.view.active{display:block}
+.flashline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px;min-height:28px}
+.live-pill{display:inline-flex;align-items:center;gap:7px;color:var(--good);font-size:12px;font-weight:900}.live-dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 0 5px rgba(20,134,91,.12)}
+.sync-text{color:var(--muted);font-size:12px;font-weight:750}
+.hero{background:linear-gradient(125deg,#173a8c 0%,#1f5fd1 62%,#3978e8 100%);color:#fff;border-radius:28px;padding:26px;display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center;box-shadow:0 20px 50px rgba(11,31,51,.18);overflow:hidden;position:relative}
+.hero:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;right:-95px;top:-125px;background:radial-gradient(circle,rgba(244,180,0,.32),rgba(255,255,255,.04) 62%,transparent 63%)}
+.hero-copy{position:relative;z-index:1}.eyebrow{color:#ffe49a;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:1px}.hero h2{font-size:30px;line-height:1.15;margin:8px 0 10px;letter-spacing:-.8px}.hero p{margin:0;color:#dce7ff;font-weight:700;font-size:14px;max-width:620px;line-height:1.55}
+.hero-score{position:relative;z-index:1;width:142px;height:142px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) var(--pct,0%),rgba(255,255,255,.13) 0);box-shadow:0 16px 40px rgba(0,0,0,.18)}
+.hero-score:before{content:"";position:absolute;inset:11px;border-radius:50%;background:#143985}
+.hero-score strong,.hero-score span{position:relative;z-index:1;text-align:center}.hero-score strong{font-size:34px;display:block}.hero-score span{font-size:11px;color:#dce7ff;font-weight:850}
+.metric-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px;margin-top:14px}
+.metric{appearance:none;width:100%;text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:var(--shadow);display:flex;align-items:center;gap:11px;min-height:90px;transition:transform .15s,box-shadow .15s,border-color .15s}.metric:hover{transform:translateY(-2px);box-shadow:0 15px 34px rgba(11,31,51,.11);border-color:#c9d9e3}.metric:active{transform:scale(.985)}
+.metric-ico{width:42px;height:42px;flex:0 0 42px;border-radius:14px;display:grid;place-items:center;font-size:19px;font-weight:950;background:#eef3f7;color:#526471}.metric.total .metric-ico{background:#e9f1ff;color:var(--info)}.metric.required .metric-ico{background:#edf3ff;color:var(--brand)}.metric.good .metric-ico{background:#e6f6ef;color:var(--good)}.metric.warn .metric-ico{background:#fff3dd;color:var(--warn)}.metric.bad .metric-ico{background:#ffebee;color:var(--bad)}.metric.leave .metric-ico{background:#f0ecff;color:var(--leave)}.metric.info .metric-ico{background:#e9f0ff;color:var(--info)}.metric.score .metric-ico{background:#fff5d9;color:#9a6500}
+.metric strong{font-size:24px;line-height:1}.metric span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.45px;font-weight:900;margin-top:6px;line-height:1.25}
+.two-col{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:14px}.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.panel-head h3{margin:0;font-size:17px}.panel-head p{margin:3px 0 0;color:var(--muted);font-size:12px;font-weight:700}.count-pill{border-radius:999px;background:#edf3ff;color:var(--brand);padding:6px 10px;font-size:11px;font-weight:900;white-space:nowrap}
+.attention-list,.unit-list{display:grid;gap:9px}.attention-row,.unit-row{border:1px solid #edf1f4;border-radius:16px;padding:12px;display:flex;align-items:center;gap:11px;background:#fff;transition:.14s}.attention-row:hover,.unit-row:hover{background:#f7faff;border-color:#d8e4fb}
+.avatar{width:40px;height:40px;flex:0 0 40px;border-radius:13px;background:linear-gradient(145deg,#dce8ff,#f1f6ff);display:grid;place-items:center;color:var(--brand);font-weight:950}
+.row-main{min-width:0;flex:1}.row-main b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row-main span{display:block;color:var(--muted);font-size:11px;font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:950;white-space:nowrap}.b-good{background:#e4f6ee;color:var(--good)}.b-warn{background:#fff2da;color:var(--warn)}.b-bad{background:#ffeaee;color:var(--bad)}.b-info{background:#e9f0ff;color:var(--info)}.b-leave{background:#eeeaff;color:var(--leave)}.b-neutral{background:#eef2f5;color:#5f6f7c}
+.unit-row{display:grid;grid-template-columns:minmax(120px,1fr) minmax(180px,2fr) auto;gap:12px}.unit-name b{display:block;font-size:13px}.unit-name span{display:block;color:var(--muted);font-size:11px;margin-top:3px;font-weight:700}.progress{height:9px;background:#edf2f4;border-radius:999px;overflow:hidden}.progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--brand2));width:0}.progress-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;font-weight:850;margin-top:6px}
+.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}.section-title h2{margin:0;font-size:24px;letter-spacing:-.5px}.section-title p{margin:4px 0 0;color:var(--muted);font-size:13px;font-weight:700}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:13px}.search{flex:1;min-width:220px;position:relative}.search input{width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px 12px 39px;outline:none;font-weight:750}.search input:focus{border-color:#7da7f7;box-shadow:0 0 0 4px rgba(31,95,209,.11)}.search:before{content:"⌕";position:absolute;left:14px;top:8px;font-size:22px;color:var(--muted)}
+.chip-row{display:flex;gap:7px;overflow:auto;padding-bottom:2px;scrollbar-width:none}.chip-row::-webkit-scrollbar{display:none}.branch-filter-box{margin-top:12px;padding:13px;border:1px solid var(--line);background:linear-gradient(180deg,#ffffff,#f8fbff);border-radius:18px;box-shadow:var(--shadow)}.branch-filter-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:9px}.branch-filter-head strong{font-size:13px;color:var(--navy)}.branch-filter-head span{font-size:11px;color:var(--muted);font-weight:700}.branch-chip-row .chip{padding:9px 13px}.chip{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:8px 12px;font-size:11px;font-weight:900;white-space:nowrap}.chip.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.staff-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.staff-card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:15px;box-shadow:0 7px 22px rgba(11,31,51,.055);display:grid;gap:12px;transition:.15s}.staff-card:hover{transform:translateY(-2px);box-shadow:0 13px 30px rgba(11,31,51,.09)}
+.staff-top{display:flex;align-items:flex-start;gap:11px}.staff-top .avatar{width:44px;height:44px;flex-basis:44px}.staff-name{min-width:0;flex:1}.staff-name b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.staff-name span{display:block;color:var(--muted);font-size:11px;margin-top:4px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.score-dot{width:45px;height:45px;flex:0 0 45px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--scoreColor,var(--brand)) var(--score,0%),#edf1f4 0);position:relative}.score-dot:before{content:"";position:absolute;inset:5px;background:#fff;border-radius:50%}.score-dot b{position:relative;font-size:11px}
+.report-steps{display:grid;grid-template-columns:1fr 1fr;gap:8px}.step{border-radius:12px;padding:9px;background:#f7f9fb;border:1px solid #edf1f4}.step span{display:block;color:var(--muted);font-size:9px;font-weight:900;text-transform:uppercase}.step b{display:block;font-size:11px;margin-top:4px}.step.ok b{color:var(--good)}.step.no b{color:var(--bad)}.step.na b{color:var(--leave)}
+.remark{font-size:11px;color:#526471;line-height:1.5;min-height:34px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px}.link-btn{border:0;background:transparent;color:var(--brand);font-weight:950;font-size:12px;padding:7px 0}.risk{color:var(--bad);font-size:10px;font-weight:900}
+.load-more{display:block;margin:16px auto 0}
+.empty{padding:28px 16px;border:1px dashed #cbd7df;border-radius:17px;text-align:center;color:var(--muted);font-weight:750;background:#fafcfd}
+.skeleton{position:relative;overflow:hidden;background:#e9eef2!important;color:transparent!important;border-color:transparent!important}.skeleton:after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:shine 1.15s infinite}@keyframes shine{100%{transform:translateX(100%)}}
+.month-box{display:grid;grid-template-columns:180px 1fr 1fr auto;gap:10px;align-items:end}.field label{display:block;color:var(--muted);font-size:10px;font-weight:950;text-transform:uppercase;margin-bottom:6px}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:13px;background:#fff;padding:11px 12px;outline:none;font-weight:800;color:var(--ink)}
+.month-progress{margin:13px 0 0;color:var(--brand);font-size:12px;font-weight:850}.month-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-top:14px}.month-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:var(--shadow)}.month-score{font-size:25px;font-weight:950}.month-reason{color:var(--muted);font-size:11px;line-height:1.55;margin-top:10px}.month-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.month-stats div{background:#f7f9fb;border-radius:10px;padding:8px;text-align:center}.month-stats b{display:block;font-size:13px}.month-stats span{display:block;font-size:8px;color:var(--muted);font-weight:900;text-transform:uppercase;margin-top:2px}
+.kpi-sheet{right:0;top:0;bottom:0;width:min(520px,100vw);transform:translateX(105%);padding:20px;overflow:auto}.kpi-sheet.open{transform:translateX(0)}
+.kpi-sheet .sheet-head{position:sticky;top:-20px;z-index:2;background:#fff;padding-top:2px}
+.kpi-choice-summary{margin:15px 0 12px;padding:14px;border-radius:16px;background:linear-gradient(135deg,#edf3ff,#f8fbff);border:1px solid #d5e3ff;color:var(--navy)}
+.kpi-choice-summary b{display:block;font-size:17px}.kpi-choice-summary span{display:block;margin-top:4px;color:var(--muted);font-size:11px;font-weight:750}
+.kpi-branch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.kpi-branch-card{appearance:none;border:1px solid var(--line);background:#fff;border-radius:17px;padding:14px;text-align:left;color:var(--ink);box-shadow:0 7px 20px rgba(23,58,140,.06);transition:.15s;min-height:104px}
+.kpi-branch-card:hover{transform:translateY(-2px);border-color:#9fbcf5;box-shadow:0 13px 28px rgba(23,58,140,.12)}
+.kpi-branch-card.all{grid-column:1/-1;background:linear-gradient(135deg,var(--navy),var(--brand));color:#fff;border:0}
+.kpi-branch-card .branch-count{font-size:27px;font-weight:950;line-height:1}.kpi-branch-card .branch-label{display:block;font-size:13px;font-weight:950;margin-top:9px}.kpi-branch-card .branch-meta{display:block;font-size:10px;color:var(--muted);font-weight:750;margin-top:5px;line-height:1.4}.kpi-branch-card.all .branch-meta{color:#dce7ff}
+.kpi-sheet-note{margin-top:12px;color:var(--muted);font-size:11px;font-weight:700;line-height:1.55}
+.mobile-nav{display:none}
+.overlay{position:fixed;inset:0;background:rgba(7,21,33,.45);z-index:80;display:none}.overlay.open{display:block}
+.sheet{position:fixed;z-index:90;background:#fff;box-shadow:0 25px 80px rgba(7,21,33,.27);transition:.22s ease}
+.filter-sheet{right:0;top:0;bottom:0;width:min(430px,100vw);transform:translateX(105%);padding:20px;overflow:auto}.filter-sheet.open{transform:translateX(0)}
+.detail-sheet{right:14px;top:14px;bottom:14px;width:min(620px,calc(100vw - 28px));border-radius:24px;transform:translateX(110%);overflow:hidden;display:flex;flex-direction:column}.detail-sheet.open{transform:translateX(0)}
+.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}.detail-sheet .sheet-head{padding:18px 18px 14px;background:var(--navy);color:#fff}.sheet-head h3{margin:0;font-size:20px}.sheet-head p{margin:4px 0 0;color:var(--muted);font-size:12px;font-weight:700}.detail-sheet .sheet-head p{color:#b9ccd6}
+.close-btn{border:0;background:#eef2f4;color:var(--navy);border-radius:12px;width:38px;height:38px;font-weight:950}.detail-sheet .close-btn{background:rgba(255,255,255,.13);color:#fff}
+.sheet-body{padding:18px;overflow:auto}.filter-grid{display:grid;gap:13px;margin-top:16px}.filter-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+.detail-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:13px}.detail-summary div{background:#f5f8fa;border:1px solid #e8eef2;border-radius:13px;padding:10px;text-align:center}.detail-summary b{display:block;font-size:15px}.detail-summary span{display:block;font-size:8px;color:var(--muted);font-weight:950;text-transform:uppercase;margin-top:3px}
+.detail-block{border:1px solid var(--line);border-radius:17px;padding:13px;margin-top:10px}.detail-block h4{margin:0 0 10px;font-size:14px}.kv{padding:9px 0;border-bottom:1px dashed #d9e1e6}.kv:last-child{border-bottom:0}.kv b{display:block;font-size:10px;color:#405360;text-transform:none}.kv span{display:block;margin-top:4px;color:var(--muted);font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.score-bars{display:grid;gap:8px}.score-line{display:grid;grid-template-columns:120px 1fr 42px;align-items:center;gap:8px;font-size:10px;font-weight:850;color:var(--muted)}.score-line i{height:7px;background:#edf1f4;border-radius:999px;overflow:hidden}.score-line i:after{content:"";display:block;height:100%;width:var(--w);background:var(--brand);border-radius:999px}.score-line b{text-align:right;color:var(--ink)}
+.toast{position:fixed;z-index:200;left:50%;bottom:26px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--navy);color:#fff;border-radius:14px;padding:12px 16px;font-size:12px;font-weight:800;box-shadow:0 16px 40px rgba(7,21,33,.3);transition:.2s;max-width:min(500px,calc(100vw - 32px));text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1200px){.staff-grid,.month-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.metric-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){
+  .metric-grid{grid-template-columns:repeat(3,1fr)}
+  .sidebar{display:none}.main-shell{margin-left:0}.topbar{padding:9px 11px}.top-logo-box{display:block}.content{padding:14px 13px 96px}.page-title h1{font-size:18px}.page-title p{max-width:44vw}.top-actions .desktop-only{display:none}.date-box{padding:6px 8px}.date-box input{min-width:112px;font-size:12px}.hero{border-radius:22px;padding:20px}.hero h2{font-size:25px}.two-col{grid-template-columns:1fr}.mobile-nav{display:grid;position:fixed;z-index:55;left:10px;right:10px;bottom:max(10px,env(safe-area-inset-bottom));grid-template-columns:repeat(4,1fr);background:rgba(23,58,140,.97);backdrop-filter:blur(14px);border-radius:18px;padding:6px;box-shadow:0 18px 45px rgba(7,21,33,.28)}.mobile-nav button{border:0;background:transparent;color:#c7d6ff;border-radius:12px;padding:7px 3px;font-size:9px;font-weight:900;display:grid;gap:3px;place-items:center}.mobile-nav button span{font-size:17px}.mobile-nav button.active{background:#fff;color:var(--navy)}.detail-sheet{inset:auto 0 0 0;width:100%;height:min(88vh,820px);border-radius:24px 24px 0 0;transform:translateY(105%)}.detail-sheet.open{transform:translateY(0)}.filter-sheet,.kpi-sheet{inset:auto 0 0 0;width:100%;max-height:88vh;border-radius:24px 24px 0 0;transform:translateY(105%)}.filter-sheet.open,.kpi-sheet.open{transform:translateY(0)}.kpi-sheet .sheet-head{top:-20px}}
 @media(max-width:640px){
-  .app{padding:8px}.topbar,.panel,.card{border-radius:18px}.brand img{width:118px;height:46px}.brand h1{font-size:17px}.page-title h2{font-size:20px}
-  .filters,.perf-filters{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.branch-grid{grid-template-columns:1fr}
-  .actions button{width:100%}.chart-box{height:260px}.split{grid-template-columns:1fr}
-}
-@media print{
-  body{background:#fff}.actions,.filters,.drawer,.toast,.loader,.modal,.modal-backdrop,.perf-page{display:none!important}.topbar,.panel,.card{box-shadow:none;break-inside:avoid}
-}
+  .topbar{gap:7px}.top-logo-box{width:82px;height:34px;padding:3px 5px}.page-title p{display:none}.date-box span{display:none}.date-box input{min-width:106px}.hero{grid-template-columns:1fr auto;padding:18px}.hero h2{font-size:21px}.hero p{font-size:12px}.hero-score{width:102px;height:102px}.hero-score strong{font-size:25px}.metric-grid{grid-template-columns:repeat(2,1fr);gap:8px}.metric{min-height:80px;padding:12px;gap:9px}.metric-ico{width:36px;height:36px;border-radius:11px;font-size:16px}.metric strong{font-size:20px}.metric span{font-size:8px}.panel{padding:14px;border-radius:18px}.staff-grid,.month-grid{grid-template-columns:1fr}.unit-row{grid-template-columns:1fr auto}.unit-row .unit-progress{grid-column:1/-1;grid-row:2}.section-title{align-items:flex-start}.section-title h2{font-size:21px}.month-box{grid-template-columns:1fr 1fr}.month-box .primary-btn{grid-column:1/-1}.detail-summary{grid-template-columns:repeat(2,1fr)}.score-line{grid-template-columns:96px 1fr 36px}}
+@media(max-width:420px){.kpi-branch-grid{grid-template-columns:1fr}.kpi-branch-card.all{grid-column:auto}.hero{grid-template-columns:1fr}.hero-score{width:100%;height:76px;border-radius:18px;background:rgba(255,255,255,.1)}.hero-score:before{display:none}.hero-score strong{display:inline;font-size:25px}.hero-score span{display:inline;margin-left:6px}.metric{display:block}.metric-ico{margin-bottom:9px}.topbar .primary-btn{display:none}}
+@media print{.sidebar,.topbar,.mobile-nav,.filter-sheet,.kpi-sheet,.detail-sheet,.overlay,.toast{display:none!important}.main-shell{margin:0}.content{padding:0}.view{display:block!important}.hero{color:#000;background:#fff;border:1px solid #ccc;box-shadow:none}.panel,.metric,.staff-card{box-shadow:none;break-inside:avoid}}
 </style>
 </head>
 <body>
-<div class="loader" id="loader"><div class="spin"></div></div>
-<div class="toast" id="toast"></div>
-<div class="modal-backdrop" id="modalBackdrop"></div>
-
 <div class="app">
-  <header class="topbar">
-    <div class="brand">
-      <img src="https://anikfin.com/wp-content/uploads/2024/06/anik-horizontal-1-1024x400.png" alt="ANIK Financial Services" referrerpolicy="no-referrer">
-      <div>
-        <h1>ANIK Pro Dashboard</h1>
-        <p>Plan • Actual • Leave • Performance</p>
-      </div>
-    </div>
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-logo-box"><img class="brand-logo" src="https://anikfin.com/wp-content/uploads/2024/06/anik-horizontal-1-1024x400.png" alt="ANIK Financial Services" loading="eager" fetchpriority="high" referrerpolicy="no-referrer"></div><div class="brand-copy"><div class="brand-name">ANIK Command Center</div><div class="brand-sub">Fast Staff Control System</div></div></div>
+    <nav class="side-nav">
+      <button class="nav-btn active" data-view="overview"><span class="nav-ico">⌂</span>आजची स्थिती</button>
+      <button class="nav-btn" data-view="staff"><span class="nav-ico">◎</span>कर्मचारी</button>
+      <button class="nav-btn" data-view="units"><span class="nav-ico">▦</span>शाखा</button>
+      <button class="nav-btn" data-view="monthly"><span class="nav-ico">★</span>मासिक स्कोअर</button>
+    </nav>
+    <div class="side-foot">रजेवरील कर्मचारी Pending मध्ये धरले जात नाहीत.<br><b>Simple • Fast • Clear</b></div>
+  </aside>
 
-    <div class="page-title">
-      <h2>Staff Report Control Room</h2>
-      <p>रजा staff pending मध्ये count होणार नाही. Pending, report quality, plan-vs-actual आणि problematic staff एकाच dashboard वर.</p>
-    </div>
-
-    <div class="actions">
-      <button class="btn-dark" id="performanceBtn">🏆 Monthly Staff Score</button>
-      <button class="btn-soft" id="copySummary">📋 Copy Summary</button>
-      <button class="btn-soft" id="exportCsv">⬇️ CSV</button>
-      <button class="btn-soft" onclick="window.print()">🖨️ Print</button>
-      <button class="btn-primary" id="refreshBtn">🔄 Refresh</button>
-    </div>
-  </header>
-
-  <section class="panel">
-    <div class="filters">
-      <div>
-        <label>📅 दिनांक</label>
-        <input type="date" id="dashDate">
+  <div class="main-shell">
+    <header class="topbar">
+      <div class="top-logo-box"><img src="https://anikfin.com/wp-content/uploads/2024/06/anik-horizontal-1-1024x400.png" alt="ANIK" loading="eager" fetchpriority="high" referrerpolicy="no-referrer"></div>
+      <div class="page-title"><h1 id="screenTitle">आजची स्थिती</h1><p id="screenSub">काय पूर्ण झाले आणि कुठे लक्ष द्यायचे ते एका नजरेत.</p></div>
+      <div class="top-actions">
+        <div class="date-box"><span>📅</span><input type="date" id="dashDate" aria-label="दिनांक"></div>
+        <button class="icon-btn" id="filterBtn" title="फिल्टर">☷</button>
+        <button class="icon-btn" id="refreshBtn" title="Refresh">↻</button>
+        <button class="soft-btn desktop-only" id="copyBtn">कॉपी</button>
+        <button class="primary-btn" id="pendingBtn">बाकी काम</button>
       </div>
-      <div>
-        <label>🏦 शाखा</label>
-        <select id="branchFilter"><option value="">All Branches</option></select>
-      </div>
-      <div>
-        <label>👤 पद / Role</label>
-        <select id="roleFilter"><option value="">All Roles</option></select>
-      </div>
-      <div>
-        <label>🚦 Report Status</label>
-        <select id="statusFilter">
-          <option value="">All Status</option>
-          <option value="required">Report Required Staff</option>
-          <option value="leave">On Leave - Not Pending</option>
-          <option value="complete">Complete - Morning + Evening Done</option>
-          <option value="pending">Pending - Any Report Pending</option>
-          <option value="morningPending">Morning Pending</option>
-          <option value="eveningPending">Evening Pending</option>
-          <option value="missing">Both Missing</option>
-          <option value="check">Check - Evening Done, Morning Missing</option>
-          <option value="lowQuality">Low Quality / Low Achievement</option>
-          <option value="red">Red Attention</option>
-        </select>
-      </div>
-      <div>
-        <label>🔎 Staff Search</label>
-        <input type="search" id="searchBox" placeholder="नाव / शाखा / role / remark शोधा">
-      </div>
-      <button class="btn-primary" id="applyBtn">Apply</button>
-    </div>
+    </header>
 
-    <div class="status-line">
-      <span class="tag"><span class="live-dot"></span> LIVE DASHBOARD</span>
-      <span class="tag" id="lastRefresh">Refresh pending</span>
-      <span class="tag" id="leaveNote">Leave logic active</span>
-    </div>
-
-    <div class="grid kpis">
-      <div class="card kpi" data-kpi="all"><div class="ico">👥</div><div class="num" id="kTotal">0</div><div class="lbl">Total Active Staff</div></div>
-      <div class="card kpi neutral" data-kpi="leave"><div class="ico">🏖️</div><div class="num" id="kLeave">0</div><div class="lbl">On Leave Today</div></div>
-      <div class="card kpi" data-kpi="required"><div class="ico">📝</div><div class="num" id="kRequired">0</div><div class="lbl">Report Required</div></div>
-      <div class="card kpi good" data-kpi="complete"><div class="ico">✅</div><div class="num" id="kComplete">0</div><div class="lbl">Full Report Done</div></div>
-      <div class="card kpi warn" data-kpi="pending"><div class="ico">⏳</div><div class="num" id="kPending">0</div><div class="lbl">Real Pending</div></div>
-      <div class="card kpi" data-kpi="morningPending"><div class="ico">🌅</div><div class="num" id="kMorningPending">0</div><div class="lbl">Morning Pending</div></div>
-      <div class="card kpi purple" data-kpi="eveningPending"><div class="ico">🌙</div><div class="num" id="kEveningPending">0</div><div class="lbl">Evening Pending</div></div>
-      <div class="card kpi good" data-kpi="complete"><div class="ico">📈</div><div class="num" id="kCompletion">0%</div><div class="lbl">Completion Rate</div></div>
-      <div class="card kpi" data-kpi="lowQuality"><div class="ico">🎯</div><div class="num" id="kAvgScore">0</div><div class="lbl">Avg Staff Score</div></div>
-      <div class="card kpi bad" data-kpi="red"><div class="ico">🚨</div><div class="num" id="kRed">0</div><div class="lbl">Red Attention</div></div>
-    </div>
-  </section>
-
-  <section class="grid main-grid">
-    <div class="card">
-      <div class="section">
-        <div><h3>🏦 Branch Completion</h3><p>Leave staff separate; pending count मध्ये नाही.</p></div>
-        <span class="tag">Done / Pending / Leave</span>
-      </div>
-      <div class="chart-box"><canvas id="branchChart"></canvas></div>
-    </div>
-
-    <div class="card">
-      <div class="section">
-        <div><h3>🎯 Branch System Performance</h3><p>OD, Collection, Disbursement, NC achievement.</p></div>
-        <span class="tag">System KPI</span>
-      </div>
-      <div class="chart-box"><canvas id="systemChart"></canvas></div>
-    </div>
-
-    <div class="card">
-      <div class="section">
-        <div><h3>🚦 Report Mix</h3><p>Complete, pending, missing, check and leave split.</p></div>
-        <span class="tag">Status Split</span>
-      </div>
-      <div class="chart-box"><canvas id="statusChart"></canvas></div>
-    </div>
-  </section>
-
-  <section class="grid" style="grid-template-columns:1.2fr .8fr;margin-top:12px">
-    <div class="card">
-      <div class="section">
-        <div><h3>⚡ Branch-wise Fast Position</h3><p>Click branch card to filter full dashboard.</p></div>
-        <span class="tag" id="branchCountTag">0 Branches</span>
-      </div>
-      <div class="branch-grid" id="branchCards"></div>
-    </div>
-
-    <div class="card">
-      <div class="section">
-        <div><h3>🚨 Problematic Staff</h3><p>Pending, missing report, low quality / low achievement.</p></div>
-        <span class="tag">Top Risk</span>
-      </div>
-      <div class="chart-box" style="height:230px"><canvas id="problemChart"></canvas></div>
-      <div class="problem-list" id="problemList"></div>
-    </div>
-  </section>
-
-  <section class="card table-panel">
-    <div class="table-toolbar">
-      <div>
-        <div class="section" style="border:0;margin:0;padding:0">
-          <div>
-            <h3>👥 Staff-wise Done / Pending Control Table</h3>
-            <p>Leave status असल्यास final status “On Leave” येईल आणि pending मध्ये count होणार नाही.</p>
-          </div>
+    <main class="content">
+      <section class="view active" id="view-overview">
+        <div class="flashline"><span class="live-pill"><i class="live-dot"></i>LIVE CONTROL</span><span class="sync-text" id="syncText">डेटा घेत आहे...</span></div>
+        <div class="hero" id="heroCard">
+          <div class="hero-copy"><div class="eyebrow">आजचा रिपोर्ट पल्स</div><h2 id="heroTitle">Dashboard तयार होत आहे</h2><p id="heroText">तुमची माहिती मिळताच सर्वात महत्त्वाची स्थिती इथे दिसेल.</p></div>
+          <div class="hero-score" id="heroScore" style="--pct:0%"><div><strong id="completionPct">0%</strong><span>पूर्णता</span></div></div>
         </div>
-        <div class="summary-text" id="tableSummary">No data loaded.</div>
-      </div>
-      <div class="actions">
-        <button class="btn-danger" id="showPending">🚨 Pending Only</button>
-        <button class="btn-soft" id="showLeave">🏖️ Leave Only</button>
-        <button class="btn-soft" id="clearFilter">Clear Filter</button>
-      </div>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Staff</th>
-            <th>Role</th>
-            <th>Branch</th>
-            <th>Leave</th>
-            <th>Morning</th>
-            <th>Evening</th>
-            <th>Final Status</th>
-            <th>Score</th>
-            <th>Remark</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="staffTable">
-          <tr><td colspan="10">Loading...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+        <div class="metric-grid" aria-label="Dashboard KPI">
+          <button class="metric total" data-status="" title="सर्व कर्मचारी दाखवा"><div class="metric-ico">◎</div><div><strong id="mTotal">0</strong><span>एकूण Active Staff</span></div></button>
+          <button class="metric leave" data-status="leave" title="आज रजेवरील कर्मचारी"><div class="metric-ico">☂</div><div><strong id="mLeave">0</strong><span>आज रजेवर</span></div></button>
+          <button class="metric required" data-status="required" title="Report आवश्यक कर्मचारी"><div class="metric-ico">✎</div><div><strong id="mRequired">0</strong><span>Report Required</span></div></button>
+          <button class="metric good" data-status="complete" title="दोन्ही report पूर्ण"><div class="metric-ico">✓</div><div><strong id="mComplete">0</strong><span>Full Report Done</span></div></button>
+          <button class="metric warn" data-status="pending" title="रजा वगळून खरे pending"><div class="metric-ico">⌛</div><div><strong id="mPending">0</strong><span>Real Pending</span></div></button>
+          <button class="metric info" data-status="morningPending" title="Morning Plan बाकी"><div class="metric-ico">☀</div><div><strong id="mMorningPending">0</strong><span>Morning Pending</span></div></button>
+          <button class="metric leave" data-status="eveningPending" title="Evening Actual बाकी"><div class="metric-ico">☾</div><div><strong id="mEveningPending">0</strong><span>Evening Pending</span></div></button>
+          <button class="metric good" data-status="complete" title="Report पूर्णता टक्केवारी"><div class="metric-ico">↗</div><div><strong id="mCompletion">0%</strong><span>Completion Rate</span></div></button>
+          <button class="metric score" data-status="lowQuality" title="कमी score कर्मचारी दाखवा"><div class="metric-ico">★</div><div><strong id="mAvgScore">0</strong><span>Avg Staff Score</span></div></button>
+          <button class="metric bad" data-status="red" title="तातडीने लक्ष आवश्यक"><div class="metric-ico">!</div><div><strong id="mAttention">0</strong><span>Red Attention</span></div></button>
+        </div>
+        <div class="two-col">
+          <div class="panel"><div class="panel-head"><div><h3>तातडीने लक्ष द्या</h3><p>Missing report किंवा कमी score.</p></div><span class="count-pill" id="attentionCount">0 Staff</span></div><div class="attention-list" id="attentionList"></div></div>
+          <div class="panel"><div class="panel-head"><div><h3>शाखांची स्थिती</h3><p>सर्वात कमी पूर्णता वर दिसते.</p></div><button class="link-btn" data-go="units">सर्व पहा →</button></div><div class="unit-list" id="overviewUnits"></div></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-staff">
+        <div class="section-title"><div><h2>कर्मचारी स्थिती</h2><p id="staffSummary">सर्व कर्मचारी</p></div><button class="soft-btn" id="csvBtn">CSV</button></div>
+        <div class="toolbar"><div class="search"><input type="search" id="searchBox" placeholder="नाव, शाखा किंवा remark शोधा"></div><button class="soft-btn" id="staffFilterBtn">फिल्टर</button></div>
+        <div class="chip-row" id="statusChips">
+          <button class="chip active" data-chip="">सर्व</button><button class="chip" data-chip="complete">पूर्ण</button><button class="chip" data-chip="pending">बाकी</button><button class="chip" data-chip="missing">दोन्ही Missing</button><button class="chip" data-chip="red">लक्ष द्या</button><button class="chip" data-chip="leave">रजा</button>
+        </div>
+        <div class="branch-filter-box">
+          <div class="branch-filter-head">
+            <strong id="kpiBranchTitle">KPI नुसार शाखा फिल्टर</strong>
+            <span id="kpiBranchHint">KPI वर click केल्यावर शाखेनुसार लगेच filter करा.</span>
+          </div>
+          <div class="chip-row branch-chip-row" id="kpiBranchChips"></div>
+        </div>
+        <div class="staff-grid" id="staffGrid" style="margin-top:13px"></div>
+        <button class="soft-btn load-more hidden" id="loadMoreBtn">आणखी कर्मचारी दाखवा</button>
+      </section>
+
+      <section class="view" id="view-units">
+        <div class="section-title"><div><h2>शाखा नियंत्रण</h2><p>पूर्ण, बाकी आणि रजा यांची सोपी तुलना.</p></div><span class="count-pill" id="unitCount">0 शाखा</span></div>
+        <div class="panel"><div class="unit-list" id="allUnits"></div></div>
+      </section>
+
+      <section class="view" id="view-monthly">
+        <div class="section-title"><div><h2>मासिक कर्मचारी स्कोअर</h2><p>हा report फक्त button दाबल्यावर तयार होतो, त्यामुळे dashboard fast राहतो.</p></div></div>
+        <div class="panel">
+          <div class="month-box">
+            <div class="field"><label>महिना</label><input type="month" id="perfMonth"></div>
+            <div class="field"><label>शाखा</label><select id="perfBranch"><option value="">सर्व शाखा</option></select></div>
+            <div class="field"><label>कर्मचारी</label><select id="perfStaff"><option value="">सर्व कर्मचारी</option></select></div>
+            <button class="primary-btn" id="generatePerf">स्कोअर तयार करा</button>
+          </div>
+          <div class="month-progress" id="monthProgress">मासिक report अजून तयार केलेला नाही.</div>
+        </div>
+        <div class="month-grid" id="monthGrid"></div>
+      </section>
+    </main>
+  </div>
 </div>
 
-<aside class="drawer" id="drawer">
-  <button class="close-x" id="closeDrawer" type="button" title="Close">✕</button>
-  <div class="drawer-head">
-    <h3 id="drawerTitle">Staff Detail</h3>
-    <p id="drawerSub">Morning plan + evening actual + leave status</p>
+<nav class="mobile-nav">
+  <button class="active" data-view="overview"><span>⌂</span>आज</button><button data-view="staff"><span>◎</span>Staff</button><button data-view="units"><span>▦</span>शाखा</button><button data-view="monthly"><span>★</span>स्कोअर</button>
+</nav>
+<div class="overlay" id="overlay"></div>
+<aside class="sheet filter-sheet" id="filterSheet">
+  <div class="sheet-head"><div><h3>Dashboard Filter</h3><p>फक्त आवश्यक माहिती निवडा.</p></div><button class="close-btn" data-close>✕</button></div>
+  <div class="filter-grid">
+    <div class="field"><label>शाखा</label><select id="branchFilter"><option value="">सर्व शाखा</option></select></div>
+    <div class="field"><label>पद / Role</label><select id="roleFilter"><option value="">सर्व पदे</option></select></div>
+    <div class="field"><label>स्थिती</label><select id="statusFilter"><option value="">सर्व स्थिती</option><option value="required">Report Required</option><option value="complete">पूर्ण</option><option value="pending">बाकी</option><option value="morningPending">Morning बाकी</option><option value="eveningPending">Evening बाकी</option><option value="missing">दोन्ही Missing</option><option value="lowQuality">कमी Score</option><option value="red">तातडीने लक्ष</option><option value="leave">रजा</option></select></div>
   </div>
-  <div class="drawer-body">
-    <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
-      <div class="mini-stat"><b id="dLeave">-</b><span>Leave</span></div>
-      <div class="mini-stat"><b id="dMorning">-</b><span>Morning</span></div>
-      <div class="mini-stat"><b id="dEvening">-</b><span>Evening</span></div>
-      <div class="mini-stat"><b id="dQuality">-</b><span>Score</span></div>
-    </div>
-    <div class="small-card" id="leaveBox" style="margin-bottom:12px;display:none">
-      <h4>🏖️ Leave Remark</h4>
-      <div id="leaveText"></div>
-    </div>
-    <div class="small-card score-explain-card" id="scoreBox">
-      <h4>🧮 Score का दिला? <span class="badge neutral" id="scoreBadge">-</span></h4>
-      <div id="scoreReason"></div>
-    </div>
-    <div class="split">
-      <div class="small-card"><h4>🌅 सकाळचे नियोजन</h4><div id="morningList"></div></div>
-      <div class="small-card"><h4>🌙 सायंकाळची कामगिरी</h4><div id="eveningList"></div></div>
-    </div>
-  </div>
-  <div class="drawer-actions">
-    <button class="btn-soft" id="closeDrawerBottom" type="button">✕ Close</button>
-  </div>
+  <div class="filter-actions"><button class="soft-btn" id="clearFilters">साफ करा</button><button class="primary-btn" id="applyFiltersBtn">लागू करा</button></div>
 </aside>
-
-<section class="perf-page" id="perfModal" aria-label="Monthly Staff Performance">
-  <div class="modal-head">
-    <button class="close-x" id="closePerf" type="button" title="Close">✕</button>
-    <h3>🏆 Monthly Staff Performance Score</h3>
-    <p>Popup नाही — full screen quick monthly score. Daily score सारखेच कारण clear Marathi मध्ये दिसेल.</p>
-  </div>
-  <div class="modal-body">
-    <div class="perf-top-panel">
-      <div class="perf-filters quick">
-        <div>
-          <label>📅 महिना</label>
-          <input type="month" id="perfMonth">
-        </div>
-        <div>
-          <label>🏦 शाखा / Unit</label>
-          <select id="perfBranch"><option value="">All Units</option></select>
-        </div>
-        <div>
-          <label>👤 Staff</label>
-          <select id="perfStaff"><option value="">All Staff</option></select>
-        </div>
-        <button class="btn-primary" id="generatePerf">⚡ Quick Score</button>
-        <button class="btn-soft" id="closePerf2" type="button">⬅ Dashboard</button>
-      </div>
-
-      <div class="perf-kpi-grid">
-        <div class="mini-stat"><b id="mPerfStaff">0</b><span>Staff</span></div>
-        <div class="mini-stat"><b id="mPerfAvg">0</b><span>Avg Monthly Score</span></div>
-        <div class="mini-stat"><b id="mPerfPending">0</b><span>Pending Days</span></div>
-        <div class="mini-stat"><b id="mPerfProblem">0</b><span>Below 70</span></div>
-      </div>
-
-      <div class="summary-text" id="perfSummary">Monthly score open केल्यावर current month auto load होईल.</div>
-      <div class="perf-progress" id="perfProgress"></div>
-      <div class="perf-sticky-note">
-        <span>Formula: Report 35 + Remark 25 + Plan/Actual 25 + Consistency 15</span>
-        <span>रजा दिवस pending मध्ये count नाही</span>
-        <span>Data दिवसागणिक येताच table लगेच update होईल</span>
-      </div>
-    </div>
-
-    <div class="table-wrap perf-table">
-      <table>
-        <thead>
-          <tr>
-            <th>Staff</th>
-            <th>Branch</th>
-            <th>Req.</th>
-            <th>Done</th>
-            <th>Pending</th>
-            <th>Report %</th>
-            <th>Remark</th>
-            <th>Plan</th>
-            <th>Monthly Score</th>
-            <th>Score कमी / जास्त का?</th>
-          </tr>
-        </thead>
-        <tbody id="perfTable">
-          <tr><td colspan="10">Monthly score अजून generate केलेला नाही.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
+<aside class="sheet kpi-sheet" id="kpiSheet" aria-label="KPI शाखा निवड">
+  <div class="sheet-head"><div><h3 id="kpiSheetTitle">KPI शाखा निवडा</h3><p id="kpiSheetSub">शाखा निवडल्यानंतर संबंधित कर्मचारी दिसतील.</p></div><button class="close-btn" data-close>✕</button></div>
+  <div class="kpi-choice-summary"><b id="kpiChoiceName">सर्व कर्मचारी</b><span id="kpiChoiceTotal">शाखानुसार संख्या</span></div>
+  <div class="kpi-branch-grid" id="kpiChoiceGrid"></div>
+  <div class="kpi-sheet-note">KPI निवड कायम राहील. पुढे Staff screen मध्ये branch आणि status दोन्ही filter दिसतील.</div>
+</aside>
+<aside class="sheet detail-sheet" id="detailSheet">
+  <div class="sheet-head"><div><h3 id="detailName">कर्मचारी तपशील</h3><p id="detailMeta"></p></div><button class="close-btn" data-close>✕</button></div>
+  <div class="sheet-body" id="detailBody"></div>
+</aside>
+<div class="toast" id="toast"></div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbwYVMl2nT-Q2MCr1y-uBKnyL5nvIzVFkr5DakQKtnMpzwMRnewU_rjK1bvg7ScxXKU/exec';
+'use strict';
+const API_URL='https://script.google.com/macros/s/AKfycbwYVMl2nT-Q2MCr1y-uBKnyL5nvIzVFkr5DakQKtnMpzwMRnewU_rjK1bvg7ScxXKU/exec';
+const $=id=>document.getElementById(id);
+const safe=v=>(v??'').toString().trim();
+const esc=v=>String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]));
+const clamp=v=>Math.max(0,Math.min(100,Math.round(Number(v)||0)));
+const MASTER_KEY='anik_nova_master_v1';
+const DASH_KEY='anik_nova_dash_v1';
+const CACHE_MAX_DATES=38;
+const state={staff:[],questions:[],qIndex:new Map(),rows:[],viewRows:[],unitSummary:[],date:'',branch:'',role:'',status:'',search:'',page:1,pageSize:30,view:'overview',loaded:false,lastUpdated:null,lastKpiLabel:'सर्व कर्मचारी',pendingKpiStatus:''};
+const payloadCache=new WeakMap();
+const inflight=new Map();
+let searchTimer=null,toastTimer=null,monthlyRun=0;
 
-let staffMaster=[], allQuestions=[], entriesCache=[], unitSummaryCache=[], accountStaffSystemCache=[];
-let allRows=[], viewRows=[];
-let dashboardDateCache=new Map();
-let branchChart=null, systemChart=null, statusChart=null, problemChart=null;
-
-const $ = id => document.getElementById(id);
-const safe = v => (v ?? '').toString().trim();
-const esc = str => String(str ?? '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[s]));
-const num = v => Number(v || 0).toLocaleString('en-IN');
-
-function todayISO(){
-  const d = new Date();
-  return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
-}
-function addDaysISO(iso, days){
-  const d = new Date(iso + 'T00:00:00');
-  d.setDate(d.getDate()+days);
-  return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
-}
-function dateRange(from,to){
-  const list=[]; let d=from;
-  while(d<=to && list.length<370){ list.push(d); d=addDaysISO(d,1); }
-  return list;
-}
-function toast(msg){
-  const el=$('toast'); el.textContent=msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),3800);
-}
-function showLoader(v=true){ $('loader').classList.toggle('active', v); }
-
-function jsonp(action, params={}){
-  return new Promise((resolve,reject)=>{
-    const cb='anikDash_'+Math.random().toString(36).slice(2);
+function todayISO(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function initials(name){return safe(name).split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'A'}
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
+function readJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key)||'')||fallback}catch{return fallback}}
+function writeJSON(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch{}}
+function jsonp(action,params={},timeout=22000){
+  const key=action+'|'+JSON.stringify(params);
+  if(inflight.has(key))return inflight.get(key);
+  const p=new Promise((resolve,reject)=>{
+    const cb='anikNova_'+Date.now().toString(36)+Math.random().toString(36).slice(2);
     const script=document.createElement('script');
-    const url=new URL(API_URL);
-    url.searchParams.set('action', action);
-    url.searchParams.set('callback', cb);
-    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
-    window[cb]=data=>{
-      delete window[cb]; script.remove();
-      if(data && data.success === false) reject(new Error(data.message || 'Request failed'));
-      else resolve(data || {});
-    };
-    script.onerror=()=>{
-      delete window[cb]; script.remove();
-      reject(new Error('API connection failed. कृपया internet / Apps Script deployment तपासा.'));
-    };
-    script.src=url.toString();
-    document.body.appendChild(script);
-  });
+    const url=new URL(API_URL);url.searchParams.set('action',action);url.searchParams.set('callback',cb);
+    Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+    let done=false;
+    const finish=(err,data)=>{if(done)return;done=true;clearTimeout(timer);delete window[cb];script.remove();err?reject(err):resolve(data||{})};
+    window[cb]=data=>data&&data.success===false?finish(new Error(data.message||'Request failed')):finish(null,data);
+    script.onerror=()=>finish(new Error('API connection failed. Internet किंवा Apps Script तपासा.'));
+    const timer=setTimeout(()=>finish(new Error('Server response उशिरा येत आहे. पुन्हा Refresh करा.')),timeout);
+    script.src=url.toString();document.body.appendChild(script);
+  }).finally(()=>inflight.delete(key));
+  inflight.set(key,p);return p;
 }
-
-function branches(){
-  return [...new Set(staffMaster.map(s=>safe(s.branch)).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-}
-function roles(){
-  return [...new Set(staffMaster.map(s=>safe(s.role)).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-}
-function parsePayload(entry){
-  if(!entry || !entry.payloadJson) return {};
-  try { return typeof entry.payloadJson === 'object' ? entry.payloadJson : JSON.parse(entry.payloadJson); }
-  catch(e){ return {}; }
-}
-function truthyLeave(v){
-  const t=safe(v).toLowerCase();
-  return ['होय','yes','y','true','1','on leave','leave','rja','raja','रजा आहे','आज रजा आहे'].some(x => t === x || t.includes(x));
-}
-function findLeaveInfo(staff, morning, evening, account){
-  const mp=parsePayload(morning), ep=parsePayload(evening);
-  const sources=[staff, morning, evening, account, mp, ep].filter(Boolean);
-  let found=false, status='', remark='';
-  for(const src of sources){
-    const leaveToday = src.leaveToday ?? src.leave_today ?? src.onLeave ?? src.on_leave ?? src.leave;
-    const leaveStatus = src.leaveStatus ?? src.leave_status ?? src.leave_status_today;
-    const leaveRemark = src.leaveRemark ?? src.leave_remark ?? src.remarkLeave ?? src.leaveReason ?? src.leave_reason;
-    if(truthyLeave(leaveToday) || truthyLeave(leaveStatus)){
-      found=true;
-      status=safe(leaveStatus) || 'आज रजा आहे';
-      remark=safe(leaveRemark) || safe(leaveStatus) || 'आज कर्मचारी रजेवर आहे. त्यामुळे सकाळचा Plan / सायंकाळची Actual भरणे आवश्यक नाही.';
-    }
-    if(safe(leaveRemark) && (truthyLeave(leaveRemark) || safe(leaveRemark).includes('रजेवर'))){
-      found=true;
-      status=status || 'आज रजा आहे';
-      remark=remark || safe(leaveRemark);
-    }
-  }
-  return {onLeave:found, status:status || (found?'आज रजा आहे':''), remark:remark || ''};
-}
-function metricScore(achieved,target){
-  const t=Number(target||0), a=Number(achieved||0);
-  if(!t || t<=0) return null;
-  return Math.max(0, Math.min(100, Math.round((a/t)*100)));
-}
-function firstNumFromPayload(payload, keys){
-  for(const k of keys){
-    if(payload && safe(payload[k])) return Number(String(payload[k]).replace(/[^0-9.\-]/g,''))||0;
-  }
-  return 0;
-}
-function calculateStaffWorkScore(obj){
-  if(!obj) return 0;
-  const metrics=[
-    {score:metricScore(obj.odAchieved,obj.odTarget),weight:25},
-    {score:metricScore(obj.collectionAchieved,obj.collectionTarget),weight:35},
-    {score:metricScore(obj.disbursementAchieved,obj.disbursementTarget),weight:25},
-    {score:metricScore(obj.newCustomerAchieved,obj.newCustomerTarget),weight:15}
-  ].filter(m=>m.score!==null);
-  if(!metrics.length) return 0;
-  const w=metrics.reduce((s,m)=>s+m.weight,0);
-  return Math.round(metrics.reduce((s,m)=>s+(m.score*m.weight),0)/w);
-}
-function effectiveWorkQuality(obj){
-  if(!obj) return 0;
-  const existing=Number(obj.workQuality||obj.score||obj.staffScore||0);
-  if(existing>0) return Math.min(100,Math.max(0,Math.round(existing)));
-  return calculateStaffWorkScore(obj);
-}
-function calculateEntryWorkScore(row){
-  if(!row || !row.morning || !row.evening) return 0;
-  const mp=parsePayload(row.morning), ep=parsePayload(row.evening);
-  const metrics=[
-    {target:firstNumFromPayload(mp,['od_target','od_collection_target','overdue_target','odTarget']), achieved:firstNumFromPayload(ep,['od_actual','od_received','od_collection_actual','odAchieved']), weight:25},
-    {target:firstNumFromPayload(mp,['loan_demand_target','collection_target','regular_collection_target','collectionTarget']), achieved:firstNumFromPayload(ep,['loan_demand_actual','collection_actual','collection_done','collectionAchieved']), weight:35},
-    {target:firstNumFromPayload(mp,['disbursement_target','autodebit_target','appraisal_target','disbursementTarget']), achieved:firstNumFromPayload(ep,['disbursement_actual','disbursement_done','autodebit_actual','appraisal_done','disbursementAchieved']), weight:25},
-    {target:firstNumFromPayload(mp,['new_customer_target','meeting_target','equifax_plan','newCustomerTarget']), achieved:firstNumFromPayload(ep,['new_customer_added','meeting_actual','equifax_done','newCustomerAchieved']), weight:15}
-  ].map(m=>({score:metricScore(m.achieved,m.target),weight:m.weight})).filter(m=>m.score!==null);
-  if(!metrics.length) return 0;
-  const w=metrics.reduce((s,m)=>s+m.weight,0);
-  return Math.round(metrics.reduce((s,m)=>s+(m.score*m.weight),0)/w);
-}
-function cleanRemark(v){
-  const t=safe(v);
-  if(!t || t==='0' || t==='-' || t==='--' || t.toLowerCase()==='null' || t.toLowerCase()==='undefined') return '';
-  return t.replace(/\s+/g,' ').trim();
-}
-function clampScore(v){ return Math.max(0, Math.min(100, Math.round(Number(v)||0))); }
-function textLower(v){ return safe(v).toLowerCase(); }
-function countMatches(text, words){ return words.reduce((n,w)=> n + (text.includes(w.toLowerCase()) ? 1 : 0), 0); }
-function payloadText(payload){
-  return Object.entries(payload||{})
-    .filter(([k])=>!['leavetoday','leavestatus','leaveremark'].includes(String(k).toLowerCase()))
-    .map(([k,v])=>cleanRemark(v)).filter(Boolean).join(' ');
-}
-function pickBestRemark(values){
-  const list=(values||[]).map(cleanRemark).filter(Boolean);
-  if(!list.length) return '';
-  const bad=['na','n/a','nil','no','ok','done','yes','हो','होय','नाही'];
-  const scored=list.map(t=>{
-    const low=t.toLowerCase();
-    const wordBonus=(low.match(/[0-9]/g)||[]).length>0?20:0;
-    const lengthBonus=Math.min(120,t.length);
-    const weakPenalty=bad.includes(low)?100:0;
-    return {t,score:lengthBonus+wordBonus-weakPenalty};
-  }).sort((a,b)=>b.score-a.score);
-  return scored[0].t;
-}
-function rowRemark(r){
-  if(r.leave && r.leave.onLeave) return r.leave.remark || 'आज कर्मचारी रजेवर आहे. Report required नाही.';
-  const ep=parsePayload(r.evening);
-  const mp=parsePayload(r.morning);
-  return pickBestRemark([
-    r.account && r.account.remark,
-    r.account && r.account.workRemark,
-    r.account && r.account.staffRemark,
-    r.account && r.account.systemRemark,
-    ep.remark, ep.remarks, ep.important_note, ep.work_done, ep.actual_remark, ep.today_work, ep.note,
-    mp.remark, mp.remarks, mp.plan_remark, mp.today_plan, mp.note,
-    payloadText(ep), payloadText(mp)
-  ]) || '-';
-}
-function remarkQualityScore(text, r){
-  const t=cleanRemark(text);
-  const low=textLower(t);
-  if(!r.morning && !r.evening) return 0;
-  let score = (r.morning && r.evening) ? 58 : 34;
-  if(!t){ return (r.morning && r.evening) ? 55 : score; }
-
-  const actionWords=[
-    'appraisal','apraisal','loan','renewal','grt','meeting','staff meeting','office','process','document','online','recovery','collection','emi','demand','follow','visit','field','customer','member','group','cash','receipt','call','verification','training','camp',
-    'अप्रेजल','अपरेजल','कर्ज','नूतनीकरण','बैठक','ऑफिस','प्रोसेस','प्रक्रिया','कागदपत्र','ऑनलाइन','वसुल','वसुली','भरणा','हप्ता','मागणी','फॉलोअप','भेट','फील्ड','ग्राहक','सदस्य','गट','रोख','पावती','फोन','तपासणी','प्रशिक्षण','शिबीर','पूर्ण','केले','केली','झाले','झाली','सहभागी','जमा'
-  ];
-  const negativeWords=[
-    'pending','not done','not complete','failed','problem','issue','missing','no work','not found','delay','late','reject','rejected','नाही झाले','पूर्ण नाही','प्रलंबित','अडचण','समस्या','मिसिंग','उशीर','रिजेक्ट','काम नाही','भेट झाली नाही'
-  ];
-  const vagueOnly=['ok','done','yes','हो','होय','केले','झाले'];
-  const actionCount=countMatches(low, actionWords);
-  const negativeCount=countMatches(low, negativeWords);
-
-  if(t.length>=18) score+=8;
-  if(t.length>=45) score+=10;
-  if(t.length>=90) score+=6;
-  if(/[0-9०-९]/.test(t)) score+=5;
-  if(actionCount>=1) score+=10;
-  if(actionCount>=3) score+=7;
-  if(actionCount>=5) score+=4;
-  if(vagueOnly.includes(low) || t.length<8) score-=18;
-  if(negativeCount>=1) score-=15;
-  if(negativeCount>=2) score-=10;
-
-  if(r.morning && r.evening && actionCount>=2 && t.length>=35) score=Math.max(score,86);
-  if(r.morning && r.evening && actionCount>=1 && t.length>=20) score=Math.max(score,74);
-  if(r.morning && !r.evening) score=Math.min(score,58);
-  if(!r.morning && r.evening) score=Math.min(score,72);
-  return clampScore(score);
-}
-function entryAchievementInfo(row){
-  if(!row || !row.morning || !row.evening) return {score:0, hasNumeric:false, label:'Target/Actual उपलब्ध नाही'};
-  const mp=parsePayload(row.morning), ep=parsePayload(row.evening);
-  const metricDefs=[
-    {name:'OD', target:firstNumFromPayload(mp,['od_target','od_collection_target','overdue_target','odTarget']), achieved:firstNumFromPayload(ep,['od_actual','od_received','od_collection_actual','odAchieved']), weight:25},
-    {name:'Collection', target:firstNumFromPayload(mp,['loan_demand_target','collection_target','regular_collection_target','collectionTarget']), achieved:firstNumFromPayload(ep,['loan_demand_actual','collection_actual','collection_done','collectionAchieved']), weight:35},
-    {name:'Disbursement/Appraisal', target:firstNumFromPayload(mp,['disbursement_target','autodebit_target','appraisal_target','disbursementTarget']), achieved:firstNumFromPayload(ep,['disbursement_actual','disbursement_done','autodebit_actual','appraisal_done','disbursementAchieved']), weight:25},
-    {name:'New Customer/Meeting', target:firstNumFromPayload(mp,['new_customer_target','meeting_target','equifax_plan','newCustomerTarget']), achieved:firstNumFromPayload(ep,['new_customer_added','meeting_actual','equifax_done','newCustomerAchieved']), weight:15}
-  ];
-  const metrics=metricDefs.map(m=>({...m,score:metricScore(m.achieved,m.target)})).filter(m=>m.score!==null);
-  if(!metrics.length) return {score:0, hasNumeric:false, label:'Target/Actual number मिळाले नाहीत'};
-  const w=metrics.reduce((s,m)=>s+m.weight,0);
-  const score=clampScore(metrics.reduce((s,m)=>s+(m.score*m.weight),0)/w);
-  const label=metrics.map(m=>`${m.name} ${m.achieved}/${m.target}`).join(', ');
-  return {score, hasNumeric:true, label};
-}
-function calculateEntryWorkScore(row){
-  return entryAchievementInfo(row).score;
-}
-function dailyScoreDetails(r){
-  if(!r) return {finalScore:0, reportScore:0, remarkScore:0, achievementScore:0, consistencyScore:0, shortReason:'Data उपलब्ध नाही.', detailReason:'Data उपलब्ध नाही.'};
-  if(r.leave && r.leave.onLeave){
-    return {finalScore:100, reportScore:100, remarkScore:100, achievementScore:100, consistencyScore:100, shortReason:'रजा असल्यामुळे pending penalty नाही.', detailReason:'आज कर्मचारी रजेवर आहे. त्यामुळे Plan/Actual report required नाही आणि score मध्ये penalty धरलेली नाही.', achievementLabel:'Leave day'};
-  }
-  const remarkText = cleanRemark(r.remark && r.remark!=='-' ? r.remark : rowRemark(r));
-  const reportScore = (r.morning && r.evening) ? 100 : (r.morning || r.evening ? 50 : 0);
-  const remarkScore = remarkQualityScore(remarkText, r);
-  const direct = effectiveWorkQuality(r.account);
-  const entry = entryAchievementInfo(r);
-  let achievementScore = entry.hasNumeric ? entry.score : (direct>0 ? direct : 0);
-  let achievementLabel = entry.hasNumeric ? entry.label : (direct>0 ? 'System score वापरला' : 'Remark based अंदाज');
-  if(!achievementScore){
-    if(r.morning && r.evening) achievementScore = Math.max(45, Math.min(95, remarkScore - 3));
-    else if(r.morning || r.evening) achievementScore = Math.max(25, Math.min(60, remarkScore));
-  }
-  let consistencyScore = 100;
-  if(!r.morning && !r.evening) consistencyScore=0;
-  else if(r.morning && !r.evening) consistencyScore=48;
-  else if(!r.morning && r.evening) consistencyScore=62;
-  if(remarkScore>0 && remarkScore<55) consistencyScore=Math.min(consistencyScore,65);
-
-  const finalScore = clampScore((reportScore*.35) + (remarkScore*.25) + (achievementScore*.25) + (consistencyScore*.15));
-  const reasons=[];
-  if(r.morning && r.evening) reasons.push('सकाळचा Plan आणि सायंकाळची Actual दोन्ही भरले आहेत');
-  else if(!r.morning && !r.evening) reasons.push('सकाळचा व सायंकाळचा दोन्ही report missing आहेत');
-  else if(!r.morning) reasons.push('Morning Plan missing आहे');
-  else if(!r.evening) reasons.push('Evening Actual pending आहे');
-
-  if(!remarkText) reasons.push('Remark रिकामा / “-” आहे, त्यामुळे quality कमी धरली');
-  else if(remarkScore>=85) reasons.push('Remark मध्ये कामाचे स्पष्ट तपशील, संख्या/ग्राहक/प्रोसेस माहिती आहे');
-  else if(remarkScore>=70) reasons.push('Remark मध्ये कामाचा तपशील आहे पण अजून थोडा स्पष्टपणा हवा');
-  else reasons.push('Remark कमी/अस्पष्ट आहे, त्यामुळे quality score कमी आहे');
-
-  if(entry.hasNumeric) reasons.push('Target vs Actual numbers वरून achievement मोजले');
-  else if(direct>0) reasons.push('System मध्ये असलेला staff/work score वापरला');
-  else reasons.push('Target/Actual number नसल्यामुळे remark व report status वरून achievement अंदाज घेतला');
-
-  return {finalScore, reportScore, remarkScore, achievementScore:clampScore(achievementScore), consistencyScore:clampScore(consistencyScore), shortReason:reasons[0] + '. ' + reasons[1], detailReason:reasons.join(' • '), remarkText, achievementLabel};
-}
-function rowQuality(r){
-  const d=dailyScoreDetails(r);
-  r.scoreParts=d;
-  return d.finalScore;
-}
-function qualityClass(q){
-  if(q>=80) return 'done';
-  if(q>=60) return 'pending';
-  if(q>0) return 'low';
-  return 'missing';
-}
-function rowStatus(st,m,e,leave){
-  if(leave && leave.onLeave) return {key:'leave', text:'On Leave', cls:'leave'};
-  if(m && e) return {key:'complete', text:'Complete', cls:'done'};
-  if(!m && !e) return {key:'missing', text:'Both Missing', cls:'missing'};
-  if(!m && e) return {key:'check', text:'Check Morning', cls:'check'};
-  return {key:'pending', text:'Evening Pending', cls:'pending'};
-}
-function getQuestions(role,shift){
-  return allQuestions.filter(q=>safe(q.role)===safe(role) && safe(q.shift).toLowerCase()===safe(shift).toLowerCase() && String(q.active).toLowerCase()!=='no')
-    .sort((a,b)=>Number(a.order||0)-Number(b.order||0));
-}
-function riskScore(r){
-  if(r.leave && r.leave.onLeave) return 0;
-  let score=0;
-  if(!r.morning) score+=24;
-  if(!r.evening) score+=24;
-  if(r.status.key==='missing') score+=22;
-  if(r.status.key==='check') score+=10;
-  if(r.quality<60) score += (60-r.quality);
-  if((r.scoreParts?.remarkScore||0)<55 && (r.morning || r.evening)) score+=8;
-  return Math.round(score);
-}
-function reportRequired(r){ return !(r.leave && r.leave.onLeave); }
-
-async function init(){
-  $('dashDate').value = todayISO();
-
-  $('refreshBtn').onclick = () => refreshAll(true);
-  $('applyBtn').onclick = applyFilters;
-  $('dashDate').onchange = () => refreshAll(true);
-  $('branchFilter').onchange = applyFilters;
-  $('roleFilter').onchange = applyFilters;
-  $('statusFilter').onchange = applyFilters;
-  $('searchBox').oninput = applyFilters;
-  $('showPending').onclick = () => setQuickFilter('pending');
-  $('showLeave').onclick = () => setQuickFilter('leave');
-  $('clearFilter').onclick = () => { $('branchFilter').value=''; $('roleFilter').value=''; $('statusFilter').value=''; $('searchBox').value=''; applyFilters(); };
-  $('exportCsv').onclick = exportCSV;
-  $('copySummary').onclick = copySummary;
-  $('closeDrawer').onclick = closeDrawer;
-  $('closeDrawerBottom').onclick = closeDrawer;
-  document.addEventListener('keydown', e => {
-    if(e.key==='Escape'){ closeDrawer(); closePerformanceModal(); }
-  });
-
-  document.querySelectorAll('.kpi').forEach(k => k.addEventListener('click', () => setQuickFilter(k.dataset.kpi || 'all')));
-
-  $('performanceBtn').onclick = openPerformanceModal;
-  $('closePerf').onclick = closePerformanceModal;
-  if($('closePerf2')) $('closePerf2').onclick = closePerformanceModal;
-  $('modalBackdrop').onclick = closePerformanceModal;
-  $('perfBranch').onchange = renderPerfStaffOptions;
-  $('generatePerf').onclick = generatePerformance;
-
-  await refreshAll(true);
-}
-async function refreshAll(show=true){
-  if(show) showLoader(true);
-  try{
-    const master = await jsonp('getMasterData');
-    staffMaster = master.staff || [];
-    allQuestions = master.questions || [];
-    renderFilterOptions();
-    renderPerformanceFilters();
-
-    const res = await jsonp('getDashboard', {date:$('dashDate').value});
-    entriesCache = res.entries || [];
-    unitSummaryCache = res.unitSummary || [];
-    accountStaffSystemCache = res.accountStaffSystem || [];
-    dashboardDateCache.set($('dashDate').value, {entries:entriesCache, accountStaffSystem:accountStaffSystemCache, unitSummary:unitSummaryCache, ts:Date.now()});
-    buildRows();
-    applyFilters(false);
-    $('lastRefresh').textContent = 'Last refresh: ' + new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
-  }catch(e){
-    toast(e.message);
-    $('staffTable').innerHTML='<tr><td colspan="10">Data load failed. API / Internet तपासा.</td></tr>';
-  }
-  if(show) showLoader(false);
-}
-function renderFilterOptions(){
-  const currentB=$('branchFilter').value, currentR=$('roleFilter').value;
-  $('branchFilter').innerHTML='<option value="">All Branches</option>'+branches().map(b=>`<option>${esc(b)}</option>`).join('');
-  $('roleFilter').innerHTML='<option value="">All Roles</option>'+roles().map(r=>`<option>${esc(r)}</option>`).join('');
-  $('branchFilter').value=currentB; $('roleFilter').value=currentR;
-}
-function renderPerformanceFilters(){
-  const currentB=$('perfBranch').value;
-  $('perfBranch').innerHTML='<option value="">All Units</option>'+branches().map(b=>`<option>${esc(b)}</option>`).join('');
-  $('perfBranch').value=currentB;
-  renderPerfStaffOptions();
-}
-function renderPerfStaffOptions(){
-  const b=safe($('perfBranch').value);
-  const current=safe($('perfStaff').value);
-  const staff=staffMaster
-    .filter(s=>String(s.active).toLowerCase()!=='no' && safe(s.role)!=='अकाउंट टीम')
-    .filter(s=>!b || safe(s.branch)===b)
-    .sort((a,b)=>safe(a.staffName).localeCompare(safe(b.staffName)));
-  $('perfStaff').innerHTML='<option value="">All Staff</option>'+staff.map(s=>`<option value="${esc(s.staffId)}">${esc(s.staffName)} - ${esc(s.branch)}</option>`).join('');
-  $('perfStaff').value=current;
-}
-function buildRows(){
-  allRows = buildRowsFromData(entriesCache, accountStaffSystemCache);
-}
-function buildRowsFromData(entries, accountRows){
-  const entryMap={}, accMap={};
-  (entries||[]).forEach(e => entryMap[safe(e.staffId)+'_'+safe(e.shift).toLowerCase()] = e);
-  (accountRows||[]).forEach(r => accMap[safe(r.staffId)] = r);
-
-  return staffMaster
-    .filter(s => String(s.active).toLowerCase() !== 'no' && safe(s.role) !== 'अकाउंट टीम')
-    .map(s => {
-      const morning = entryMap[safe(s.staffId)+'_morning'];
-      const evening = entryMap[safe(s.staffId)+'_evening'];
-      const account = accMap[safe(s.staffId)] || {};
-      const leave = findLeaveInfo(s, morning, evening, account);
-      const status = rowStatus(s, morning, evening, leave);
-      const base = {staff:s, morning, evening, account, leave, status, quality:0, remark:'-', scoreParts:null};
-      base.remark = rowRemark(base);
-      base.quality = rowQuality(base);
-      base.risk = riskScore(base);
-      return base;
-    });
-}
-function setQuickFilter(kind){
-  const statusMap={
-    all:'',
-    leave:'leave',
-    required:'required',
-    complete:'complete',
-    pending:'pending',
-    morningPending:'morningPending',
-    eveningPending:'eveningPending',
-    lowQuality:'lowQuality',
-    red:'red'
-  };
-  $('statusFilter').value = statusMap[kind] ?? '';
-  applyFilters();
-  document.querySelector('.table-panel')?.scrollIntoView({behavior:'smooth',block:'start'});
-}
-function applyFilters(){
-  const bf=safe($('branchFilter').value), rf=safe($('roleFilter').value), sf=safe($('statusFilter').value), q=safe($('searchBox').value).toLowerCase();
-  viewRows = allRows.filter(r => {
-    if(bf && safe(r.staff.branch)!==bf) return false;
-    if(rf && safe(r.staff.role)!==rf) return false;
-
-    if(sf==='required' && !reportRequired(r)) return false;
-    if(sf==='leave' && r.status.key!=='leave') return false;
-    if(sf==='complete' && r.status.key!=='complete') return false;
-    if(sf==='pending' && (!reportRequired(r) || r.status.key==='complete')) return false;
-    if(sf==='morningPending' && (!reportRequired(r) || r.morning)) return false;
-    if(sf==='eveningPending' && (!reportRequired(r) || r.evening)) return false;
-    if(sf==='missing' && r.status.key!=='missing') return false;
-    if(sf==='check' && r.status.key!=='check') return false;
-    if(sf==='lowQuality' && !(reportRequired(r) && r.quality>0 && r.quality<60)) return false;
-    if(sf==='red' && !(reportRequired(r) && (r.risk>0 || (r.quality>0 && r.quality<60)))) return false;
-
-    if(q){
-      const hay=[r.staff.staffName,r.staff.role,r.staff.branch,r.status.text,r.remark,r.leave?.remark].join(' ').toLowerCase();
-      if(!hay.includes(q)) return false;
-    }
-    return true;
-  });
-  renderDashboard();
-}
-function renderDashboard(){
-  renderKPIs();
-  renderBranchCards();
-  renderStaffTable();
-  renderProblems();
-  setTimeout(renderCharts, 50);
-}
-function renderKPIs(){
-  const total=viewRows.length;
-  const leave=viewRows.filter(r=>r.leave.onLeave).length;
-  const required=viewRows.filter(reportRequired).length;
-  const complete=viewRows.filter(r=>reportRequired(r) && r.status.key==='complete').length;
-  const pending=viewRows.filter(r=>reportRequired(r) && r.status.key!=='complete').length;
-  const mPending=viewRows.filter(r=>reportRequired(r) && !r.morning).length;
-  const ePending=viewRows.filter(r=>reportRequired(r) && !r.evening).length;
-  const scored=viewRows.filter(r=>reportRequired(r) && r.quality>0);
-  const avgScore=scored.length ? Math.round(scored.reduce((s,r)=>s+r.quality,0)/scored.length) : 0;
-  const red=viewRows.filter(r=>reportRequired(r) && (r.risk>0 || (r.quality>0 && r.quality<60))).length;
-
-  $('kTotal').textContent=total;
-  $('kLeave').textContent=leave;
-  $('kRequired').textContent=required;
-  $('kComplete').textContent=complete;
-  $('kPending').textContent=pending;
-  $('kMorningPending').textContent=mPending;
-  $('kEveningPending').textContent=ePending;
-  $('kCompletion').textContent=required ? Math.round((complete/required)*100)+'%' : '0%';
-  $('kAvgScore').textContent=avgScore || '-';
-  $('kRed').textContent=red;
-  $('leaveNote').textContent=`Leave excluded from pending: ${leave}`;
-}
-function branchSummary(){
-  const map={};
-  allRows.forEach(r=>{
-    const b=safe(r.staff.branch)||'Other';
-    if(!map[b]) map[b]={branch:b,total:0,leave:0,required:0,complete:0,pending:0,morning:0,evening:0,missing:0,check:0,red:0,qualitySum:0,qualityCount:0};
-    const x=map[b]; x.total++;
-    if(r.leave.onLeave){ x.leave++; return; }
-    x.required++;
-    if(r.morning && r.evening) x.complete++; else x.pending++;
-    if(r.morning) x.morning++;
-    if(r.evening) x.evening++;
-    if(r.status.key==='missing') x.missing++;
-    if(r.status.key==='check') x.check++;
-    if(r.risk>0 || (r.quality>0 && r.quality<60)) x.red++;
-    if(r.quality>0){x.qualitySum+=r.quality; x.qualityCount++;}
-  });
-  return Object.values(map).map(x=>({...x, percent:x.required?Math.round((x.complete/x.required)*100):100, avgQuality:x.qualityCount?Math.round(x.qualitySum/x.qualityCount):0}))
-    .sort((a,b)=>a.percent-b.percent || b.pending-a.pending);
-}
-function renderBranchCards(){
-  let list=branchSummary();
-  const bf=safe($('branchFilter').value);
-  if(bf) list=list.filter(x=>x.branch===bf);
-  $('branchCountTag').textContent=list.length+' Branches';
-
-  if(!list.length){ $('branchCards').innerHTML='<div class="empty">Branch data उपलब्ध नाही.</div>'; return; }
-  $('branchCards').innerHTML=list.map(b=>{
-    const cls=b.percent>=85?'good':b.percent>=55?'warn':'bad';
-    const branchAttr=esc(b.branch).replace(/'/g,'&#039;');
-    return `<div class="branch-card" onclick="filterBranch('${branchAttr}')">
-      <h4>🏦 ${esc(b.branch)}</h4>
-      <div class="progress ${cls}"><span style="width:${Math.min(100,b.percent)}%"></span></div>
-      <div style="display:flex;justify-content:space-between;margin-top:8px;color:#667085;font-size:12px;font-weight:900">
-        <span>${b.percent}% Done</span><span>${b.pending} Pending</span>
-      </div>
-      <div class="branch-meta">
-        <div class="mini-stat"><b>${b.total}</b><span>Total</span></div>
-        <div class="mini-stat"><b>${b.leave}</b><span>Leave</span></div>
-        <div class="mini-stat"><b>${b.required}</b><span>Req.</span></div>
-        <div class="mini-stat"><b>${b.red}</b><span>Red</span></div>
-      </div>
-      <div class="branch-meta">
-        <div class="mini-stat"><b>${b.complete}</b><span>Done</span></div>
-        <div class="mini-stat"><b>${b.pending}</b><span>Pending</span></div>
-        <div class="mini-stat"><b>${b.morning}</b><span>Morning</span></div>
-        <div class="mini-stat"><b>${b.avgQuality || '-'}</b><span>Score</span></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-window.filterBranch = function(branch){
-  $('branchFilter').value = branch;
-  applyFilters();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function renderStaffTable(){
-  const complete=viewRows.filter(r=>reportRequired(r) && r.status.key==='complete').length;
-  const pending=viewRows.filter(r=>reportRequired(r) && r.status.key!=='complete').length;
-  const leave=viewRows.filter(r=>r.leave.onLeave).length;
-  $('tableSummary').textContent=`Showing ${viewRows.length} staff | Required: ${viewRows.filter(reportRequired).length} | Complete: ${complete} | Real Pending: ${pending} | Leave: ${leave}`;
-  if(!viewRows.length){ $('staffTable').innerHTML='<tr><td colspan="10">या filter मध्ये staff data नाही.</td></tr>'; return; }
-  $('staffTable').innerHTML=viewRows.map((r)=>{
-    const idx=allRows.indexOf(r);
-    const q=Number(r.quality||0);
-    const parts=r.scoreParts || dailyScoreDetails(r);
-    const leaveBadge=r.leave.onLeave ? `<span class="badge leave">🏖️ Leave</span>` : `<span class="badge neutral">Working</span>`;
-    const morningBadge=r.leave.onLeave ? `<span class="badge neutral">Not Required</span>` : `<span class="badge ${r.morning?'done':'pending'}">${r.morning?'✅ Done':'⏳ Pending'}</span>`;
-    const eveningBadge=r.leave.onLeave ? `<span class="badge neutral">Not Required</span>` : `<span class="badge ${r.evening?'done':'pending'}">${r.evening?'✅ Done':'⏳ Pending'}</span>`;
-    const scoreText=r.leave.onLeave?'Leave':(q + '/100');
-    return `<tr>
-      <td><button class="staff-name" onclick="openStaff(${idx})">${esc(r.staff.staffName)}</button><br><small>${esc(r.staff.staffId||'')}</small></td>
-      <td>${esc(r.staff.role)}</td>
-      <td>${esc(r.staff.branch)}</td>
-      <td>${leaveBadge}</td>
-      <td>${morningBadge}</td>
-      <td>${eveningBadge}</td>
-      <td><span class="badge ${r.status.cls}">${esc(r.status.text)}</span></td>
-      <td><span class="badge score-pill ${qualityClass(q)}">${scoreText}</span></td>
-      <td class="remark-cell"><div class="remark-text">${esc(r.remark)}</div><small class="score-mini">${esc(parts.shortReason || '')}</small></td>
-      <td><button class="btn-soft" onclick="openStaff(${idx})">Open</button></td>
-    </tr>`;
-  }).join('');
-}
-
-function renderProblems(){
-  const list=viewRows
-    .filter(r=>reportRequired(r) && (r.risk>0 || r.quality<60))
-    .sort((a,b)=>b.risk-a.risk || a.quality-b.quality)
-    .slice(0,10);
-
-  if(!list.length){
-    $('problemList').innerHTML='<div class="empty">आज problematic staff नाही.</div>';
-    return;
-  }
-  $('problemList').innerHTML=list.map(r=>{
-    const idx=allRows.indexOf(r);
-    const parts=r.scoreParts || dailyScoreDetails(r);
-    const issue=[
-      !r.morning?'Morning pending':'',
-      !r.evening?'Evening pending':'',
-      r.quality<60?'Low score '+r.quality+'/100':'',
-      (parts.remarkScore>0 && parts.remarkScore<55)?'Remark कमी/अस्पष्ट':''
-    ].filter(Boolean).join(' • ');
-    return `<div class="problem-item" onclick="openStaff(${idx})">
-      <b>${esc(r.staff.staffName)} <span class="badge low" style="float:right">${r.risk}</span></b>
-      <span>${esc(r.staff.branch)} | Score ${r.quality}/100 | ${esc(issue || r.status.text)}</span>
-    </div>`;
-  }).join('');
-}
-
-window.openStaff = function(index){
-  const r=allRows[index]; if(!r) return;
-  $('drawerTitle').textContent = r.staff.staffName;
-  $('drawerSub').textContent = `${r.staff.role} | ${r.staff.branch} | ${$('dashDate').value}`;
-  $('dLeave').textContent = r.leave.onLeave ? 'Yes' : 'No';
-  $('dMorning').textContent = r.leave.onLeave ? 'Not Req.' : (r.morning ? 'Done' : 'Pending');
-  $('dEvening').textContent = r.leave.onLeave ? 'Not Req.' : (r.evening ? 'Done' : 'Pending');
-  $('dQuality').textContent = r.leave.onLeave ? 'Leave' : ((r.quality || 0) + '/100');
-  $('scoreBadge').textContent = r.leave.onLeave ? 'Leave' : ((r.quality || 0) + '/100');
-  $('scoreBadge').className = 'badge ' + (r.leave.onLeave ? 'leave' : qualityClass(r.quality || 0));
-  $('scoreReason').innerHTML = scoreReasonDaily(r);
-
-  if(r.leave.onLeave){
-    $('leaveBox').style.display='block';
-    $('leaveText').innerHTML = `<div class="kv"><b>${esc(r.leave.status || 'आज रजा आहे')}</b><span>${esc(r.leave.remark || 'Report required नाही.')}</span></div>`;
-  }else{
-    $('leaveBox').style.display='none';
-    $('leaveText').innerHTML='';
-  }
-
-  const mPayload=parsePayload(r.morning), ePayload=parsePayload(r.evening);
-  const mQs=getQuestions(r.staff.role,'morning'), eQs=getQuestions(r.staff.role,'evening');
-
-  $('morningList').innerHTML = r.leave.onLeave
-    ? '<div class="empty">आज कर्मचारी रजेवर आहे. सकाळचा Plan required नाही.</div>'
-    : (r.morning
-      ? (mQs.length ? mQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(mPayload[q.key]||'-')}</span></div>`).join('') : payloadFallback(mPayload))
-      : '<div class="empty">सकाळचे planning pending आहे.</div>');
-
-  $('eveningList').innerHTML = r.leave.onLeave
-    ? '<div class="empty">आज कर्मचारी रजेवर आहे. सायंकाळची Actual required नाही.</div>'
-    : (r.evening
-      ? (eQs.length ? eQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(ePayload[q.key]||'-')}</span></div>`).join('') : payloadFallback(ePayload))
-      : '<div class="empty">सायंकाळची actual report pending आहे.</div>');
-
-  $('drawer').classList.add('open');
-}
-function payloadFallback(p){
-  const keys=Object.keys(p||{}).filter(k=>!['leaveToday','leaveStatus','leaveRemark'].includes(k));
-  if(!keys.length) return '<div class="empty">Details उपलब्ध नाहीत.</div>';
-  return keys.map(k=>`<div class="kv"><b>${esc(k)}</b><span>${esc(p[k]||'-')}</span></div>`).join('');
-}
-
-function renderCharts(){
-  if(!window.Chart) return;
-  const bsum=branchSummary();
-  const labels=bsum.map(x=>x.branch);
-  const done=bsum.map(x=>x.complete), pend=bsum.map(x=>x.pending), leave=bsum.map(x=>x.leave);
-
-  if(branchChart) branchChart.destroy();
-  branchChart=new Chart($('branchChart'),{
-    type:'bar',
-    data:{labels,datasets:[
-      {label:'Complete',data:done,borderRadius:8},
-      {label:'Pending',data:pend,borderRadius:8},
-      {label:'Leave',data:leave,borderRadius:8}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,ticks:{precision:0}}}}
-  });
-
-  const units=unitSummaryCache.filter(u=>!$('branchFilter').value || safe(u.branch)===safe($('branchFilter').value));
-  if(systemChart) systemChart.destroy();
-  systemChart=new Chart($('systemChart'),{
-    type:'bar',
-    data:{labels:units.map(u=>u.branch),datasets:[
-      {label:'OD %',data:units.map(u=>Number((u.system||{}).odPercent||0)),borderRadius:8},
-      {label:'Collection %',data:units.map(u=>Number((u.system||{}).collectionPercent||0)),borderRadius:8},
-      {label:'Disbursement %',data:units.map(u=>Number((u.system||{}).disbursementPercent||0)),borderRadius:8},
-      {label:'NC %',data:units.map(u=>Number((u.system||{}).newCustomerPercent||0)),borderRadius:8}
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,max:120}}}
-  });
-
-  const complete=viewRows.filter(r=>reportRequired(r) && r.status.key==='complete').length;
-  const eveningPending=viewRows.filter(r=>reportRequired(r) && r.morning && !r.evening).length;
-  const missing=viewRows.filter(r=>reportRequired(r) && r.status.key==='missing').length;
-  const check=viewRows.filter(r=>reportRequired(r) && r.status.key==='check').length;
-  const leaveCount=viewRows.filter(r=>r.leave.onLeave).length;
-  if(statusChart) statusChart.destroy();
-  statusChart=new Chart($('statusChart'),{
-    type:'doughnut',
-    data:{labels:['Complete','Evening Pending','Both Missing','Check Morning','Leave'],datasets:[{data:[complete,eveningPending,missing,check,leaveCount]}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},cutout:'62%'}
-  });
-
-  const problem=viewRows.filter(r=>reportRequired(r) && r.risk>0).sort((a,b)=>b.risk-a.risk).slice(0,8);
-  if(problemChart) problemChart.destroy();
-  problemChart=new Chart($('problemChart'),{
-    type:'bar',
-    data:{labels:problem.map(r=>r.staff.staffName),datasets:[{label:'Risk Score',data:problem.map(r=>r.risk),borderRadius:8}]},
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0}}}}
-  });
-}
-
-function exportCSV(){
-  const headers=['Staff','Role','Branch','Leave','Morning','Evening','Status','Score','Risk','Remark','Score Reason'];
-  const rows=viewRows.map(r=>[
-    r.staff.staffName,r.staff.role,r.staff.branch,
-    r.leave.onLeave?'Leave':'Working',
-    r.leave.onLeave?'Not Required':(r.morning?'Done':'Pending'),
-    r.leave.onLeave?'Not Required':(r.evening?'Done':'Pending'),
-    r.status.text,r.leave.onLeave?'Leave':((r.quality||0) + '/100'),r.risk || '',r.remark,(r.scoreParts||dailyScoreDetails(r)).detailReason
-  ]);
-  const csv=[headers,...rows].map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url; a.download=`ANIK_Pro_Dashboard_${$('dashDate').value}.csv`; a.click();
-  URL.revokeObjectURL(url);
-}
-async function copySummary(){
-  const required=viewRows.filter(reportRequired);
-  const pending=required.filter(r=>r.status.key!=='complete');
-  const leave=viewRows.filter(r=>r.leave.onLeave);
-  const branchLines=branchSummary()
-    .filter(b=>!$('branchFilter').value || b.branch===$('branchFilter').value)
-    .map(b=>`• ${b.branch}: ${b.complete}/${b.required} done (${b.percent}%), Pending ${b.pending}, Leave ${b.leave}`).join('\n');
-
-  const problem=viewRows.filter(r=>reportRequired(r) && (r.risk>0 || r.quality<60)).sort((a,b)=>b.risk-a.risk).slice(0,20)
-    .map(r=>`• ${r.staff.staffName} - ${r.staff.branch} - ${r.status.text} - Score ${r.quality}/100 - ${(r.scoreParts||dailyScoreDetails(r)).shortReason}`).join('\n') || '• Problematic staff नाही.';
-
-  const leaveLines=leave.slice(0,20).map(r=>`• ${r.staff.staffName} - ${r.staff.branch} - ${r.leave.status}`).join('\n') || '• Leave staff नाही.';
-
-  const msg=`📊 ANIK Pro Dashboard\n📅 Date: ${$('dashDate').value}\n\nTotal Staff: ${viewRows.length}\nReport Required: ${required.length}\nLeave Today: ${leave.length}\nComplete: ${required.filter(r=>r.status.key==='complete').length}\nReal Pending: ${pending.length}\nCompletion: ${required.length ? Math.round((required.filter(r=>r.status.key==='complete').length/required.length)*100) : 0}%\n\n🏦 Branch Position:\n${branchLines}\n\n🏖️ Leave Staff:\n${leaveLines}\n\n🚨 Problematic Staff:\n${problem}\n\n— ANIK Pro Dashboard`;
-  await navigator.clipboard.writeText(msg);
-  toast('Dashboard summary copied.');
-}
-
-function closeDrawer(){
-  $('drawer').classList.remove('open');
-}
-
-function scoreReasonDaily(r){
-  if(!r) return '<div class="empty">Score details उपलब्ध नाहीत.</div>';
-  const d = r.scoreParts || dailyScoreDetails(r);
-  if(r.leave && r.leave.onLeave){
-    return `<div class="kv"><b>रजा दिवस</b><span>${esc(d.detailReason)}</span></div>`;
-  }
-  return `
-    <div class="score-line">
-      <div><span>Report Count 35%</span><b>${d.reportScore}/100</b></div>
-      <div><span>Remark Quality 25%</span><b>${d.remarkScore}/100</b></div>
-      <div><span>Plan vs Actual 25%</span><b>${d.achievementScore}/100</b></div>
-      <div><span>Consistency 15%</span><b>${d.consistencyScore}/100</b></div>
-      <div><span>Final Staff Score</span><b>${d.finalScore}/100</b></div>
-    </div>
-    <div class="kv"><b>मराठी कारण</b><span>${esc(d.detailReason)}</span></div>
-    <div class="kv"><b>Remark वाचन</b><span>${esc(d.remarkText || 'Remark उपलब्ध नाही.')}</span></div>
-    <div class="kv"><b>Achievement आधार</b><span>${esc(d.achievementLabel || '-')}</span></div>`;
-}
-
-async function getDashboardCached(date){
-  const cached=dashboardDateCache.get(date);
-  if(cached) return cached;
-  const res=await jsonp('getDashboard',{date});
-  const pack={entries:res.entries||[], accountStaffSystem:res.accountStaffSystem||[], unitSummary:res.unitSummary||[], ts:Date.now()};
-  dashboardDateCache.set(date, pack);
-  return pack;
-}
-async function fetchDatePacksMonthlyFast(dates, onPack){
-  const concurrency=10; // old monthly report was slow because it loaded one full dashboard per day. Now 10 days load parallel + progressive render.
-  let cursor=0, completed=0, failed=0;
-  const update=()=>{
-    $('perfProgress').textContent = `Loading ${completed}/${dates.length} days... ${failed ? failed+' day failed; बाकी data घेत आहे.' : 'table live update होत आहे.'}`;
-  };
-  update();
-  async function worker(){
-    while(cursor<dates.length){
-      const idx=cursor++;
-      const date=dates[idx];
-      try{
-        const pack=await getDashboardCached(date);
-        onPack(pack, date, idx);
-      }catch(e){
-        failed++;
-      }
-      completed++;
-      if(completed===1 || completed%3===0 || completed===dates.length) update();
-      await new Promise(r=>setTimeout(r,0));
-    }
-  }
-  await Promise.all(Array.from({length:Math.min(concurrency,dates.length)}, worker));
-  $('perfProgress').textContent = `Done: ${dates.length-failed}/${dates.length} days loaded. ${failed ? failed+' days API failed.' : 'Monthly score ready.'}`;
-  return {completed,failed};
-}
-
-function monthFromISO(iso){ return safe(iso || todayISO()).slice(0,7); }
-function perfMonthDates(monthVal){
-  const mv=safe(monthVal) || monthFromISO(todayISO());
-  const [yy,mm]=mv.split('-').map(Number);
-  if(!yy || !mm) return [];
-  const first=new Date(yy, mm-1, 1);
-  const last=new Date(yy, mm, 0);
-  const today=new Date(todayISO()+'T00:00:00');
-  const end=last>today ? today : last;
-  if(first>today) return [];
-  const list=[];
-  for(let d=new Date(first); d<=end && list.length<31; d.setDate(d.getDate()+1)){
-    list.push(new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10));
-  }
-  return list;
-}
-
-function openPerformanceModal(){
-  $('perfMonth').value = monthFromISO($('dashDate').value || todayISO());
-  renderPerformanceFilters();
-  $('modalBackdrop').classList.remove('open');
-  $('perfModal').classList.add('open');
-  document.body.style.overflow='hidden';
-  $('perfTable').innerHTML='<tr><td colspan="10">Current month quick score loading...</td></tr>';
-  $('perfSummary').textContent='Opening full screen monthly score...';
-  setTimeout(()=>generatePerformance(), 80);
-}
-function closePerformanceModal(){
-  $('modalBackdrop').classList.remove('open');
-  $('perfModal').classList.remove('open');
-  document.body.style.overflow='';
-}
-function performanceNote(score){
-  if(score>=90) return {text:'उत्कृष्ट - PP Unlock Level', cls:'done'};
-  if(score>=80) return {text:'चांगले काम', cls:'done'};
-  if(score>=70) return {text:'ठीक - लक्ष ठेवावे', cls:'pending'};
-  if(score>=60) return {text:'कमकुवत - Follow-up हवा', cls:'low'};
-  return {text:'समस्या - Action आवश्यक', cls:'missing'};
-}
-
-function createMonthlyAgg(branch, staffId){
-  const agg={};
-  staffMaster
-    .filter(s=>String(s.active).toLowerCase()!=='no' && safe(s.role)!=='अकाउंट टीम')
-    .filter(s=>!branch || safe(s.branch)===branch)
-    .filter(s=>!staffId || safe(s.staffId)===staffId)
-    .forEach(s=>{
-      agg[safe(s.staffId)]={
-        staff:s, days:0, leaveDays:0, requiredDays:0, fullReports:0, pendingDays:0,
-        morningDone:0, eveningDone:0, missingDays:0, checkDays:0,
-        reportScore:0, quality:0, achievement:0, consistency:0, finalScore:0,
-        remarkScoreSum:0, remarkScoreCount:0, achievementSum:0, achievementCount:0,
-        dailyScoreSum:0, dailyScoreCount:0, redDays:0, reasonSamples:[]
-      };
-    });
-  return agg;
-}
-function addMonthlyRow(agg, r, date){
-  const id=safe(r.staff.staffId);
-  if(!agg[id]) return;
-  const a=agg[id];
-  a.days++;
-  if(r.leave.onLeave){ a.leaveDays++; return; }
-  a.requiredDays++;
-  if(r.status.key==='complete') a.fullReports++; else a.pendingDays++;
-  if(r.morning) a.morningDone++;
-  if(r.evening) a.eveningDone++;
-  if(r.status.key==='missing') a.missingDays++;
-  if(r.status.key==='check') a.checkDays++;
-  const parts=r.scoreParts || dailyScoreDetails(r);
-  a.remarkScoreSum += parts.remarkScore; a.remarkScoreCount++;
-  a.achievementSum += parts.achievementScore; a.achievementCount++;
-  a.dailyScoreSum += parts.finalScore; a.dailyScoreCount++;
-  if(r.risk>0 || parts.finalScore<70){
-    a.redDays++;
-    if(a.reasonSamples.length<3) a.reasonSamples.push(`${date}: ${parts.shortReason}`);
-  }
-}
-function finalizeMonthlyRows(agg){
-  return Object.values(agg).map(a=>{
-    const reportScore = a.requiredDays ? Math.round((a.fullReports/a.requiredDays)*100) : (a.leaveDays ? 100 : 0);
-    const quality = a.remarkScoreCount ? Math.round(a.remarkScoreSum/a.remarkScoreCount) : 0;
-    const achievement = a.achievementCount ? Math.round(a.achievementSum/a.achievementCount) : 0;
-    const consistency = a.requiredDays ? Math.round(((a.requiredDays-a.redDays)/a.requiredDays)*100) : (a.leaveDays ? 100 : 0);
-    const finalScore = Math.round((reportScore*.35) + (quality*.25) + (achievement*.25) + (consistency*.15));
-    return {...a, reportScore, quality, achievement, consistency, finalScore};
-  }).sort((a,b)=>a.finalScore-b.finalScore || b.pendingDays-a.pendingDays || safe(a.staff.staffName).localeCompare(safe(b.staff.staffName)));
-}
-
-async function generatePerformance(){
-  const month=safe($('perfMonth').value) || monthFromISO($('dashDate').value || todayISO());
-  $('perfMonth').value=month;
-  const dates=perfMonthDates(month);
-  if(!dates.length){ toast('या महिन्यासाठी आजपर्यंत data नाही.'); return; }
-
-  const branch=safe($('perfBranch').value);
-  const staffId=safe($('perfStaff').value);
-  const btn=$('generatePerf');
-  btn.disabled=true;
-  btn.textContent='Loading...';
-  $('perfTable').innerHTML='<tr><td colspan="10">Quick monthly score loading... कृपया थांबा.</td></tr>';
-  $('perfSummary').textContent=`${month} month | ${dates.length} days | Full screen score loading...`;
-  $('perfProgress').textContent='Starting monthly quick load...';
-
-  const agg=createMonthlyAgg(branch, staffId);
-  let renderedAt=0;
-  const renderLive=(force=false)=>{
-    const rows=finalizeMonthlyRows(agg);
-    const loadedDays=Math.max(...Object.values(agg).map(a=>a.days),0);
-    if(force || loadedDays!==renderedAt){
-      renderedAt=loadedDays;
-      renderPerformanceRows(rows, dates.length, loadedDays);
-    }
-  };
-
-  try{
-    await fetchDatePacksMonthlyFast(dates, (pack,date)=>{
-      const rows=buildRowsFromData(pack.entries||[], pack.accountStaffSystem||[]);
-      rows.forEach(r=>addMonthlyRow(agg, r, date));
-      const loadedDays=Math.max(...Object.values(agg).map(a=>a.days),0);
-      if(loadedDays===1 || loadedDays%3===0 || loadedDays===dates.length) renderLive(true);
-    });
-    renderLive(true);
-  }catch(e){
-    toast(e.message || 'Monthly report failed.');
-    $('perfProgress').textContent='Report failed. API / internet तपासा.';
-  }
-  btn.disabled=false;
-  btn.textContent='⚡ Quick Score';
-}
-function performanceReason(r){
-  if(!r.requiredDays && r.leaveDays){ return 'निवडलेल्या महिन्यात कामाचे दिवस रजा मध्ये आहेत; pending penalty नाही.'; }
-  if(!r.requiredDays){ return 'या महिन्यात या staff साठी report-required data उपलब्ध नाही.'; }
-  const weak=[];
-  if(r.pendingDays>0) weak.push(`${r.pendingDays} दिवस report pending`);
-  if(r.missingDays>0) weak.push(`${r.missingDays} दिवस दोन्ही report missing`);
-  if(r.checkDays>0) weak.push(`${r.checkDays} दिवस morning missing पण evening done`);
-  if(r.quality<60) weak.push('remark quality कमी/अस्पष्ट');
-  if(r.achievement<60) weak.push('plan/actual achievement कमी किंवा number उपलब्ध नाही');
-  if(r.consistency<75) weak.push('consistency कमी');
-  if(r.reasonSamples && r.reasonSamples.length) weak.push(r.reasonSamples.join(' / '));
-  const good=[];
-  if(r.reportScore>=90) good.push('report count चांगला');
-  if(r.quality>=80) good.push('remark स्पष्ट');
-  if(r.achievement>=80) good.push('कामगिरी/achievement चांगली');
-  const why = weak.length ? weak.join(', ') : (good.length ? good.join(', ') : 'performance stable');
-  return `Report ${r.reportScore}% (${r.fullReports}/${r.requiredDays}), Remark ${r.quality}/100, Plan ${r.achievement}/100, Consistency ${r.consistency}%. कारण: ${why}.`;
-}
-
-function renderPerformanceRows(rows, totalDays, loadedDays=totalDays){
-  if(!rows.length){
-    $('perfSummary').textContent='Selected filter मध्ये staff मिळाला नाही.';
-    $('perfTable').innerHTML='<tr><td colspan="10">No performance data.</td></tr>';
-    ['mPerfStaff','mPerfAvg','mPerfPending','mPerfProblem'].forEach(id=>$(id).textContent='0');
-    return;
-  }
-  const activeRows=rows.filter(r=>r.days>0 || loadedDays>0);
-  const useRows=activeRows.length ? activeRows : rows;
-  const avg=Math.round(useRows.reduce((s,r)=>s+(r.finalScore||0),0)/useRows.length);
-  const pending=useRows.reduce((s,r)=>s+(r.pendingDays||0),0);
-  const problem=useRows.filter(r=>r.finalScore<70 && r.requiredDays>0).length;
-  $('mPerfStaff').textContent=useRows.length;
-  $('mPerfAvg').textContent=(avg || 0)+'/100';
-  $('mPerfPending').textContent=pending;
-  $('mPerfProblem').textContent=problem;
-  $('perfSummary').textContent=`${$('perfMonth').value} | Loaded ${loadedDays}/${totalDays} days | ${useRows.length} staff | Avg ${avg || 0}/100 | Below 70: ${problem}`;
-
-  $('perfTable').innerHTML=useRows.map(r=>{
-    const note=performanceNote(r.finalScore || 0);
-    const reason=performanceReason(r);
-    return `<tr>
-      <td><b>${esc(r.staff.staffName)}</b><br><small>${esc(r.staff.staffId||'')}</small></td>
-      <td>${esc(r.staff.branch)}</td>
-      <td>${r.requiredDays}</td>
-      <td>${r.fullReports}</td>
-      <td>${r.pendingDays}</td>
-      <td><span class="badge ${qualityClass(r.reportScore)}">${r.reportScore || 0}%</span></td>
-      <td><span class="badge ${qualityClass(r.quality)}">${r.quality || 0}</span></td>
-      <td><span class="badge ${qualityClass(r.achievement)}">${r.achievement || 0}</span></td>
-      <td><span class="badge score-pill ${note.cls}">${r.finalScore || 0}/100</span><br><small>${esc(note.text)}</small></td>
-      <td class="reason-cell"><small class="score-reason">${esc(reason)}</small></td>
-    </tr>`;
-  }).join('');
-}
-
-
-window.addEventListener('load', init);
+function getMasterCache(){const x=readJSON(MASTER_KEY,null);return x&&Date.now()-x.ts<24*60*60*1000?x:null}
+function getDashStore(){return readJSON(DASH_KEY,{dates:{}})}
+function getDashCache(date){const x=getDashStore().dates?.[date];return x||null}
+function saveDashCache(date,pack){const store=getDashStore();store.dates=store.dates||{};store.dates[date]={...pack,ts:Date.now()};const keys=Object.keys(store.dates).sort((a,b)=>(store.dates[b].ts||0)-(store.dates[a].ts||0));keys.slice(CACHE_MAX_DATES).forEach(k=>delete store.dates[k]);writeJSON(DASH_KEY,store)}
+async function fetchMaster(force=false){const cache=getMasterCache();if(cache&&!force)return cache;const res=await jsonp('getMasterData');const pack={staff:res.staff||[],questions:res.questions||[],ts:Date.now()};writeJSON(MASTER_KEY,pack);return pack}
+async function fetchDashboard(date,force=false){const cache=getDashCache(date);if(cache&&!force)return cache;const res=await jsonp('getDashboard',{date});const pack={entries:res.entries||[],unitSummary:res.unitSummary||[],accountStaffSystem:res.accountStaffSystem||[]};saveDashCache(date,pack);return {...pack,ts:Date.now()}}
+function parsePayload(entry){if(!entry||!entry.payloadJson)return{};if(payloadCache.has(entry))return payloadCache.get(entry);let out={};try{out=typeof entry.payloadJson==='object'?entry.payloadJson:JSON.parse(entry.payloadJson)}catch{}payloadCache.set(entry,out);return out}
+function truthyLeave(v){const t=safe(v).toLowerCase();return['होय','yes','y','true','1','on leave','leave','rja','raja','रजा आहे','आज रजा आहे'].some(x=>t===x||t.includes(x))}
+function findLeaveInfo(staff,morning,evening,account,mp,ep){const sources=[staff,morning,evening,account,mp,ep].filter(Boolean);let found=false,status='',remark='';for(const src of sources){const a=src.leaveToday??src.leave_today??src.onLeave??src.on_leave??src.leave;const b=src.leaveStatus??src.leave_status??src.leave_status_today;const c=src.leaveRemark??src.leave_remark??src.remarkLeave??src.leaveReason??src.leave_reason;if(truthyLeave(a)||truthyLeave(b)){found=true;status=safe(b)||'आज रजा आहे';remark=safe(c)||safe(b)||'आज कर्मचारी रजेवर आहे.'}if(safe(c)&&(truthyLeave(c)||safe(c).includes('रजेवर'))){found=true;status=status||'आज रजा आहे';remark=remark||safe(c)}}return{onLeave:found,status:status||(found?'आज रजा आहे':''),remark}}
+function clean(v){const t=safe(v);if(!t||['0','-','--','null','undefined'].includes(t.toLowerCase()))return'';return t.replace(/\s+/g,' ').trim()}
+function payloadText(p){return Object.entries(p||{}).filter(([k])=>!['leavetoday','leavestatus','leaveremark'].includes(k.toLowerCase())).map(([,v])=>clean(v)).filter(Boolean).join(' ')}
+function bestRemark(values){const bad=new Set(['na','n/a','nil','no','ok','done','yes','हो','होय','नाही']);return(values||[]).map(clean).filter(Boolean).map(t=>({t,s:Math.min(120,t.length)+(/\d/.test(t)?20:0)-(bad.has(t.toLowerCase())?100:0)})).sort((a,b)=>b.s-a.s)[0]?.t||''}
+function metricScore(a,t){a=Number(a||0);t=Number(t||0);return t>0?clamp((a/t)*100):null}
+function firstNum(p,keys){for(const k of keys){if(p&&safe(p[k]))return Number(String(p[k]).replace(/[^0-9.\-]/g,''))||0}return 0}
+function entryAchievement(mp,ep){const defs=[
+  ['OD',['od_target','od_collection_target','overdue_target','odTarget'],['od_actual','od_received','od_collection_actual','odAchieved'],25],
+  ['Collection',['loan_demand_target','collection_target','regular_collection_target','collectionTarget'],['loan_demand_actual','collection_actual','collection_done','collectionAchieved'],35],
+  ['Disbursement',['disbursement_target','autodebit_target','appraisal_target','disbursementTarget'],['disbursement_actual','disbursement_done','autodebit_actual','appraisal_done','disbursementAchieved'],25],
+  ['New Customer',['new_customer_target','meeting_target','equifax_plan','newCustomerTarget'],['new_customer_added','meeting_actual','equifax_done','newCustomerAchieved'],15]
+ ];const metrics=defs.map(([name,tk,ak,w])=>{const t=firstNum(mp,tk),a=firstNum(ep,ak);return{name,t,a,w,s:metricScore(a,t)}}).filter(x=>x.s!==null);if(!metrics.length)return{score:0,hasNumeric:false,label:'Target/Actual number उपलब्ध नाही'};const w=metrics.reduce((s,x)=>s+x.w,0);return{score:clamp(metrics.reduce((s,x)=>s+x.s*x.w,0)/w),hasNumeric:true,label:metrics.map(x=>`${x.name} ${x.a}/${x.t}`).join(', ')}}
+function directScore(obj){if(!obj)return 0;const existing=Number(obj.workQuality||obj.score||obj.staffScore||0);if(existing>0)return clamp(existing);const defs=[[obj.odAchieved,obj.odTarget,25],[obj.collectionAchieved,obj.collectionTarget,35],[obj.disbursementAchieved,obj.disbursementTarget,25],[obj.newCustomerAchieved,obj.newCustomerTarget,15]].map(([a,t,w])=>({s:metricScore(a,t),w})).filter(x=>x.s!==null);if(!defs.length)return 0;const w=defs.reduce((s,x)=>s+x.w,0);return clamp(defs.reduce((s,x)=>s+x.s*x.w,0)/w)}
+function remarkScore(text,hasM,hasE){const t=clean(text),low=t.toLowerCase();if(!hasM&&!hasE)return 0;let s=hasM&&hasE?58:34;if(!t)return hasM&&hasE?55:s;const actions=['loan','meeting','office','recovery','collection','visit','customer','group','cash','call','verification','training','कर्ज','बैठक','ऑफिस','वसुली','भरणा','भेट','ग्राहक','गट','रोख','फोन','तपासणी','पूर्ण','केले','झाले','जमा'];const negatives=['pending','not done','failed','problem','missing','delay','reject','प्रलंबित','अडचण','समस्या','मिसिंग','उशीर','रिजेक्ट','काम नाही'];const ac=actions.reduce((n,w)=>n+(low.includes(w)?1:0),0),nc=negatives.reduce((n,w)=>n+(low.includes(w)?1:0),0);if(t.length>=18)s+=8;if(t.length>=45)s+=10;if(t.length>=90)s+=6;if(/[0-9०-९]/.test(t))s+=5;if(ac>=1)s+=10;if(ac>=3)s+=7;if(['ok','done','yes','हो','होय','केले','झाले'].includes(low)||t.length<8)s-=18;if(nc>=1)s-=15;if(nc>=2)s-=10;if(hasM&&hasE&&ac>=2&&t.length>=35)s=Math.max(s,86);if(hasM&&!hasE)s=Math.min(s,58);if(!hasM&&hasE)s=Math.min(s,72);return clamp(s)}
+function rowStatus(m,e,leave){if(leave.onLeave)return{key:'leave',text:'रजेवर'};if(m&&e)return{key:'complete',text:'पूर्ण'};if(!m&&!e)return{key:'missing',text:'दोन्ही Missing'};if(!m&&e)return{key:'check',text:'Morning Missing'};return{key:'pending',text:'Evening बाकी'}}
+function scoreDetails(row){if(row.leave.onLeave)return{final:100,report:100,remark:100,achievement:100,consistency:100,reason:'रजा असल्यामुळे report आवश्यक नाही आणि penalty नाही.',achievementLabel:'Leave day'};const hasM=!!row.morning,hasE=!!row.evening;const report=hasM&&hasE?100:(hasM||hasE?50:0);const remark=remarkScore(row.remark,hasM,hasE);const entry=entryAchievement(row.mp,row.ep);const direct=directScore(row.account);let achievement=entry.hasNumeric?entry.score:(direct||0);let label=entry.hasNumeric?entry.label:(direct?'System score':'Remark based अंदाज');if(!achievement){achievement=hasM&&hasE?Math.max(45,Math.min(95,remark-3)):(hasM||hasE?Math.max(25,Math.min(60,remark)):0)}let consistency=hasM&&hasE?100:(hasM?48:(hasE?62:0));if(remark>0&&remark<55)consistency=Math.min(consistency,65);const final=clamp(report*.35+remark*.25+achievement*.25+consistency*.15);const reasons=[];reasons.push(hasM&&hasE?'Plan आणि Actual दोन्ही भरले आहेत':(!hasM&&!hasE?'दोन्ही report missing आहेत':(!hasM?'Morning Plan missing आहे':'Evening Actual बाकी आहे')));reasons.push(!row.remark?'Remark उपलब्ध नाही':remark>=85?'Remark स्पष्ट आणि उपयोगी आहे':remark>=70?'Remark ठीक आहे; थोडा अधिक तपशील हवा':'Remark कमी किंवा अस्पष्ट आहे');reasons.push(entry.hasNumeric?'Target vs Actual वरून कामगिरी मोजली':direct?'System score वापरला':'Report व remark वरून अंदाज घेतला');return{final,report,remark,achievement,consistency,reason:reasons.join(' • '),achievementLabel:label}}
+function buildQuestionIndex(){state.qIndex=new Map();for(const q of state.questions){if(String(q.active).toLowerCase()==='no')continue;const k=safe(q.role)+'|'+safe(q.shift).toLowerCase();if(!state.qIndex.has(k))state.qIndex.set(k,[]);state.qIndex.get(k).push(q)}for(const a of state.qIndex.values())a.sort((x,y)=>Number(x.order||0)-Number(y.order||0))}
+function buildRows(entries,accountRows){const em=new Map(),am=new Map();for(const e of entries||[])em.set(safe(e.staffId)+'|'+safe(e.shift).toLowerCase(),e);for(const a of accountRows||[])am.set(safe(a.staffId),a);const out=[];for(const staff of state.staff){if(String(staff.active).toLowerCase()==='no'||safe(staff.role)==='अकाउंट टीम')continue;const id=safe(staff.staffId),morning=em.get(id+'|morning'),evening=em.get(id+'|evening'),account=am.get(id)||{},mp=parsePayload(morning),ep=parsePayload(evening),leave=findLeaveInfo(staff,morning,evening,account,mp,ep),status=rowStatus(morning,evening,leave);const remark=leave.onLeave?(leave.remark||'आज रजेवर आहे.'):bestRemark([account.remark,account.workRemark,account.staffRemark,account.systemRemark,ep.remark,ep.remarks,ep.important_note,ep.work_done,ep.actual_remark,ep.today_work,ep.note,mp.remark,mp.remarks,mp.plan_remark,mp.today_plan,mp.note,payloadText(ep),payloadText(mp)]);const row={id,staff,morning,evening,account,mp,ep,leave,status,remark};row.score=scoreDetails(row);let risk=0;if(!leave.onLeave){if(!morning)risk+=24;if(!evening)risk+=24;if(status.key==='missing')risk+=22;if(status.key==='check')risk+=10;if(row.score.final<60)risk+=60-row.score.final;if(row.score.remark>0&&row.score.remark<55&&(morning||evening))risk+=8}row.risk=Math.round(risk);row.search=[staff.staffName,staff.role,staff.branch,status.text,remark,leave.remark].join(' ').toLowerCase();out.push(row)}return out}
+function setData(master,dash){state.staff=master.staff||[];state.questions=master.questions||[];state.unitSummary=dash.unitSummary||[];buildQuestionIndex();state.rows=buildRows(dash.entries||[],dash.accountStaffSystem||[]);state.loaded=true;state.lastUpdated=dash.ts||Date.now();populateFilters();renderKpiBranchFilters();applyFilters(false)}
+function summarize(rows){const s={total:rows.length,leave:0,required:0,complete:0,pending:0,morningPending:0,eveningPending:0,attention:0,scoreSum:0,scoreCount:0};for(const r of rows){if(r.leave.onLeave){s.leave++;continue}s.required++;if(r.status.key==='complete')s.complete++;else s.pending++;if(!r.morning)s.morningPending++;if(!r.evening)s.eveningPending++;if(r.risk>0||r.score.final<60)s.attention++;if(r.score.final>0){s.scoreSum+=r.score.final;s.scoreCount++}}s.completion=s.required?Math.round(s.complete/s.required*100):0;s.avg=s.scoreCount?Math.round(s.scoreSum/s.scoreCount):0;return s}
+function branchSummary(rows=state.rows){const m=new Map();for(const r of rows){const b=safe(r.staff.branch)||'Other';if(!m.has(b))m.set(b,{branch:b,total:0,leave:0,required:0,complete:0,pending:0,attention:0,scoreSum:0,scoreCount:0});const x=m.get(b);x.total++;if(r.leave.onLeave){x.leave++;continue}x.required++;if(r.status.key==='complete')x.complete++;else x.pending++;if(r.risk>0||r.score.final<60)x.attention++;if(r.score.final>0){x.scoreSum+=r.score.final;x.scoreCount++}}return[...m.values()].map(x=>({...x,percent:x.required?Math.round(x.complete/x.required*100):100,avg:x.scoreCount?Math.round(x.scoreSum/x.scoreCount):0})).sort((a,b)=>a.percent-b.percent||b.pending-a.pending)}
+function matchStatus(r,st){if(!st||st==='all')return true;if(st==='required')return !r.leave.onLeave;if(st==='complete')return r.status.key==='complete';if(st==='leave')return r.leave.onLeave;if(st==='pending')return !r.leave.onLeave&&r.status.key!=='complete';if(st==='morningPending')return !r.leave.onLeave&&!r.morning;if(st==='eveningPending')return !r.leave.onLeave&&!r.evening;if(st==='missing')return r.status.key==='missing';if(st==='lowQuality')return !r.leave.onLeave&&r.score.final<60;if(st==='red')return !r.leave.onLeave&&(r.risk>0||r.score.final<60);return true}
+function applyFilters(reset=true){if(reset)state.page=1;const q=state.search.toLowerCase();state.viewRows=state.rows.filter(r=>(!state.branch||safe(r.staff.branch)===state.branch)&&(!state.role||safe(r.staff.role)===state.role)&&matchStatus(r,state.status)&&(!q||r.search.includes(q))).sort((a,b)=>b.risk-a.risk||safe(a.staff.branch).localeCompare(safe(b.staff.branch))||safe(a.staff.staffName).localeCompare(safe(b.staff.staffName)));renderKpiBranchFilters();renderVisible()}
+function renderVisible(){renderTopStatus();if(state.view==='overview')renderOverview();if(state.view==='staff')renderStaff();if(state.view==='units')renderUnits()}
+function renderTopStatus(){const t=state.lastUpdated?new Date(state.lastUpdated).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'-';$('syncText').textContent=state.loaded?`Last update ${t}${state.branch?' • '+state.branch:''}`:'डेटा घेत आहे...'}
+function renderOverview(){const s=summarize(state.viewRows);$('completionPct').textContent=s.completion+'%';$('heroScore').style.setProperty('--pct',s.completion+'%');$('mTotal').textContent=s.total;$('mLeave').textContent=s.leave;$('mRequired').textContent=s.required;$('mComplete').textContent=s.complete;$('mPending').textContent=s.pending;$('mMorningPending').textContent=s.morningPending;$('mEveningPending').textContent=s.eveningPending;$('mCompletion').textContent=s.completion+'%';$('mAvgScore').textContent=s.avg;$('mAttention').textContent=s.attention;if(!state.loaded){$('heroTitle').textContent='Dashboard तयार होत आहे';$('heroText').textContent='तुमची माहिती मिळताच सर्वात महत्त्वाची स्थिती इथे दिसेल.'}else if(s.pending===0){$('heroTitle').textContent='आजचे सर्व report पूर्ण आहेत';$('heroText').textContent=`${s.required} required staff पैकी सर्व report पूर्ण. आज रजेवर ${s.leave}.`}else{$('heroTitle').textContent=`${s.pending} report अजून बाकी आहेत`;$('heroText').textContent=`${s.complete}/${s.required} पूर्ण • Morning बाकी ${s.morningPending} • Evening बाकी ${s.eveningPending} • सरासरी score ${s.avg}`}
+ const attention=state.viewRows.filter(r=>!r.leave.onLeave&&(r.risk>0||r.score.final<60)).sort((a,b)=>b.risk-a.risk).slice(0,8);$('attentionCount').textContent=attention.length+' Staff';$('attentionList').innerHTML=attention.length?attention.map(attentionHTML).join(''):'<div class="empty">आज तातडीची समस्या नाही.</div>';
+ const units=branchSummary(state.viewRows).slice(0,6);$('overviewUnits').innerHTML=units.length?units.map(unitHTML).join(''):'<div class="empty">Branch data उपलब्ध नाही.</div>'}
+function attentionHTML(r){const issue=!r.morning&&!r.evening?'दोन्ही report missing':(!r.morning?'Morning missing':(!r.evening?'Evening बाकी':`Score ${r.score.final}`));return`<button class="attention-row" data-staff="${esc(r.id)}"><span class="avatar">${esc(initials(r.staff.staffName))}</span><span class="row-main"><b>${esc(r.staff.staffName)}</b><span>${esc(r.staff.branch)} • ${esc(issue)}</span></span><span class="badge b-bad">Risk ${r.risk}</span></button>`}
+function unitHTML(x){return`<button class="unit-row" data-branch="${esc(x.branch)}"><span class="unit-name"><b>${esc(x.branch)}</b><span>${x.complete}/${x.required} पूर्ण • ${x.leave} रजा</span></span><span class="unit-progress"><span class="progress"><i style="width:${x.percent}%"></i></span><span class="progress-meta"><span>${x.percent}% पूर्ण</span><span>${x.pending} बाकी</span></span></span><span class="badge ${x.percent>=85?'b-good':x.percent>=55?'b-warn':'b-bad'}">${x.avg||'-'} Score</span></button>`}
+function statusBadge(r){if(r.leave.onLeave)return'<span class="badge b-leave">रजा</span>';if(r.status.key==='complete')return'<span class="badge b-good">पूर्ण</span>';if(r.status.key==='missing')return'<span class="badge b-bad">दोन्ही Missing</span>';if(r.status.key==='check')return'<span class="badge b-info">Morning Missing</span>';return'<span class="badge b-warn">Evening बाकी</span>'}
+function scoreColor(v){return v>=80?'var(--good)':v>=60?'var(--warn)':'var(--bad)'}
+function staffHTML(r){const m=r.leave.onLeave?['Not Required','na']:[r.morning?'Done':'बाकी',r.morning?'ok':'no'];const e=r.leave.onLeave?['Not Required','na']:[r.evening?'Done':'बाकी',r.evening?'ok':'no'];return`<article class="staff-card"><div class="staff-top"><span class="avatar">${esc(initials(r.staff.staffName))}</span><span class="staff-name"><b>${esc(r.staff.staffName)}</b><span>${esc(r.staff.role)} • ${esc(r.staff.branch)}</span></span><span class="score-dot" style="--score:${r.leave.onLeave?100:r.score.final}%;--scoreColor:${r.leave.onLeave?'var(--leave)':scoreColor(r.score.final)}"><b>${r.leave.onLeave?'R':r.score.final}</b></span></div><div class="report-steps"><div class="step ${m[1]}"><span>Morning</span><b>${m[0]}</b></div><div class="step ${e[1]}"><span>Evening</span><b>${e[0]}</b></div></div><div class="remark">${esc(r.remark||'Remark उपलब्ध नाही.')}</div><div class="card-foot">${statusBadge(r)}<button class="link-btn" data-staff="${esc(r.id)}">तपशील →</button></div></article>`}
+function renderStaff(){const s=summarize(state.viewRows);const branchText=state.branch?(' • शाखा: '+state.branch):'';const kpiText=state.status?(' • KPI: '+state.lastKpiLabel):'';$('staffSummary').textContent=`${state.viewRows.length} कर्मचारी • ${s.complete} पूर्ण • ${s.pending} बाकी • ${s.leave} रजा${branchText}${kpiText}`;const limit=state.page*state.pageSize,list=state.viewRows.slice(0,limit);$('staffGrid').innerHTML=list.length?list.map(staffHTML).join(''):'<div class="empty">या filter मध्ये कर्मचारी मिळाले नाहीत.</div>';$('loadMoreBtn').classList.toggle('hidden',limit>=state.viewRows.length)}
+function renderUnits(){const list=branchSummary(state.viewRows);$('unitCount').textContent=list.length+' शाखा';$('allUnits').innerHTML=list.length?list.map(unitHTML).join(''):'<div class="empty">Branch data उपलब्ध नाही.</div>'}
+function populateFilters(){const branches=[...new Set(state.staff.map(x=>safe(x.branch)).filter(Boolean))].sort((a,b)=>a.localeCompare(b));const roles=[...new Set(state.staff.map(x=>safe(x.role)).filter(Boolean))].sort((a,b)=>a.localeCompare(b));$('branchFilter').innerHTML='<option value="">सर्व शाखा</option>'+branches.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');$('roleFilter').innerHTML='<option value="">सर्व पदे</option>'+roles.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');$('perfBranch').innerHTML='<option value="">सर्व शाखा</option>'+branches.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');renderPerfStaff()}
+function renderPerfStaff(){const b=safe($('perfBranch').value),cur=safe($('perfStaff').value);const list=state.staff.filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम'&&(!b||safe(s.branch)===b)).sort((a,b)=>safe(a.staffName).localeCompare(safe(b.staffName)));$('perfStaff').innerHTML='<option value="">सर्व कर्मचारी</option>'+list.map(s=>`<option value="${esc(s.staffId)}">${esc(s.staffName)} - ${esc(s.branch)}</option>`).join('');$('perfStaff').value=cur}
+function setView(view){state.view=view;document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+view));document.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===view));const titles={overview:['आजची स्थिती','काय पूर्ण झाले आणि कुठे लक्ष द्यायचे ते एका नजरेत.'],staff:['कर्मचारी','प्रत्येक staff चा report आणि score सोप्या पद्धतीने.'],units:['शाखा','शाखानिहाय पूर्णता आणि बाकी काम.'],monthly:['मासिक स्कोअर','महिन्याची report performance.']};$('screenTitle').textContent=titles[view][0];$('screenSub').textContent=titles[view][1];renderVisible();window.scrollTo({top:0,behavior:'smooth'})}
+function openSheet(id){$('overlay').classList.add('open');$(id).classList.add('open');document.body.style.overflow='hidden'}
+function closeSheets(){$('overlay').classList.remove('open');document.querySelectorAll('.sheet').forEach(x=>x.classList.remove('open'));document.body.style.overflow=''}
+function detailValues(payload,role,shift){const qs=state.qIndex.get(safe(role)+'|'+shift)||[];if(qs.length)return qs.map(q=>({k:q.label,v:payload[q.key]})).filter(x=>clean(x.v));return Object.entries(payload||{}).filter(([k,v])=>!['leaveToday','leaveStatus','leaveRemark'].includes(k)&&clean(v)).map(([k,v])=>({k,v}))}
+function openDetail(id){const r=state.rows.find(x=>x.id===id);if(!r)return;$('detailName').textContent=r.staff.staffName;$('detailMeta').textContent=`${r.staff.role} • ${r.staff.branch} • ${state.date}`;const d=r.score;const scoreBlock=r.leave.onLeave?`<div class="detail-block"><h4>रजेची माहिती</h4><div class="kv"><b>${esc(r.leave.status)}</b><span>${esc(r.leave.remark||'Report आवश्यक नाही.')}</span></div></div>`:`<div class="detail-block"><h4>Score का मिळाला?</h4><div class="score-bars"><div class="score-line"><span>Report 35%</span><i style="--w:${d.report}%"></i><b>${d.report}</b></div><div class="score-line"><span>Remark 25%</span><i style="--w:${d.remark}%"></i><b>${d.remark}</b></div><div class="score-line"><span>Plan/Actual 25%</span><i style="--w:${d.achievement}%"></i><b>${d.achievement}</b></div><div class="score-line"><span>Consistency 15%</span><i style="--w:${d.consistency}%"></i><b>${d.consistency}</b></div></div><div class="kv"><b>कारण</b><span>${esc(d.reason)}</span></div><div class="kv"><b>Achievement आधार</b><span>${esc(d.achievementLabel)}</span></div></div>`;const m=detailValues(r.mp,r.staff.role,'morning'),e=detailValues(r.ep,r.staff.role,'evening');const block=(title,list,missing)=>`<div class="detail-block"><h4>${title}</h4>${list.length?list.map(x=>`<div class="kv"><b>${esc(x.k)}</b><span>${esc(x.v)}</span></div>`).join(''):`<div class="empty">${missing}</div>`}</div>`;$('detailBody').innerHTML=`<div class="detail-summary"><div><b>${r.leave.onLeave?'रजा':r.status.text}</b><span>स्थिती</span></div><div><b>${r.leave.onLeave?'-':d.final}</b><span>Score</span></div><div><b>${r.morning?'Done':'बाकी'}</b><span>Morning</span></div><div><b>${r.evening?'Done':'बाकी'}</b><span>Evening</span></div></div>${scoreBlock}${block('सकाळचे नियोजन',m,r.leave.onLeave?'रजा असल्यामुळे आवश्यक नाही.':'Morning report उपलब्ध नाही.')}${block('सायंकाळचे काम',e,r.leave.onLeave?'रजा असल्यामुळे आवश्यक नाही.':'Evening report उपलब्ध नाही.')}`;openSheet('detailSheet')}
+async function refreshData(force=true,quiet=false){if(!quiet){$('syncText').textContent='Fresh data घेत आहे...';$('refreshBtn').disabled=true}try{const cachedMaster=getMasterCache();const masterP=cachedMaster&&!force?Promise.resolve(cachedMaster):fetchMaster(false);const dashP=fetchDashboard(state.date,force);const[master,dash]=await Promise.all([masterP,dashP]);setData(master,dash);toast('Dashboard update झाला.')}catch(e){toast(e.message||'Data load failed.')}finally{$('refreshBtn').disabled=false}}
+function tryCachedFirst(){const master=getMasterCache(),dash=getDashCache(state.date);if(master&&dash){setData(master,dash);$('syncText').textContent='Cached data दाखवत आहे • fresh update सुरू';return true}return false}
+async function changeDate(){state.date=$('dashDate').value||todayISO();state.page=1;const used=tryCachedFirst();await refreshData(true,used)}
+function statusLabel(st){return({"":"सर्व कर्मचारी",leave:"आज रजेवर",required:"Report Required",complete:"Full Report Done",pending:"Real Pending",morningPending:"Morning Pending",eveningPending:"Evening Pending",missing:"दोन्ही Missing",lowQuality:"कमी Score",red:"Red Attention"}[st]||'सर्व कर्मचारी')}
+function kpiBaseRows(st){const q=state.search.toLowerCase();return state.rows.filter(r=>(!state.role||safe(r.staff.role)===state.role)&&matchStatus(r,st)&&(!q||r.search.includes(q)))}
+function renderKpiChooser(st){const rows=kpiBaseRows(st),label=statusLabel(st),items=branchSummary(rows).sort((a,b)=>b.total-a.total||a.branch.localeCompare(b.branch));$('kpiSheetTitle').textContent=label+' • शाखा निवडा';$('kpiSheetSub').textContent='कोणत्या शाखेची माहिती पाहायची ते निवडा.';$('kpiChoiceName').textContent=label;$('kpiChoiceTotal').textContent='एकूण '+rows.length+' कर्मचारी • '+items.length+' शाखा';const cards=[`<button class="kpi-branch-card all" data-kpichoose=""><span class="branch-count">${rows.length}</span><span class="branch-label">सर्व शाखा</span><span class="branch-meta">${esc(label)} चे सर्व कर्मचारी दाखवा</span></button>`];for(const x of items){cards.push(`<button class="kpi-branch-card" data-kpichoose="${esc(x.branch)}"><span class="branch-count">${x.total}</span><span class="branch-label">${esc(x.branch)}</span><span class="branch-meta">पूर्ण ${x.complete} • बाकी ${x.pending} • रजा ${x.leave}</span></button>`)}$('kpiChoiceGrid').innerHTML=cards.join('')||'<div class="empty">या KPI साठी branch data उपलब्ध नाही.</div>'}
+function openKpiChooser(st){state.pendingKpiStatus=st;state.status=st;state.branch='';state.lastKpiLabel=statusLabel(st);$('statusFilter').value=st;$('branchFilter').value='';document.querySelectorAll('[data-chip]').forEach(x=>x.classList.toggle('active',x.dataset.chip===st));renderKpiChooser(st);openSheet('kpiSheet')}
+function chooseKpiBranch(branch){state.status=state.pendingKpiStatus;state.branch=safe(branch);$('statusFilter').value=state.status;$('branchFilter').value=state.branch;closeSheets();applyFilters();setView('staff');toast(statusLabel(state.status)+' • '+(state.branch||'सर्व शाखा'))}
+function renderKpiBranchFilters(){const holder=$('kpiBranchChips');if(!holder)return;const q=state.search.toLowerCase();const baseRows=state.rows.filter(r=>(!state.role||safe(r.staff.role)===state.role)&&matchStatus(r,state.status)&&(!q||r.search.includes(q)));const items=branchSummary(baseRows);const total=baseRows.length;state.lastKpiLabel=statusLabel(state.status);$('kpiBranchTitle').textContent=state.lastKpiLabel+' • शाखानुसार फिल्टर';$('kpiBranchHint').textContent=items.length?('एकूण '+total+' कर्मचारी • कोणतीही शाखा निवडा'):'या KPI साठी branch data नाही';const chips=['<button class="chip'+(!state.branch?' active':'')+'" data-kpibranch="">सर्व शाखा ('+total+')</button>'];items.forEach(x=>chips.push('<button class="chip'+(state.branch===x.branch?' active':'')+'" data-kpibranch="'+esc(x.branch)+'">'+esc(x.branch)+' ('+x.total+')</button>'));holder.innerHTML=chips.join('')}
+function setStatus(st){state.status=st;state.branch='';$('branchFilter').value='';$('statusFilter').value=st;state.lastKpiLabel=statusLabel(st);document.querySelectorAll('[data-chip]').forEach(x=>x.classList.toggle('active',x.dataset.chip===st));applyFilters();if(state.view!=='staff')setView('staff')}
+function exportCSV(){const headers=['Staff','Role','Branch','Leave','Morning','Evening','Status','Score','Risk','Remark','Score Reason'];const rows=state.viewRows.map(r=>[r.staff.staffName,r.staff.role,r.staff.branch,r.leave.onLeave?'Leave':'Working',r.leave.onLeave?'Not Required':(r.morning?'Done':'Pending'),r.leave.onLeave?'Not Required':(r.evening?'Done':'Pending'),r.status.text,r.leave.onLeave?'Leave':r.score.final,r.risk,r.remark,r.score.reason]);const csv=[headers,...rows].map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=`ANIK_Nova_${state.date}.csv`;a.click();URL.revokeObjectURL(url)}
+async function copySummary(){const s=summarize(state.viewRows);const lines=branchSummary(state.viewRows).map(x=>`• ${x.branch}: ${x.complete}/${x.required} पूर्ण (${x.percent}%), बाकी ${x.pending}, रजा ${x.leave}`).join('\n');const msg=`📊 ANIK NOVA\n📅 ${state.date}\n\nएकूण Active Staff: ${s.total}\nआज रजेवर: ${s.leave}\nReport Required: ${s.required}\nFull Report Done: ${s.complete}\nReal Pending: ${s.pending}\nMorning Pending: ${s.morningPending}\nEvening Pending: ${s.eveningPending}\nCompletion Rate: ${s.completion}%\nAverage Staff Score: ${s.avg}\nRed Attention: ${s.attention}\n\n🏦 शाखा स्थिती\n${lines}`;try{await navigator.clipboard.writeText(msg)}catch{const ta=document.createElement('textarea');ta.value=msg;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}toast('Summary copy झाली.')}
+function monthDates(mv){const[yy,mm]=safe(mv).split('-').map(Number);if(!yy||!mm)return[];const first=new Date(yy,mm-1,1),last=new Date(yy,mm,0),today=new Date(todayISO()+'T00:00:00'),end=last>today?today:last;if(first>today)return[];const out=[];for(let d=new Date(first);d<=end;d.setDate(d.getDate()+1))out.push(new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10));return out}
+function createAgg(branch,staffId){const a=new Map();for(const s of state.staff){if(String(s.active).toLowerCase()==='no'||safe(s.role)==='अकाउंट टीम'||(branch&&safe(s.branch)!==branch)||(staffId&&safe(s.staffId)!==staffId))continue;a.set(safe(s.staffId),{staff:s,days:0,leave:0,required:0,done:0,pending:0,missing:0,reportSum:0,remarkSum:0,achSum:0,consSum:0,scoreSum:0,red:0,reasons:[]})}return a}
+function addAgg(a,r,date){const x=a.get(r.id);if(!x)return;x.days++;if(r.leave.onLeave){x.leave++;return}x.required++;if(r.status.key==='complete')x.done++;else x.pending++;if(r.status.key==='missing')x.missing++;x.reportSum+=r.score.report;x.remarkSum+=r.score.remark;x.achSum+=r.score.achievement;x.consSum+=r.score.consistency;x.scoreSum+=r.score.final;if(r.risk>0||r.score.final<70){x.red++;if(x.reasons.length<2)x.reasons.push(`${date}: ${r.score.reason}`)}}
+function finalizeAgg(a){return[...a.values()].map(x=>{const n=x.required||1;const report=x.required?Math.round(x.reportSum/n):(x.leave?100:0),remark=x.required?Math.round(x.remarkSum/n):0,achievement=x.required?Math.round(x.achSum/n):0,consistency=x.required?Math.round(x.consSum/n):(x.leave?100:0),final=x.required?Math.round(x.scoreSum/n):(x.leave?100:0);return{...x,report,remark,achievement,consistency,final}}).sort((a,b)=>a.final-b.final||b.pending-a.pending)}
+function monthlyReason(x){if(!x.required&&x.leave)return'निवडलेल्या दिवसांत कर्मचारी रजेवर होता; pending penalty नाही.';const weak=[];if(x.pending)weak.push(`${x.pending} दिवस report बाकी`);if(x.missing)weak.push(`${x.missing} दिवस दोन्ही missing`);if(x.remark<60)weak.push('remark quality कमी');if(x.achievement<60)weak.push('कामगिरी/target कमी');if(x.red)weak.push(`${x.red} red दिवस`);return weak.join(' • ')||'Report आणि कामगिरी स्थिर आहे.'}
+function renderMonth(rows,loaded,total){$('monthProgress').textContent=`${loaded}/${total} दिवस load • ${rows.length} कर्मचारी`;$('monthGrid').innerHTML=rows.length?rows.map(x=>`<article class="month-card"><div class="staff-top"><span class="avatar">${esc(initials(x.staff.staffName))}</span><span class="staff-name"><b>${esc(x.staff.staffName)}</b><span>${esc(x.staff.branch)} • ${esc(x.staff.role)}</span></span><span class="month-score" style="color:${scoreColor(x.final)}">${x.final}</span></div><div class="month-stats"><div><b>${x.done}</b><span>Done</span></div><div><b>${x.pending}</b><span>बाकी</span></div><div><b>${x.remark}</b><span>Remark</span></div></div><div class="month-reason">${esc(monthlyReason(x))}</div></article>`).join(''):'<div class="empty">Data उपलब्ध नाही.</div>'}
+async function generateMonthly(){const run=++monthlyRun,dates=monthDates($('perfMonth').value),branch=safe($('perfBranch').value),staffId=safe($('perfStaff').value);if(!dates.length){toast('या महिन्यासाठी data नाही.');return}const btn=$('generatePerf');btn.disabled=true;btn.textContent='तयार होत आहे...';const agg=createAgg(branch,staffId);let cursor=0,done=0,failed=0;renderMonth(finalizeAgg(agg),0,dates.length);async function worker(){while(cursor<dates.length&&run===monthlyRun){const date=dates[cursor++];try{const pack=await fetchDashboard(date,false);const rows=buildRows(pack.entries||[],pack.accountStaffSystem||[]);rows.forEach(r=>addAgg(agg,r,date))}catch{failed++}done++;if(done===1||done%3===0||done===dates.length)renderMonth(finalizeAgg(agg),done,dates.length);await new Promise(r=>setTimeout(r,0))}}await Promise.all(Array.from({length:Math.min(6,dates.length)},worker));if(run===monthlyRun){renderMonth(finalizeAgg(agg),done,dates.length);$('monthProgress').textContent=`पूर्ण: ${dates.length-failed}/${dates.length} दिवस${failed?' • '+failed+' दिवस API failed':''}`}btn.disabled=false;btn.textContent='स्कोअर तयार करा'}
+function bind(){
+ $('dashDate').value=state.date=todayISO();$('perfMonth').value=state.date.slice(0,7);
+ document.addEventListener('click',e=>{const v=e.target.closest('[data-view]');if(v){setView(v.dataset.view);return}const g=e.target.closest('[data-go]');if(g){setView(g.dataset.go);return}const s=e.target.closest('[data-staff]');if(s){openDetail(s.dataset.staff);return}const kb=e.target.closest('[data-kpibranch]');if(kb){state.branch=safe(kb.dataset.kpibranch);$('branchFilter').value=state.branch;applyFilters();if(state.view!=='staff')setView('staff');return}const b=e.target.closest('[data-branch]');if(b){state.branch=b.dataset.branch;$('branchFilter').value=state.branch;applyFilters();setView('staff');return}const kc=e.target.closest('[data-kpichoose]');if(kc){chooseKpiBranch(kc.dataset.kpichoose);return}const m=e.target.closest('.metric[data-status]');if(m){openKpiChooser(m.dataset.status);return}const c=e.target.closest('[data-chip]');if(c){setStatus(c.dataset.chip);return}if(e.target.closest('[data-close]'))closeSheets()});
+ $('overlay').onclick=closeSheets;$('filterBtn').onclick=$('staffFilterBtn').onclick=()=>openSheet('filterSheet');$('refreshBtn').onclick=()=>refreshData(true,false);$('dashDate').onchange=changeDate;$('pendingBtn').onclick=()=>setStatus('pending');$('copyBtn').onclick=copySummary;$('csvBtn').onclick=exportCSV;$('loadMoreBtn').onclick=()=>{state.page++;renderStaff()};$('searchBox').oninput=e=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{state.search=e.target.value;applyFilters()},180)};$('applyFiltersBtn').onclick=()=>{state.branch=safe($('branchFilter').value);state.role=safe($('roleFilter').value);state.status=safe($('statusFilter').value);document.querySelectorAll('[data-chip]').forEach(x=>x.classList.toggle('active',x.dataset.chip===state.status));closeSheets();applyFilters()};$('clearFilters').onclick=()=>{state.branch=state.role=state.status='';state.lastKpiLabel='सर्व कर्मचारी';state.pendingKpiStatus='';$('branchFilter').value=$('roleFilter').value=$('statusFilter').value='';document.querySelectorAll('[data-chip]').forEach(x=>x.classList.toggle('active',x.dataset.chip===''));applyFilters();closeSheets()};$('perfBranch').onchange=renderPerfStaff;$('generatePerf').onclick=generateMonthly;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets()})}
+async function boot(){bind();const used=tryCachedFirst();renderVisible();await refreshData(true,used)}
+window.addEventListener('DOMContentLoaded',boot);
 </script>
 </body>
 </html>
