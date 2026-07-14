@@ -7,6 +7,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="mr">
 <head>
@@ -375,9 +376,10 @@ const REPORT_TIME_CONFIG={
   timeZone:'Asia/Kolkata',
   allowNonTodayEntry:false, // true केल्यास back-date / future-date entry UI मधून करता येईल
   managerRoles:['शाखा व्यवस्थापक','ब्रांच मॅनेजर','Branch Manager','BM'],
+  taRoles:['TA','T A','टी ए','टि ए','टी.ए.','T.A.'],
   cutoff:{
-    morning:{staff:'8:30',manager:'9:30'},
-    evening:{staff:'19:10',manager:'19:30'}
+    morning:{staff:'8:30',manager:'9:30',ta:'10:00'},
+    evening:{staff:'19:10',manager:'19:30',ta:'22:00'}
   }
 };
 
@@ -385,6 +387,7 @@ let staffMaster=[],allQuestions=[],entriesCache=[],dashboardRowsCache=[],unitSum
 const $=id=>document.getElementById(id),safe=v=>(v??'').toString().trim();
 function normalizeRole(v){return safe(v).toLocaleLowerCase('mr-IN').replace(/\s+/g,' ')}
 function isBranchManagerRole(role){const current=normalizeRole(role);return REPORT_TIME_CONFIG.managerRoles.some(r=>normalizeRole(r)===current)}
+function isTARole(role){const current=normalizeRole(role);return REPORT_TIME_CONFIG.taRoles.some(r=>normalizeRole(r)===current)}
 function getReportClock(){
   const parts={};
   new Intl.DateTimeFormat('en-CA',{timeZone:REPORT_TIME_CONFIG.timeZone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).forEach(p=>{if(p.type!=='literal')parts[p.type]=p.value});
@@ -393,25 +396,25 @@ function getReportClock(){
 function todayISO(){return getReportClock().date}
 function timeToMinutes(value){const [h,m]=safe(value).split(':').map(Number);return (Number.isFinite(h)?h:0)*60+(Number.isFinite(m)?m:0)}
 function shiftNameMr(shift){return shift==='morning'?'सकाळचा रिपोर्ट':'सायंकाळचा रिपोर्ट'}
-function getRoleCutoff(staff,shift){const group=isBranchManagerRole(staff&&staff.role)?'manager':'staff';return REPORT_TIME_CONFIG.cutoff[shift][group]}
+function getRoleCutoff(staff,shift){const role=staff&&staff.role;const group=isTARole(role)?'ta':(isBranchManagerRole(role)?'manager':'staff');return REPORT_TIME_CONFIG.cutoff[shift][group]}
 function setEntryStatusTag(text){const tag=$('entryLockTag');if(!tag)return;tag.dataset.baseTag=text;tag.textContent=text}
 function syncEntryLockState(){currentEntryLocked=Boolean(savedEntryLocked||timeEntryLocked)}
 function getEntryTimeStatus(staff,shift,entryDate){
   if(!staff)return {allowed:false,message:'कृपया कर्मचारी निवडा.'};
-  const now=getReportClock(),selectedDate=safe(entryDate),cutoff=getRoleCutoff(staff,shift),manager=isBranchManagerRole(staff.role);
+  const now=getReportClock(),selectedDate=safe(entryDate),cutoff=getRoleCutoff(staff,shift),manager=isBranchManagerRole(staff.role),ta=isTARole(staff.role);
   if(!selectedDate)return {allowed:false,message:'कृपया दिनांक निवडा.',cutoff};
   if(!REPORT_TIME_CONFIG.allowNonTodayEntry&&selectedDate!==now.date){
     const dateText=selectedDate<now.date?'मागील दिनांकाची':'पुढील दिनांकाची';
     return {allowed:false,cutoff,message:`⛔ ${dateText} नोंद करता येणार नाही. फक्त आजच्या (${now.date}) दिनांकाची नोंद करता येईल.`};
   }
   // Non-today entry explicitly allowed असल्यास daily cutoff लागू करू नये.
-  if(REPORT_TIME_CONFIG.allowNonTodayEntry&&selectedDate!==now.date)return {allowed:true,cutoff,manager};
+  if(REPORT_TIME_CONFIG.allowNonTodayEntry&&selectedDate!==now.date)return {allowed:true,cutoff,manager,ta};
   const nowMinutes=now.hour*60+now.minute;
   if(nowMinutes>timeToMinutes(cutoff)){
-    const roleText=manager?'शाखा व्यवस्थापकांसाठी':'इतर कर्मचाऱ्यांसाठी';
-    return {allowed:false,cutoff,manager,message:`⛔ ${shiftNameMr(shift)} भरण्याची वेळ संपली आहे. ${roleText} अंतिम वेळ ${cutoff} होती. आता नोंद Save करता येणार नाही.`};
+    const roleText=ta?'TA पदासाठी':(manager?'शाखा व्यवस्थापकांसाठी':'इतर कर्मचाऱ्यांसाठी');
+    return {allowed:false,cutoff,manager,ta,message:`⛔ ${shiftNameMr(shift)} भरण्याची वेळ संपली आहे. ${roleText} अंतिम वेळ ${cutoff} होती. आता नोंद Save करता येणार नाही.`};
   }
-  return {allowed:true,cutoff,manager};
+  return {allowed:true,cutoff,manager,ta};
 }
 function applyReportTimeLock(staff=getSelectedStaff(),shift=$('shift')?$('shift').value:'morning',entryDate=$('entryDate')?$('entryDate').value:''){
   timeEntryLocked=false;
@@ -437,7 +440,7 @@ function applyReportTimeLock(staff=getSelectedStaff(),shift=$('shift')?$('shift'
 function renderReportTimeHint(){
   const el=$('reportTimeHint');if(!el)return;
   const c=REPORT_TIME_CONFIG.cutoff;
-  el.innerHTML=`⏰ <b>रिपोर्ट अंतिम वेळ:</b> इतर कर्मचारी — सकाळ ${esc(c.morning.staff)}, सायंकाळ ${esc(c.evening.staff)} | शाखा व्यवस्थापक — सकाळ ${esc(c.morning.manager)}, सायंकाळ ${esc(c.evening.manager)}. सकाळचा Plan save झाल्यावर lock राहील.`;
+  el.innerHTML=`⏰ <b>रिपोर्ट अंतिम वेळ:</b> इतर कर्मचारी — सकाळ ${esc(c.morning.staff)}, सायंकाळ ${esc(c.evening.staff)} | शाखा व्यवस्थापक — सकाळ ${esc(c.morning.manager)}, सायंकाळ ${esc(c.evening.manager)} | TA पद — सकाळ ${esc(c.morning.ta)}, सायंकाळ ${esc(c.evening.ta)}. सकाळचा Plan save झाल्यावर lock राहील.`;
 }
 function showLoader(v=true){$('loader').classList.toggle('active',v)}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3600)}
