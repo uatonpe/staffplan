@@ -1,6 +1,8 @@
 
 
 
+
+
 <!doctype html>
 <html lang="mr">
 <head>
@@ -27,6 +29,25 @@ button,input,select{font:inherit}
 button{cursor:pointer}
 button:disabled{cursor:wait;opacity:.65}
 .hidden{display:none!important}
+/* One-time startup loader: closes only after the first dashboard render is ready. */
+body.startup-loading{overflow:hidden}
+.startup-loader{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:linear-gradient(145deg,#0b245c 0%,#173a8c 52%,#1f5fd1 100%);color:#fff;padding:22px;opacity:1;visibility:visible;transition:opacity .32s ease,visibility .32s ease}
+.startup-loader.done{opacity:0;visibility:hidden;pointer-events:none}
+.startup-loader:before,.startup-loader:after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.startup-loader:before{width:320px;height:320px;right:-115px;top:-120px;background:radial-gradient(circle,rgba(244,180,0,.36),rgba(255,255,255,.06) 58%,transparent 60%)}
+.startup-loader:after{width:260px;height:260px;left:-110px;bottom:-115px;background:radial-gradient(circle,rgba(79,141,255,.55),rgba(255,255,255,.03) 60%,transparent 62%)}
+.startup-card{position:relative;z-index:1;width:min(430px,calc(100vw - 32px));background:rgba(255,255,255,.98);color:var(--ink);border:1px solid rgba(255,255,255,.75);border-radius:26px;padding:25px;box-shadow:0 28px 80px rgba(4,20,61,.38);text-align:center}
+.startup-logo{width:168px;height:66px;object-fit:contain;display:block;margin:0 auto 13px;background:#fff;border-radius:14px;padding:7px}
+.startup-card h2{margin:0;color:var(--navy);font-size:22px;letter-spacing:-.35px}
+.startup-card p{margin:7px 0 0;color:var(--muted);font-size:12px;font-weight:750;line-height:1.5}
+.startup-progress{height:10px;background:#e7eef9;border-radius:999px;overflow:hidden;margin:20px 0 10px}
+.startup-progress i{display:block;width:0;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--navy),var(--brand2),var(--accent));transition:width .1s linear}
+.startup-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:11px;font-weight:850}
+.startup-meta strong{color:var(--navy);font-size:13px}
+.startup-status{margin-top:13px;min-height:18px;color:#405a70;font-size:11px;font-weight:800}
+.startup-pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-right:6px;box-shadow:0 0 0 5px rgba(15,138,95,.12);animation:startupPulse 1.1s ease-in-out infinite}
+@keyframes startupPulse{50%{transform:scale(.72);opacity:.65}}
+@media(max-width:480px){.startup-card{padding:21px 17px;border-radius:22px}.startup-logo{width:145px;height:58px}.startup-card h2{font-size:19px}}
 .app{min-height:100vh}
 .sidebar{position:fixed;inset:0 auto 0 0;width:238px;background:linear-gradient(180deg,#173a8c 0%,#102f75 58%,#0a2359 100%);color:#fff;padding:20px 16px;z-index:40;display:flex;flex-direction:column}
 .brand{display:grid;gap:11px;padding:0 4px 22px}
@@ -137,7 +158,17 @@ button:disabled{cursor:wait;opacity:.65}
 @media print{.sidebar,.topbar,.mobile-nav,.filter-sheet,.kpi-sheet,.detail-sheet,.overlay,.toast{display:none!important}.main-shell{margin:0}.content{padding:0}.view{display:block!important}.hero{color:#000;background:#fff;border:1px solid #ccc;box-shadow:none}.panel,.metric,.staff-card{box-shadow:none;break-inside:avoid}}
 </style>
 </head>
-<body>
+<body class="startup-loading">
+<div class="startup-loader" id="startupLoader" role="status" aria-live="polite" aria-label="ANIK dashboard loading">
+  <div class="startup-card">
+    <img class="startup-logo" src="https://anikfin.com/wp-content/uploads/2024/06/anik-horizontal-1-1024x400.png" alt="ANIK Financial Services" decoding="async" fetchpriority="high" referrerpolicy="no-referrer">
+    <h2>ANIK Command Center</h2>
+    <p>आजची माहिती सुरक्षितपणे तयार होत आहे.</p>
+    <div class="startup-progress"><i id="startupBar"></i></div>
+    <div class="startup-meta"><span id="startupStep">Dashboard सुरू होत आहे</span><strong id="startupPct">0%</strong></div>
+    <div class="startup-status" id="startupStatus"><span class="startup-pulse"></span>डेटा जोडत आहे...</div>
+  </div>
+</div>
 <div class="app">
   <aside class="sidebar">
     <div class="brand"><div class="brand-logo-box"><img class="brand-logo" src="https://anikfin.com/wp-content/uploads/2024/06/anik-horizontal-1-1024x400.png" alt="ANIK Financial Services" loading="eager" decoding="async" fetchpriority="high" referrerpolicy="no-referrer"></div><div class="brand-copy"><div class="brand-name">ANIK Command Center</div><div class="brand-sub">Fast Staff Control System</div></div></div>
@@ -264,6 +295,7 @@ const DASH_PREFIX='anik_nova_dash_v2_';
 const DASH_INDEX_KEY='anik_nova_dash_index_v2';
 const CACHE_MAX_DATES=40;
 const MASTER_TTL=7*24*60*60*1000;
+const STARTUP_LOADER_MAX_WAIT=24000;
 const state={staff:[],questions:[],qIndex:new Map(),rows:[],viewRows:[],unitSummary:[],date:'',branch:'',role:'',status:'',search:'',page:1,pageSize:30,view:'overview',loaded:false,lastUpdated:null,lastKpiLabel:'सर्व कर्मचारी',pendingKpiStatus:'',monthRows:[],monthLoaded:0,monthTotal:0,monthLabel:''};
 const payloadCache=new WeakMap();
 const inflight=new Map();
@@ -272,6 +304,39 @@ let searchTimer=null,toastTimer=null,monthlyRun=0;
 function todayISO(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
 function initials(name){return safe(name).split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'A'}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3200)}
+function setStartupStatus(message,step){const status=$('startupStatus'),stepEl=$('startupStep');if(status)status.innerHTML=`<span class="startup-pulse"></span>${esc(message)}`;if(stepEl&&step)stepEl.textContent=step}
+let startupProgressTimer=null,startupProgress=4,startupClosed=false;
+function paintStartupProgress(value,stepText){
+ const bar=$('startupBar'),pct=$('startupPct'),step=$('startupStep');
+ startupProgress=Math.max(startupProgress,Math.min(100,Math.round(value)));
+ if(bar)bar.style.width=startupProgress+'%';
+ if(pct)pct.textContent=startupProgress+'%';
+ if(step&&stepText)step.textContent=stepText
+}
+function startStartupLoader(){
+ if(!$('startupLoader'))return;
+ startupClosed=false;startupProgress=4;
+ paintStartupProgress(4,'Dashboard सुरू होत आहे');
+ clearInterval(startupProgressTimer);
+ startupProgressTimer=setInterval(()=>{
+  if(startupClosed)return;
+  const add=startupProgress<35?4:startupProgress<68?2:startupProgress<86?1:.35;
+  const next=Math.min(92,startupProgress+add);
+  const label=next<30?'Staff माहिती तपासत आहे':next<60?'आजचे report जोडत आहे':next<82?'KPI आणि शाखा तयार करत आहे':'Dashboard render होत आहे';
+  paintStartupProgress(next,label)
+ },180)
+}
+function waitForDashboardPaint(){
+ return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))
+}
+async function finishStartupLoader(message='Dashboard तयार आहे.'){
+ const loader=$('startupLoader');if(!loader||startupClosed)return;
+ startupClosed=true;clearInterval(startupProgressTimer);startupProgressTimer=null;
+ setStartupStatus(message,'पूर्ण');paintStartupProgress(100,'Dashboard तयार आहे');
+ await waitForDashboardPaint();
+ document.body.classList.remove('startup-loading');loader.classList.add('done');
+ setTimeout(()=>loader.remove(),420)
+}
 function readJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key)||'')||fallback}catch{return fallback}}
 function writeJSON(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch{}}
 function jsonp(action,params={},timeout=22000){
@@ -380,7 +445,7 @@ function openDetail(id){const r=state.rows.find(x=>x.id===id);if(!r)return;$('de
  const scoreBlock=r.leave.onLeave?`<div class="detail-block"><h4>रजेची माहिती</h4><div class="kv"><b>${esc(r.leave.status)}</b><span>${esc(r.leave.remark||'Report आवश्यक नाही.')}</span></div></div>`:`<div class="analysis-banner"><div class="analysis-score"><div><b>${d.final}</b><span>Score</span></div></div><div><h4>${esc(d.grade)} कामगिरी</h4><p>${esc(d.headline)}</p></div></div><div class="detail-block"><h4>Score कसा तयार झाला?</h4><div class="score-bars">${d.components.map(x=>`<div class="score-line"><span>${esc(x.name)} ${x.weight}%</span><i style="--w:${x.score}%"></i><b>${x.score}</b></div>`).join('')}</div><div class="detail-note">मिळालेले गुण: ${d.components.map(x=>`${x.name} ${x.points}/${x.weight}`).join(' • ')}</div></div><div class="detail-block"><h4>Score कमी का झाला?</h4>${d.deductions.length?`<div class="deduction-list">${d.deductions.map(x=>`<div class="deduction-row"><span>${esc(x.label)} — ${esc(x.text)}</span><b>-${x.loss}</b></div>`).join('')}</div>`:'<div class="empty">महत्त्वाची deduction नाही.</div>'}</div><div class="analysis-grid"><div class="analysis-box good"><h4>✓ चांगल्या बाजू</h4>${listHTML(d.strengths)}</div><div class="analysis-box weak"><h4>! कमी बाजू</h4>${listHTML(d.weaknesses)}</div><div class="analysis-box action"><h4>→ Staff ने आता काय करावे?</h4>${listHTML(d.actions)}</div></div><div class="detail-block"><h4>Target विरुद्ध Actual</h4>${metricDetailsHTML(d.metrics)}<div class="kv"><b>Achievement आधार</b><span>${esc(d.achievementLabel)}</span></div></div>`;
  const m=detailValues(r.mp,r.staff.role,'morning'),e=detailValues(r.ep,r.staff.role,'evening');const block=(title,list,missing)=>`<div class="detail-block"><h4>${title}</h4>${list.length?list.map(x=>`<div class="kv"><b>${esc(x.k)}</b><span>${esc(x.v)}</span></div>`).join(''):`<div class="empty">${missing}</div>`}</div>`;
  $('detailBody').innerHTML=`<div class="detail-summary"><div><b>${r.leave.onLeave?'रजा':r.status.text}</b><span>स्थिती</span></div><div><b>${r.leave.onLeave?'-':d.final}</b><span>Score</span></div><div><b>${r.morning?'Done':'बाकी'}</b><span>Morning</span></div><div><b>${r.evening?'Done':'बाकी'}</b><span>Evening</span></div></div>${scoreBlock}${!r.leave.onLeave?`<div class="detail-block"><h4>मुख्य Remark</h4><div class="kv"><b>नोंद</b><span>${esc(r.remark||'Remark उपलब्ध नाही.')}</span></div></div>`:''}${block('सकाळचे नियोजन',m,r.leave.onLeave?'रजा असल्यामुळे आवश्यक नाही.':'Morning report उपलब्ध नाही.')}${block('सायंकाळचे काम',e,r.leave.onLeave?'रजा असल्यामुळे आवश्यक नाही.':'Evening report उपलब्ध नाही.')}`;openSheet('detailSheet')}
-async function refreshData(force=true,quiet=false){if(!quiet){$('syncText').textContent='Fresh data घेत आहे...';$('refreshBtn').disabled=true}try{const cachedMaster=getMasterCache();const masterP=cachedMaster?Promise.resolve(cachedMaster):fetchMaster(false);const dashP=fetchDashboard(state.date,force);const[master,dash]=await Promise.all([masterP,dashP]);setData(master,dash);if(!quiet)toast('Dashboard update झाला.')}catch(e){if(!quiet||!state.loaded)toast(e.message||'Data load failed.')}finally{$('refreshBtn').disabled=false}}
+async function refreshData(force=true,quiet=false){if(!quiet){$('syncText').textContent='Fresh data घेत आहे...';$('refreshBtn').disabled=true}try{const cachedMaster=getMasterCache();const masterP=cachedMaster?Promise.resolve(cachedMaster):fetchMaster(false);const dashP=fetchDashboard(state.date,force);const[master,dash]=await Promise.all([masterP,dashP]);setData(master,dash);if(!quiet)toast('Dashboard update झाला.');return true}catch(e){if(!quiet||!state.loaded)toast(e.message||'Data load failed.');return false}finally{$('refreshBtn').disabled=false}}
 function tryCachedFirst(){const master=getMasterCache(),dash=getDashCache(state.date);if(master&&dash){setData(master,dash);$('syncText').textContent='Cached data लगेच दाखवला • fresh update सुरू';return true}return false}
 async function changeDate(){state.date=$('dashDate').value||todayISO();state.page=1;state.loaded=false;const used=tryCachedFirst();if(!used){state.rows=[];state.viewRows=[];renderVisible()}await refreshData(true,used)}
 function shiftDate(date,days){const d=new Date(date+'T12:00:00');d.setDate(d.getDate()+days);return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
@@ -469,7 +534,34 @@ function bind(){
  $('dashDate').value=state.date=todayISO();$('perfMonth').value=state.date.slice(0,7);
  document.addEventListener('click',e=>{const v=e.target.closest('[data-view]');if(v){setView(v.dataset.view);return}const g=e.target.closest('[data-go]');if(g){setView(g.dataset.go);return}const s=e.target.closest('[data-staff]');if(s){openDetail(s.dataset.staff);return}const ms=e.target.closest('[data-monthstaff]');if(ms){openMonthlyDetail(ms.dataset.monthstaff);return}const kb=e.target.closest('[data-kpibranch]');if(kb){state.branch=safe(kb.dataset.kpibranch);$('branchFilter').value=state.branch;applyFilters();if(state.view!=='staff')setView('staff');return}const b=e.target.closest('[data-branch]');if(b){state.branch=b.dataset.branch;$('branchFilter').value=state.branch;applyFilters();setView('staff');return}const kc=e.target.closest('[data-kpichoose]');if(kc){chooseKpiBranch(kc.dataset.kpichoose);return}const m=e.target.closest('.metric[data-status]');if(m){openKpiChooser(m.dataset.status);return}const c=e.target.closest('[data-chip]');if(c){setStatus(c.dataset.chip);return}if(e.target.closest('[data-close]'))closeSheets()});
  $('overlay').onclick=closeSheets;$('filterBtn').onclick=$('staffFilterBtn').onclick=()=>openSheet('filterSheet');$('refreshBtn').onclick=()=>refreshData(true,false);$('dashDate').onchange=changeDate;$('pendingBtn').onclick=()=>setStatus('pending');$('copyBtn').onclick=copySummary;$('csvBtn').onclick=exportCSV;$('loadMoreBtn').onclick=()=>{state.page++;renderStaff()};$('searchBox').oninput=e=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>{state.search=e.target.value;applyFilters()},180)};$('applyFiltersBtn').onclick=()=>{state.branch=safe($('branchFilter').value);state.role=safe($('roleFilter').value);state.status=safe($('statusFilter').value);document.querySelectorAll('[data-chip]').forEach(x=>x.classList.toggle('active',x.dataset.chip===state.status));closeSheets();applyFilters()};$('clearFilters').onclick=()=>{state.branch=state.role=state.status='';state.lastKpiLabel='सर्व कर्मचारी';state.pendingKpiStatus='';$('branchFilter').value=$('roleFilter').value=$('statusFilter').value='';document.querySelectorAll('[data-chip]').forEach(x=>x.classList.toggle('active',x.dataset.chip===''));applyFilters();closeSheets()};$('perfBranch').onchange=renderPerfStaff;$('generatePerf').onclick=generateMonthly;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheets();if((e.key==='Enter'||e.key===' ')&&e.target.closest?.('[data-monthstaff]')){e.preventDefault();openMonthlyDetail(e.target.closest('[data-monthstaff]').dataset.monthstaff)}})}
-async function boot(){bind();const used=tryCachedFirst();renderVisible();await refreshData(true,used);warmNearbyDates()}
+async function boot(){
+ bind();startStartupLoader();
+ const used=tryCachedFirst();renderVisible();
+ if(used&&state.loaded){
+  setStartupStatus('Saved dashboard तयार आहे. Live data background मध्ये तपासत आहे...','Dashboard render होत आहे');
+  await finishStartupLoader('Dashboard तयार आहे.');
+  refreshData(true,true).then(ok=>{
+   if(!ok)toast('Live update मिळाला नाही; saved data दाखवला आहे.');
+   warmNearbyDates()
+  });
+  return
+ }
+ setStartupStatus('Live data घेत आहे...','डेटा load होत आहे');
+ let timeoutId;
+ const safetyTimeout=new Promise(resolve=>{timeoutId=setTimeout(()=>resolve(false),STARTUP_LOADER_MAX_WAIT)});
+ const ok=await Promise.race([refreshData(true,true),safetyTimeout]);
+ clearTimeout(timeoutId);
+ if(ok&&state.loaded){
+  renderVisible();
+  await finishStartupLoader('सर्व data आणि dashboard तयार आहे.');
+  warmNearbyDates();return
+ }
+ $('syncText').textContent='Data मिळाला नाही • Refresh करा';
+ setStartupStatus('Server response मिळाला नाही. Dashboard मधून Refresh करा.','Connection समस्या');
+ await new Promise(r=>setTimeout(r,900));
+ await finishStartupLoader('Dashboard उघडत आहे; कृपया Refresh करा.');
+ toast('Server response मिळाला नाही. Refresh करून पुन्हा प्रयत्न करा.')
+}
 window.addEventListener('DOMContentLoaded',boot);
 </script>
 </body>
