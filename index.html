@@ -8,12 +8,14 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html lang="mr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Anik Daily Staff Work System - Pro</title>
+<title>ANIK Daily Staff Work - Lite</title>
 <style>
 :root{
   --primary:#007bff;
@@ -306,6 +308,58 @@ canvas{min-height:120px}
   .card:hover{box-shadow:0 18px 45px rgba(15,23,42,.10) !important}
 }
 
+
+
+/* ===== ANIK LITE / LOW NETWORK FINAL UI ===== */
+*{animation:none!important;transition:none!important}
+html,body{background:#f3f6fb!important}
+body{padding:6px 6px 78px!important}
+.app{max-width:980px!important}
+.app:before,.brand:before,.brand:after,.hero:before,.hero:after,.stat:before{display:none!important}
+.app-shell,.top,.card,.table-card,.table-container,.stat,.mini{backdrop-filter:none!important;box-shadow:0 2px 8px rgba(15,23,42,.07)!important}
+.app-shell{position:relative!important;top:0!important;border-radius:14px!important;padding:8px!important;background:#fff!important}
+.brand{display:grid!important;grid-template-columns:72px 1fr!important;align-items:center!important;gap:10px!important;text-align:left!important;background:#24388D!important;border-radius:12px!important;padding:9px 11px!important;box-shadow:none!important}
+.logo{width:72px!important;height:38px!important;margin:0!important;background:#fff!important;background-image:none!important;border-radius:8px!important;padding:0!important;color:#24388D!important;font-size:16px!important;font-weight:900!important;display:grid!important;place-items:center!important;box-shadow:none!important}
+.brand h1{font-size:16px!important;margin:0!important;text-shadow:none!important}
+.brand p,.app-title-chip{display:none!important}
+.nav{min-width:0!important;padding:9px 12px!important;border-radius:10px!important;box-shadow:none!important;background:#f7f9fc!important;border:1px solid #dce4ef!important}
+.nav:hover,.nav.active{transform:none!important;background:#24388D!important;box-shadow:none!important}
+.secret-trigger{display:inline-flex!important;width:auto!important;height:auto!important;min-width:0!important;opacity:1!important;padding:9px 11px!important;border-radius:10px!important;background:#f7f9fc!important;color:#24388D!important;border:1px solid #dce4ef!important}
+.secret-panel{position:static!important;width:100%!important;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important}
+.hint{display:none!important}
+.network-status{width:100%;border-radius:10px;padding:8px 10px;font-size:12px;font-weight:800;text-align:center;background:#ecfdf3;color:#166534;border:1px solid #bbf7d0}
+.network-status.offline{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+.network-status.pending-sync{background:#fffbea;color:#854d0e;border-color:#fde68a}
+.main{padding-top:0!important}
+.top{position:relative!important;top:0!important;border-radius:12px!important;padding:12px 14px!important;margin-bottom:8px!important}
+.top h2{font-size:20px!important}
+.top p{display:none!important}
+.hero{display:none!important}
+.card{border-radius:12px!important;padding:13px!important;margin-bottom:10px!important}
+.section{margin-bottom:10px!important;padding-bottom:9px!important}
+.section h3{font-size:17px!important}
+.entry-flow{display:none!important}
+input,select,textarea{border-radius:10px!important;padding:11px 12px!important;box-shadow:none!important;background:#fff!important}
+.btn{border-radius:10px!important;padding:11px 13px!important;box-shadow:none!important}
+.btn:hover{transform:none!important}
+.btn-primary{background:#24388D!important;box-shadow:none!important}
+.btn-green{background:#16803c!important;box-shadow:none!important}
+.copybox{min-height:300px!important;background:#fff!important;color:#111827!important;border:1px solid #cbd5e1!important;border-radius:10px!important;font-family:'Nirmala UI','Mangal',sans-serif!important;font-weight:600!important;line-height:1.55!important}
+.share-meta{margin-bottom:10px!important;background:#f8fafc!important;font-size:13px!important}
+.saved-reports-lite{margin-top:14px;padding-top:13px;border-top:1px solid #e5e7eb}
+.saved-reports-lite .btns{margin-top:9px}
+.loader{background:rgba(255,255,255,.72)!important}
+.spin{width:34px!important;height:34px!important;border-width:4px!important}
+.fast-data-note{display:none!important}
+@media(max-width:900px){
+  .app-shell{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important}
+  .brand,.network-status{grid-column:1/-1!important}
+  .nav{font-size:12px!important;width:100%!important}
+  .top{padding:11px 12px!important}.top h2{font-size:18px!important}
+  .card{padding:11px!important}
+  .btn{width:100%!important}
+}
+
 </style>
 </head>
 <body>
@@ -321,6 +375,7 @@ canvas{min-height:120px}
       <button class="nav admin-nav" data-page="dashboard">📊 डॅशबोर्ड</button>
     </div>
     <div class="hint" id="reportTimeHint">📅 दिनांक → 🏦 शाखा → 👤 कर्मचारी निवडा. रिपोर्टची अंतिम वेळ role नुसार लागू होईल.</div>
+    <div class="network-status" id="networkStatus">⚡ अ‍ॅप तयार आहे</div>
   </aside>
   <main class="main">
     <div class="top"><div><h2 id="pageTitle">📝 स्टाफ नोंदणी</h2><p id="pageSub">दैनंदिन नियोजन आणि प्रत्यक्ष कामगिरी</p></div><div class="pill" id="todayText">Today</div></div>
@@ -360,7 +415,25 @@ canvas{min-height:120px}
       <div class="card"><div class="section"><h3>Staff-wise Daily Status</h3><span class="tag">Click staff name</span></div><div style="overflow:auto"><table><thead><tr><th>Staff</th><th>Role</th><th>Branch</th><th>Planning</th><th>Actual</th><th>Status</th><th>Quality</th><th>Remark</th><th>Open</th></tr></thead><tbody id="statusTable"></tbody></table></div></div>
       <div id="staffDetail" class="hidden"><div class="card"><div class="section"><h3 id="detailTitle">Staff Detail</h3><span class="tag" id="detailTag">Plan vs Actual</span></div><div class="grid g3"><div class="stat good"><div class="num" id="detailPlanCount">0</div><div class="lbl">Planning Fields</div></div><div class="stat purple"><div class="num" id="detailActualCount">0</div><div class="lbl">Actual Fields</div></div><div class="stat warn"><div class="num" id="detailScore">0/100</div><div class="lbl">Work Quality Score</div></div></div><div class="grid g2" style="margin-top:14px"><div class="mini"><h4>🌅 सकाळचे नियोजन</h4><div id="planList"></div></div><div class="mini"><h4>🌙 सायंकाळची प्रत्यक्ष कामगिरी</h4><div id="actualList"></div></div></div></div></div>
     </section>
-    <section id="page-share" class="page hidden"><div class="card"><div class="section"><h3>WhatsApp / Management Share Text</h3><span class="tag">Auto generated</span></div><textarea id="shareText" class="copybox"></textarea><div class="btns" style="margin-top:12px"><button class="btn btn-green" id="copyShare">Copy Text</button><a class="btn btn-soft" id="waShare" target="_blank">Open WhatsApp</a></div></div></section>
+    <section id="page-share" class="page hidden">
+      <div class="card">
+        <div class="section"><h3>📤 रिपोर्ट Summary</h3><span class="tag" id="shareSaveTag">फोनमध्ये सुरक्षित</span></div>
+        <div id="shareMeta" class="mini share-meta">शेवटची Summary येथे दिसेल.</div>
+        <textarea id="shareText" class="copybox" readonly></textarea>
+        <div class="btns" style="margin-top:12px">
+          <button class="btn btn-green" id="copyShare">📋 Summary पुन्हा Copy करा</button>
+          <a class="btn btn-soft" id="waShare" target="_blank" rel="noopener">🟢 WhatsApp पुन्हा करा</a>
+        </div>
+        <div class="saved-reports-lite">
+          <label for="savedSummarySelect">🕘 आधी सेव्ह केलेले रिपोर्ट</label>
+          <select id="savedSummarySelect"><option value="">Saved report निवडा</option></select>
+          <div class="btns">
+            <button class="btn btn-soft" id="loadSavedSummary">📄 जुनी Summary उघडा</button>
+            <button class="btn btn-primary" id="syncPendingBtn">🔄 Pending रिपोर्ट Sync करा</button>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 <script>
@@ -1655,6 +1728,372 @@ init=async function(){
   $('submitBtn').onclick=submitEntry;
 
   preloadPromise.catch(()=>{});
+};
+
+
+/* =====================================================================
+   ANIK LITE LOW-NETWORK PATCH — FINAL ACTIVE CODE
+   - No full-day preload during startup
+   - Form draft auto-saved on the phone
+   - Failed saves go to a local pending queue
+   - Pending reports auto-sync when connectivity returns
+   - Every generated summary is stored verbatim and can be copied again
+   ===================================================================== */
+const __ANIK_LITE={
+  draftPrefix:'ANIK_LITE_DRAFT_V1_',
+  queueKey:'ANIK_LITE_PENDING_V1',
+  summaryKey:'ANIK_LITE_SUMMARIES_V1',
+  maxSummaries:40,
+  masterKey:'ANIK_MASTER_FAST_V2'
+};
+let __anikLiteSyncing=false;
+let __anikLiteDraftTimer=0;
+let __anikLiteCurrentSummaryId='';
+__ANIK_FAST.requestTimeout=9000;
+__ANIK_FAST.masterTTL=30*24*60*60*1000;
+__ANIK_FAST.entryTTL=30*24*60*60*1000;
+
+function __liteReadJson(key,fallback){
+  try{const v=JSON.parse(localStorage.getItem(key)||'');return v===null?fallback:v}catch(e){return fallback}
+}
+function __liteWriteJson(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){return false}}
+function __liteReadFastAny(key){
+  try{const o=JSON.parse(localStorage.getItem(key)||'');return o&&Object.prototype.hasOwnProperty.call(o,'v')?{value:o.v,age:Date.now()-(o.t||0)}:null}catch(e){return null}
+}
+function __liteReportId(date,staffId,shift){return [safe(date),safe(staffId),safe(shift).toLowerCase()].join('_')}
+function __liteDraftKey(ctx){return __ANIK_LITE.draftPrefix+__liteReportId(ctx.date,ctx.st.staffId,ctx.shift)}
+function __liteQueue(){const q=__liteReadJson(__ANIK_LITE.queueKey,[]);return Array.isArray(q)?q:[]}
+function __liteSaveQueue(q){__liteWriteJson(__ANIK_LITE.queueKey,q);__liteUpdateNetworkStatus();__liteRenderSavedSummaries()}
+function __liteSummaries(){const x=__liteReadJson(__ANIK_LITE.summaryKey,[]);return Array.isArray(x)?x:[]}
+function __liteSaveSummaries(x){__liteWriteJson(__ANIK_LITE.summaryKey,x.slice(0,__ANIK_LITE.maxSummaries));__liteRenderSavedSummaries()}
+function __litePendingItem(ctx){return __liteQueue().find(x=>x.id===__liteReportId(ctx.date,ctx.st.staffId,ctx.shift))||null}
+function __litePendingMorning(ctx){return __liteQueue().find(x=>x.id===__liteReportId(ctx.date,ctx.st.staffId,'morning'))||null}
+function __liteResultFromItem(item){
+  if(!item)return null;
+  return {entry:{date:item.date,staffId:item.staffId,staffName:item.staffName,role:item.role,branch:item.branch,shift:item.shift,payloadJson:item.payloadJson,pendingSync:true}};
+}
+function __liteSetShare(text,meta={}){
+  __anikLiteCurrentSummaryId=meta.id||__anikLiteCurrentSummaryId||'';
+  const box=$('shareText');if(box)box.value=text||'';
+  const wa=$('waShare');if(wa)wa.href=text?'https://wa.me/?text='+encodeURIComponent(text):'#';
+  const tag=$('shareSaveTag');if(tag)tag.textContent=meta.status||'फोनमध्ये सुरक्षित';
+  const info=$('shareMeta');
+  if(info){
+    const bits=[];
+    if(meta.staffName)bits.push('👤 '+meta.staffName);
+    if(meta.date)bits.push('📅 '+meta.date);
+    if(meta.shift)bits.push(meta.shift==='morning'?'🌅 सकाळचा Plan':(meta.shift==='account'?'🏦 खाते टीम Summary':'🌙 सायंकाळची Actual'));
+    if(meta.status)bits.push(meta.status);
+    info.textContent=bits.length?bits.join('  •  '):'शेवटची Summary येथे दिसेल.';
+  }
+}
+function __liteStoreSummary(ctx,text,status){
+  if(!ctx||!text)return;
+  const id=__liteReportId(ctx.date,ctx.st.staffId,ctx.shift);
+  const item={id,date:ctx.date,staffId:ctx.st.staffId,staffName:ctx.st.staffName,role:ctx.st.role,branch:ctx.st.branch,shift:ctx.shift,text,status:status||'फोनमध्ये सुरक्षित',updatedAt:Date.now()};
+  const list=__liteSummaries().filter(x=>x.id!==id);
+  list.unshift(item);
+  __liteSaveSummaries(list);
+  __liteSetShare(text,item);
+}
+function __liteUpdateSummaryStatus(id,status){
+  const list=__liteSummaries();let changed=false;
+  list.forEach(x=>{if(x.id===id){x.status=status;x.updatedAt=Date.now();changed=true}});
+  if(changed)__liteSaveSummaries(list);
+  const selected=$('savedSummarySelect')&&$('savedSummarySelect').value;
+  if(selected===id||__anikLiteCurrentSummaryId===id){const item=list.find(x=>x.id===id);if(item)__liteSetShare(item.text,item)}
+}
+function __liteRenderSavedSummaries(){
+  const sel=$('savedSummarySelect');if(!sel)return;
+  const current=sel.value;
+  const list=__liteSummaries();
+  sel.innerHTML='<option value="">Saved report निवडा</option>'+list.map(x=>`<option value="${esc(x.id)}">${esc(x.date)} — ${esc(x.staffName)} — ${x.shift==='morning'?'Plan':(x.shift==='account'?'Account':'Actual')} — ${esc(x.status||'Saved')}</option>`).join('');
+  if(list.some(x=>x.id===current))sel.value=current;
+}
+function __liteLoadSelectedSummary(){
+  const id=$('savedSummarySelect').value;
+  const item=__liteSummaries().find(x=>x.id===id);
+  if(!item){toast('Saved report निवडा.');return}
+  __liteSetShare(item.text,item);toast('जुनी Summary उघडली.');
+}
+function __liteRestoreLastSummary(){
+  if($('shareText')&&safe($('shareText').value))return;
+  const item=__liteSummaries()[0];if(item)__liteSetShare(item.text,item);
+}
+function __liteUpdateNetworkStatus(){
+  const el=$('networkStatus');if(!el)return;
+  const pending=__liteQueue().length;
+  const online=navigator.onLine!==false;
+  el.classList.toggle('offline',!online);
+  el.classList.toggle('pending-sync',online&&pending>0);
+  if(!online)el.textContent=`📴 Offline Mode • ${pending} रिपोर्ट Sync बाकी • Form व Summary फोनमध्ये सुरक्षित राहील`;
+  else if(pending)el.textContent=`🔄 Network मिळाले • ${pending} रिपोर्ट Server Sync बाकी`;
+  else el.textContent='⚡ Online • सर्व रिपोर्ट Sync आहेत';
+}
+function __liteCollectPayload(ctx){
+  let qs=getQuestions(ctx.st.role,ctx.shift),payload={};
+  if(isLeaveToday()){qs=[];payload=makeLeavePayload()}
+  else{
+    for(const q of qs){
+      const el=$('q_'+q.key),value=el?safe(el.value):'';
+      payload[q.key]=value;
+    }
+  }
+  return {qs,payload,leaveToday:isLeaveToday()?'होय':'नाही'};
+}
+function __liteSaveDraftNow(){
+  const ctx=__safeEntryContext();if(!ctx||savedEntryLocked)return;
+  const data=__liteCollectPayload(ctx);
+  __liteWriteJson(__liteDraftKey(ctx),{...data,date:ctx.date,staffId:ctx.st.staffId,shift:ctx.shift,updatedAt:Date.now()});
+}
+function __liteScheduleDraft(){clearTimeout(__anikLiteDraftTimer);__anikLiteDraftTimer=setTimeout(__liteSaveDraftNow,250)}
+function __liteRestoreDraft(ctx){
+  const d=__liteReadJson(__liteDraftKey(ctx),null);if(!d||!d.payload)return false;
+  if($('leaveToday'))$('leaveToday').value=d.leaveToday==='होय'?'होय':'नाही';
+  renderDynamicForm();fillForm(d.payload);
+  setEntryStatusTag('📝 फोनमधील Draft');
+  const m=$('lockMsg');if(m&&!currentEntryLocked){m.dataset.lockType='draft';m.textContent='नेटवर्क नसले तरी भरलेली माहिती फोनमध्ये सुरक्षित आहे. Save केल्यावर ती Sync queue मध्ये जाईल.';m.classList.remove('hidden')}
+  return true;
+}
+function __liteRemoveDraft(ctx){try{localStorage.removeItem(__liteDraftKey(ctx))}catch(e){}}
+function __liteQueueReport(ctx,payload,summaryText){
+  const id=__liteReportId(ctx.date,ctx.st.staffId,ctx.shift);
+  const item={id,date:ctx.date,staffId:ctx.st.staffId,staffName:ctx.st.staffName,role:ctx.st.role,branch:ctx.st.branch,shift:ctx.shift,payloadJson:JSON.stringify(payload),summaryText,createdAt:Date.now(),attempts:0};
+  const q=__liteQueue().filter(x=>x.id!==id);q.unshift(item);__liteSaveQueue(q);
+  __fastStorageSet(ctx.key,__liteResultFromItem(item));
+  return item;
+}
+function __liteRemoveQueued(id){__liteSaveQueue(__liteQueue().filter(x=>x.id!==id))}
+
+const __liteBaseBuildShareText=buildShareText;
+buildShareText=function(st,shift,currentQs,currentPayload,morningEntry){
+  __liteBaseBuildShareText(st,shift,currentQs,currentPayload,morningEntry);
+  return $('shareText').value;
+};
+const __liteBaseAccountShare=buildAccountBulkShare;
+buildAccountBulkShare=function(unit,rows){
+  __liteBaseAccountShare(unit,rows);
+  const text=$('shareText').value;
+  const fake={date:$('accDate').value,shift:'account',st:{staffId:'ACCOUNT_'+$('accBranch').value,staffName:'Account Team — '+$('accBranch').value,role:'अकाउंट टीम',branch:$('accBranch').value}};
+  __liteStoreSummary(fake,text,'✅ Server Saved');
+};
+
+copyShareText=async function(){
+  const box=$('shareText'),text=box?safe(box.value):'';
+  if(!text){toast('Share text उपलब्ध नाही.');return}
+  let copied=false;
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);copied=true}}catch(e){}
+  if(!copied){
+    try{box.removeAttribute('readonly');box.focus();box.select();box.setSelectionRange(0,999999);copied=document.execCommand('copy');box.setAttribute('readonly','readonly')}catch(e){copied=false}
+  }
+  toast(copied?'Summary Copy झाली.':'Text निवडला आहे; Copy करा.');
+};
+
+const __liteOpenPageBase=openPage;
+openPage=function(page){
+  __liteOpenPageBase(page);
+  if(page==='share'){__liteRenderSavedSummaries();__liteRestoreLastSummary();__liteUpdateNetworkStatus()}
+};
+
+// Always keep even an old master cache usable; refresh quietly whenever network permits.
+loadMasters=async function(show=false,force=false){
+  const cached=__liteReadFastAny(__ANIK_LITE.masterKey);
+  if(cached&&cached.value)__applyMasterData(cached.value);
+  if(navigator.onLine===false){
+    if(!cached)toast('पहिल्यांदा Staff Master load करण्यासाठी थोडे network आवश्यक आहे.');
+    return cached&&cached.value;
+  }
+  if(cached&&!force){setTimeout(()=>loadMasters(false,true).catch(()=>{}),500);return cached.value}
+  if(show&&!cached)showLoader(true);
+  try{
+    const res=await jsonp('getMasterData');__applyMasterData(res);__fastStorageSet(__ANIK_LITE.masterKey,res);return res;
+  }catch(e){if(!cached)throw e;return cached.value}
+  finally{if(show&&!cached)showLoader(false)}
+};
+
+// Simple branch change: no full-day dashboard preload.
+onEntryBranchChange=function(){
+  savedEntryLocked=false;timeEntryLocked=false;syncEntryLockState();
+  $('staffSelect').value='';if($('leaveToday'))$('leaveToday').value='नाही';
+  renderStaffDropdown();$('staffInfo').textContent='';
+  $('dynamicForm').innerHTML='<p class="danger">👤 कृपया कर्मचारी निवडा.</p>';
+  $('morningPreviewCard').style.display='none';$('submitBtn').disabled=true;
+  $('lockMsg').classList.add('hidden');setEntryStatusTag('✅ तयार');
+};
+
+// Only selected staff data is requested. Cached data/drafts paint immediately.
+onShiftChange=async function(forceLive=false){
+  const token=++__anikFinalSelectToken;
+  __anikVerifiedEntry={key:'',at:0,current:null,morning:null};
+  savedEntryLocked=false;timeEntryLocked=false;syncEntryLockState();morningEntryCache=null;
+  const lockMsg=$('lockMsg');lockMsg.classList.add('hidden');lockMsg.textContent='';delete lockMsg.dataset.lockType;
+  setEntryStatusTag(isLeaveToday()?'🏖️ रजा':'⚡ Form Ready');renderDynamicForm();
+  const ctx=__safeEntryContext();if(!ctx){$('submitBtn').disabled=true;return}
+
+  const pending=__litePendingItem(ctx);
+  const pendingMorning=ctx.shift==='evening'?__litePendingMorning(ctx):null;
+  if(pending){
+    __applyEntryResult(ctx.st,ctx.shift,__liteResultFromItem(pending),pendingMorning?__liteResultFromItem(pendingMorning):null);
+    setEntryStatusTag('📴 फोनमध्ये Saved • Sync बाकी');
+    lockMsg.dataset.lockType='pending';lockMsg.textContent='रिपोर्ट फोनमध्ये सुरक्षित save आहे. Network मिळताच server वर आपोआप Sync होईल.';lockMsg.classList.remove('hidden');
+    if(navigator.onLine!==false)setTimeout(()=>syncPendingReports(false),200);
+    return;
+  }
+
+  const cached=__fastStorageGet(ctx.key,__ANIK_FAST.entryTTL);
+  const morningKey=__entryCacheKey(ctx.date,ctx.st.staffId,'morning');
+  const morningCached=ctx.shift==='evening'?__fastStorageGet(morningKey,__ANIK_FAST.entryTTL):null;
+  let painted=false;
+  if(cached||morningCached){__applyEntryResult(ctx.st,ctx.shift,cached?cached.value:{},morningCached?morningCached.value:null);painted=true}
+  if(!(cached&&cached.value&&cached.value.entry)){painted=__liteRestoreDraft(ctx)||painted}
+
+  if(navigator.onLine===false){
+    if(!painted)setEntryStatusTag('📴 Offline • Form Ready');
+    applyReportTimeLock(ctx.st,ctx.shift,ctx.date);__liteUpdateNetworkStatus();return;
+  }
+
+  try{
+    const jobs=[jsonp('getEntry',{date:ctx.date,staffId:ctx.st.staffId,shift:ctx.shift})];
+    if(ctx.shift==='evening')jobs.push(jsonp('getEntry',{date:ctx.date,staffId:ctx.st.staffId,shift:'morning'}));
+    const r=await Promise.all(jobs);if(token!==__anikFinalSelectToken)return;
+    const current=r[0]||{},morning=ctx.shift==='evening'?(r[1]||{}):null;
+    __fastStorageSet(ctx.key,current);if(ctx.shift==='evening')__fastStorageSet(morningKey,morning||{});
+    __anikVerifiedEntry={key:ctx.key,at:Date.now(),current,morning};
+    if(current&&current.entry){__applyEntryResult(ctx.st,ctx.shift,current,morning);__liteRemoveDraft(ctx)}
+    else{
+      savedEntryLocked=false;syncEntryLockState();setFormLocked(false);
+      if(ctx.shift==='evening'){morningEntryCache=(morning&&morning.entry)||null;renderMorningPreview(ctx.st)}
+      if(!__liteRestoreDraft(ctx))applyReportTimeLock(ctx.st,ctx.shift,ctx.date);
+    }
+  }catch(e){
+    if(token!==__anikFinalSelectToken)return;
+    applyReportTimeLock(ctx.st,ctx.shift,ctx.date);
+    setEntryStatusTag('📶 Low Network • Form Ready');
+    lockMsg.dataset.lockType='offline';lockMsg.textContent='Server response मिळाला नाही; तरीही Form भरा आणि Save करा. रिपोर्ट फोनमध्ये सुरक्षित राहून नंतर auto-sync होईल.';lockMsg.classList.remove('hidden');
+  }
+};
+
+submitEntry=async function(){
+  const ctx=__safeEntryContext();if(!ctx){toast('कर्मचारी निवडा.');return}
+  const timeStatus=getEntryTimeStatus(ctx.st,ctx.shift,ctx.date);
+  if(!timeStatus.allowed){applyReportTimeLock(ctx.st,ctx.shift,ctx.date);toast(timeStatus.message);return}
+  if(currentEntryLocked){
+    const old=__liteSummaries().find(x=>x.id===__liteReportId(ctx.date,ctx.st.staffId,ctx.shift));
+    if(old){__liteSetShare(old.text,old);openPage('share');toast('हा रिपोर्ट आधीच save आहे. Summary पुन्हा उघडली.')}
+    else toast('हा रिपोर्ट आधीच lock आहे.');
+    return;
+  }
+
+  const {qs,payload}=__liteCollectPayload(ctx);
+  if(!isLeaveToday()){
+    for(const q of qs){
+      if(String(q.required).toLowerCase()==='yes'&&!safe(payload[q.key])){const el=$('q_'+q.key);toast('कृपया भरा: '+q.label);el&&el.focus();return}
+    }
+  }
+  __liteSaveDraftNow();
+
+  let morningEntryForShare=morningEntryCache||(ctx.shift==='evening'&&__anikVerifiedEntry.morning&&__anikVerifiedEntry.morning.entry)||null;
+  let summaryText='';
+  let savedOnline=false;
+  if(navigator.onLine!==false){
+    showLoader(true);
+    try{
+      const fresh=await jsonp('getEntry',{date:ctx.date,staffId:ctx.st.staffId,shift:ctx.shift});
+      if(ctx.shift==='morning'&&fresh&&fresh.entry){
+        const existingPayload=parsePayload(fresh.entry);
+        __applyEntryResult(ctx.st,ctx.shift,fresh,null);
+        summaryText=buildShareText(ctx.st,ctx.shift,getQuestions(ctx.st.role,ctx.shift),existingPayload,null);
+        __liteStoreSummary(ctx,summaryText,'✅ आधीच Server Saved');
+        __liteRemoveDraft(ctx);openPage('share');toast('Morning Plan आधीच save आहे; तीच Summary उघडली.');return;
+      }
+      const res=await jsonp('saveEntry',{date:ctx.date,staffId:ctx.st.staffId,staffName:ctx.st.staffName,role:ctx.st.role,branch:ctx.st.branch,shift:ctx.shift,payloadJson:JSON.stringify(payload),clientSubmittedAt:new Date().toISOString()});
+      const confirmed=__safeStoreConfirmedEntry(ctx,payload);
+      summaryText=buildShareText(ctx.st,ctx.shift,qs,payload,morningEntryForShare);
+      __liteStoreSummary(ctx,summaryText,'✅ Server Saved');
+      __liteRemoveDraft(ctx);__liteRemoveQueued(__liteReportId(ctx.date,ctx.st.staffId,ctx.shift));savedOnline=true;
+      if(ctx.shift==='morning'){savedEntryLocked=true;syncEntryLockState();__safeApplyDisplay(ctx,confirmed,null,true)}
+      toast(res.message||'रिपोर्ट Server वर save झाला.');
+    }catch(e){savedOnline=false}
+    finally{showLoader(false)}
+  }
+
+  if(!savedOnline){
+    summaryText=buildShareText(ctx.st,ctx.shift,qs,payload,morningEntryForShare);
+    __liteQueueReport(ctx,payload,summaryText);
+    __liteStoreSummary(ctx,summaryText,'📴 फोनमध्ये Saved • Sync बाकी');
+    __liteRemoveDraft(ctx);
+    if(ctx.shift==='morning'){savedEntryLocked=true;syncEntryLockState();setFormLocked(true);$('submitBtn').disabled=true}
+    toast('नेटवर्क कमी आहे; रिपोर्ट फोनमध्ये सुरक्षित save झाला. Network मिळताच auto-sync होईल.');
+  }
+  dashboardRowsCache=[];entriesCache=[];openPage('share');__liteUpdateNetworkStatus();
+};
+
+async function syncPendingReports(showMessage=true){
+  if(__anikLiteSyncing)return;
+  const queue=__liteQueue();
+  if(!queue.length){if(showMessage)toast('Pending रिपोर्ट नाहीत.');__liteUpdateNetworkStatus();return}
+  if(navigator.onLine===false){if(showMessage)toast('Network मिळाल्यावर Sync होईल.');__liteUpdateNetworkStatus();return}
+  __anikLiteSyncing=true;__liteUpdateNetworkStatus();
+  let done=0,failed=0;
+  for(const item of queue.slice().reverse()){
+    try{
+      const fresh=await jsonp('getEntry',{date:item.date,staffId:item.staffId,shift:item.shift});
+      if(!(item.shift==='morning'&&fresh&&fresh.entry)){
+        await jsonp('saveEntry',{date:item.date,staffId:item.staffId,staffName:item.staffName,role:item.role,branch:item.branch,shift:item.shift,payloadJson:item.payloadJson,clientSubmittedAt:new Date(item.createdAt).toISOString()});
+      }
+      const ctx={date:item.date,shift:item.shift,key:__entryCacheKey(item.date,item.staffId,item.shift),st:{staffId:item.staffId,staffName:item.staffName,role:item.role,branch:item.branch}};
+      __safeStoreConfirmedEntry(ctx,JSON.parse(item.payloadJson||'{}'));
+      __liteRemoveQueued(item.id);__liteUpdateSummaryStatus(item.id,'✅ Server Sync पूर्ण');done++;
+    }catch(e){
+      failed++;
+      const q=__liteQueue();const row=q.find(x=>x.id===item.id);if(row){row.attempts=Number(row.attempts||0)+1;row.lastError=safe(e.message||e);__liteSaveQueue(q)}
+    }
+  }
+  __anikLiteSyncing=false;__liteUpdateNetworkStatus();
+  if(showMessage)toast(done?`${done} रिपोर्ट Server वर Sync झाले.${failed?` ${failed} बाकी.`:''}`:`Sync झाले नाही; ${failed} रिपोर्ट फोनमध्ये सुरक्षित आहेत.`);
+}
+
+// Lightweight startup. It does not fetch the full dashboard.
+init=async function(){
+  document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>openPage(b.dataset.page));
+  const logo=document.querySelector('.logo');if(logo)logo.textContent='ANIK';
+  const adminTrigger=$('adminTrigger');if(adminTrigger){adminTrigger.textContent='⚙️';adminTrigger.title='Account / Dashboard';adminTrigger.onclick=()=>$('adminPanel').classList.toggle('hidden')};
+  $('todayText').textContent=new Date().toLocaleDateString('mr-IN',{timeZone:REPORT_TIME_CONFIG.timeZone,weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  ['entryDate','dashDate','accDate'].forEach(id=>{if($(id))$(id).value=todayISO()});
+  if(!REPORT_TIME_CONFIG.allowNonTodayEntry){$('entryDate').min=todayISO();$('entryDate').max=todayISO()}
+
+  $('entryBranch').onchange=onEntryBranchChange;
+  $('staffSelect').onchange=onStaffChange;
+  $('leaveToday').onchange=()=>{onLeaveChange();__liteScheduleDraft()};
+  $('shift').onchange=()=>onShiftChange(false);
+  $('entryDate').onchange=()=>onShiftChange(true);
+  $('reloadEntry').onclick=()=>onShiftChange(true);
+  $('submitBtn').onclick=submitEntry;
+  $('resetBtn').onclick=()=>{renderDynamicForm();__liteRemoveDraft(__safeEntryContext()||{date:'',shift:'',st:{staffId:''}})};
+  $('refreshDash').onclick=()=>loadDashboard(true,true);
+  $('copyShare').onclick=copyShareText;
+  $('loadSavedSummary').onclick=__liteLoadSelectedSummary;
+  $('syncPendingBtn').onclick=()=>syncPendingReports(true);
+  $('loadAccStaff').onclick=()=>loadAccountStaffBulk(true,false);
+  $('saveAccBulk').onclick=saveAccountStaffBulk;
+  $('clearAccBlank').onclick=clearBlankAccountRows;
+  $('branchFilter').onchange=__renderDashboardLocal;
+  $('roleFilter').onchange=__renderDashboardLocal;
+  $('dashDate').onchange=()=>loadDashboard(true,false);
+  $('accDate').onchange=()=>{accountStaffRowsCache=[];$('accStaffBody').innerHTML='<tr><td colspan="12">Load Staff Table करा.</td></tr>'};
+  $('accBranch').onchange=()=>{accountStaffRowsCache=[];$('accStaffBody').innerHTML='<tr><td colspan="12">Load Staff Table करा.</td></tr>'};
+  $('dynamicForm').addEventListener('input',__liteScheduleDraft);
+  $('dynamicForm').addEventListener('change',__liteScheduleDraft);
+
+  __liteRenderSavedSummaries();__liteRestoreLastSummary();__liteUpdateNetworkStatus();
+  try{await loadMasters(false,false)}catch(e){toast('Staff Master load झाला नाही. Network मिळाल्यावर Reload करा.')}
+
+  window.addEventListener('online',()=>{__liteUpdateNetworkStatus();syncPendingReports(false);loadMasters(false,true).catch(()=>{})});
+  window.addEventListener('offline',__liteUpdateNetworkStatus);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){__liteUpdateNetworkStatus();if(navigator.onLine!==false)syncPendingReports(false);if(getSelectedStaff())applyReportTimeLock()}});
+  setInterval(()=>{if(navigator.onLine!==false&&__liteQueue().length)syncPendingReports(false)},60000);
+  setInterval(()=>{if(getSelectedStaff())applyReportTimeLock()},30000);
+  if(navigator.onLine!==false&&__liteQueue().length)setTimeout(()=>syncPendingReports(false),800);
 };
 
 init();
