@@ -8,6 +8,8 @@
 
 
 
+
+
 <!DOCTYPE html>
 <html lang="mr">
 <head>
@@ -312,15 +314,14 @@ canvas{min-height:120px}
 <div class="loader" id="loader"><div class="spin"></div></div><div class="toast" id="toast"></div>
 <div class="app">
   <aside class="side app-shell">
-    <div class="brand"><div class="logo">A</div><h1>🚀 अनिक दैनिक स्टाफ कामकाज अ‍ॅप</h1><p>📌 Plan Lock • ✅ Actual Tracking • 📊 Power View</p><span class="app-title-chip">⚡ मोबाईल अ‍ॅप सारखा जलद अनुभव</span></div>
+    <div class="brand"><div class="logo">A</div><h1>🚀 अनिक दैनिक स्टाफ कामकाज अ‍ॅप</h1><p>📌 Plan Lock • ✅ Actual Tracking • 📤 Instant Share</p><span class="app-title-chip">⚡ मोबाईल अ‍ॅप सारखा जलद अनुभव</span></div>
     <button class="nav active" data-page="entry">📝 नोंदणी</button>
     <button class="nav" data-page="share">📤 शेअर</button>
     <button class="secret-trigger" id="adminTrigger" title="Quick tools" aria-label="Quick tools">•</button>
     <div class="secret-panel hidden" id="adminPanel">
-      <button class="nav admin-nav" data-page="account">🏦 खाते टीम</button>
       <button class="nav admin-nav" data-page="dashboard">📊 डॅशबोर्ड</button>
     </div>
-    <div class="hint" id="reportTimeHint">📅 दिनांक → 🏦 शाखा → 👤 कर्मचारी निवडा. रिपोर्टची अंतिम वेळ role नुसार लागू होईल.</div>
+    <div class="hint" id="reportTimeHint">📅 दिनांक → 🏦 शाखा → 👤 कर्मचारी निवडा. कर्मचारी स्वतःचा Plan / Actual रिपोर्ट भरेल आणि लगेच Share करेल.</div>
   </aside>
   <main class="main">
     <div class="top"><div><h2 id="pageTitle">📝 स्टाफ नोंदणी</h2><p id="pageSub">दैनंदिन नियोजन आणि प्रत्यक्ष कामगिरी</p></div><div class="pill" id="todayText">Today</div></div>
@@ -342,21 +343,12 @@ canvas{min-height:120px}
       </div>
       <div class="card" id="morningPreviewCard" style="display:none"><div class="section"><h3>🌅 सकाळचा Plan Preview</h3><span class="tag">Actual comparison साठी</span></div><div id="morningPreview"></div></div>
     </section>
-    <section id="page-account" class="page hidden">
-      <div class="hero"><h3>Account Team — Staff-wise Bulk Entry</h3><p>Unit निवडा, सर्व staff rows एकाच table मध्ये दिसतील. Target/Achieved आकडे भरले की system स्वतः staff-wise score /100 काढेल. <b>Save All</b> केल्यावर सर्व score आणि remarks एकदम save/update होतील.</p></div>
-      <div class="card"><div class="section"><h3>Staff-wise System Figures</h3><span class="tag">Fast Table Entry</span></div>
-        <div class="grid g3"><div class="field"><label>दिनांक</label><input type="date" id="accDate"></div><div class="field"><label>Unit / Branch</label><select id="accBranch"></select></div><div class="field" style="display:flex;align-items:end"><button class="btn btn-soft" id="loadAccStaff" style="width:100%">Load Staff Table</button></div></div>
-        <div class="mini" id="accBulkSummary" style="margin-bottom:12px">Unit निवडून staff table load करा.</div>
-        <div style="overflow:auto"><table class="bulk-table"><thead><tr><th>Staff</th><th>Role</th><th>OD Target</th><th>OD Achieved</th><th>Collection Target</th><th>Collection Achieved</th><th>Disb. Target</th><th>Disb. Achieved</th><th>New Cust. Target</th><th>New Cust. Achieved</th><th>Auto Score /100</th><th>Remark</th></tr></thead><tbody id="accStaffBody"><tr><td colspan="12">Load Staff Table करा.</td></tr></tbody></table></div>
-        <div class="btns" style="margin-top:12px"><button class="btn btn-primary" id="saveAccBulk">💾 Save All Staff Rows</button><button class="btn btn-soft" id="clearAccBlank">Clear Blank Rows</button></div>
-      </div>
-    </section>
     <section id="page-dashboard" class="page hidden">
-      <div class="card"><div class="section"><h3>Dashboard</h3><span class="tag">Simple View</span></div><div class="grid g4"><div class="field"><label>दिनांक</label><input type="date" id="dashDate"></div><div class="field"><label>Branch Filter</label><select id="branchFilter"><option value="">All Branches</option></select></div><div class="field"><label>Role Filter</label><select id="roleFilter"><option value="">All Roles</option></select></div><div class="field" style="display:flex;align-items:end"><button class="btn btn-primary" id="refreshDash" style="width:100%">🔎 Refresh</button></div></div></div>
-      <div class="grid g4"><div class="stat"><div class="num" id="stTotal">0</div><div class="lbl">Total Staff</div></div><div class="stat good"><div class="num" id="stMorning">0</div><div class="lbl">Planning Done</div></div><div class="stat warn"><div class="num" id="stEvening">0</div><div class="lbl">Actual Done</div></div><div class="stat purple"><div class="num" id="stAvgSys">0%</div><div class="lbl">System Achievement</div></div></div>
-      <div class="card"><div class="section"><h3>Management Summary</h3><span class="tag">System says</span></div><div id="mgmtSummary" class="mini"></div></div>
-      <div class="grid g2"><div class="card"><div class="section"><h3>Branch-wise Completion</h3><span class="tag">Today</span></div><canvas id="branchChart" height="120"></canvas></div><div class="card"><div class="section"><h3>System Achievement</h3><span class="tag">Unit Target</span></div><canvas id="systemChart" height="120"></canvas></div></div>
-      <div class="card"><div class="section"><h3>Unit-wise System Verdict</h3><span class="tag">Target vs Achieved</span></div><div style="overflow:auto"><table><thead><tr><th>Unit</th><th>Entry Complete</th><th>OD</th><th>Collection</th><th>Disbursement</th><th>New Customer</th><th>Work Quality</th><th>System Verdict</th></tr></thead><tbody id="unitTable"></tbody></table></div></div>
+      <div class="card"><div class="section"><h3>📊 स्टाफ रिपोर्ट डॅशबोर्ड</h3><span class="tag">Plan + Actual</span></div><div class="grid g4"><div class="field"><label>दिनांक</label><input type="date" id="dashDate"></div><div class="field"><label>Branch Filter</label><select id="branchFilter"><option value="">All Branches</option></select></div><div class="field"><label>Role Filter</label><select id="roleFilter"><option value="">All Roles</option></select></div><div class="field" style="display:flex;align-items:end"><button class="btn btn-primary" id="refreshDash" style="width:100%">🔎 Refresh</button></div></div></div>
+      <div class="grid g4"><div class="stat"><div class="num" id="stTotal">0</div><div class="lbl">आजचे एकूण कर्मचारी</div></div><div class="stat good"><div class="num" id="stMorning">0</div><div class="lbl">Plan भरले</div></div><div class="stat warn"><div class="num" id="stEvening">0</div><div class="lbl">Actual भरले</div></div><div class="stat purple"><div class="num" id="stAvgSys">0%</div><div class="lbl">सरासरी रिपोर्ट पूर्णता</div></div></div>
+      <div class="card"><div class="section"><h3>Management Summary</h3><span class="tag">Staff Reports Only</span></div><div id="mgmtSummary" class="mini"></div></div>
+      <div class="grid g2"><div class="card"><div class="section"><h3>Branch-wise Report Status</h3><span class="tag">Today</span></div><canvas id="branchChart" height="120"></canvas></div><div class="card"><div class="section"><h3>Unit-wise Completion</h3><span class="tag">Plan + Actual</span></div><canvas id="systemChart" height="120"></canvas></div></div>
+      <div class="card"><div class="section"><h3>Unit-wise Staff Report Position</h3><span class="tag">Staff Reports Only</span></div><div style="overflow:auto"><table><thead><tr><th>Unit</th><th>Total Staff</th><th>Plan Done</th><th>Actual Done</th><th>Complete</th><th>Completion</th><th>Verdict</th></tr></thead><tbody id="unitTable"></tbody></table></div></div>
       <div class="card"><div class="section"><h3>Staff-wise Daily Status</h3><span class="tag">Click staff name</span></div><div style="overflow:auto"><table><thead><tr><th>Staff</th><th>Role</th><th>Branch</th><th>Planning</th><th>Actual</th><th>Status</th><th>Quality</th><th>Remark</th><th>Open</th></tr></thead><tbody id="statusTable"></tbody></table></div></div>
       <div id="staffDetail" class="hidden"><div class="card"><div class="section"><h3 id="detailTitle">Staff Detail</h3><span class="tag" id="detailTag">Plan vs Actual</span></div><div class="grid g3"><div class="stat good"><div class="num" id="detailPlanCount">0</div><div class="lbl">Planning Fields</div></div><div class="stat purple"><div class="num" id="detailActualCount">0</div><div class="lbl">Actual Fields</div></div><div class="stat warn"><div class="num" id="detailScore">0/100</div><div class="lbl">Work Quality Score</div></div></div><div class="grid g2" style="margin-top:14px"><div class="mini"><h4>🌅 सकाळचे नियोजन</h4><div id="planList"></div></div><div class="mini"><h4>🌙 सायंकाळची प्रत्यक्ष कामगिरी</h4><div id="actualList"></div></div></div></div></div>
     </section>
@@ -364,7 +356,7 @@ canvas{min-height:120px}
   </main>
 </div>
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbwYVMl2nT-Q2MCr1y-uBKnyL5nvIzVFkr5DakQKtnMpzwMRnewU_rjK1bvg7ScxXKU/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbyUgCHCLCQbzmNiIIE-kZFIZNj_8ig7wh5NLymnAXty2SRlXoB57HAjjO3OrKexygY/exec';
 
 /* ================================================================
    रिपोर्ट वेळ सेटिंग — पुढे वेळ बदलायची असल्यास फक्त हा भाग बदला.
@@ -379,7 +371,7 @@ const REPORT_TIME_CONFIG={
   taRoles:['TA','T A','टी ए','टि ऐ','टी.ए.','T.A.'],
   cutoff:{
     morning:{staff:'8:30',manager:'9:30',ta:'10:00'},
-    evening:{staff:'19:15',manager:'20:00',ta:'22:00'}
+    evening:{staff:'22:15',manager:'25:00',ta:'22:00'}
   }
 };
 
@@ -512,7 +504,7 @@ function __safeBuildSnapshot(date,res,isLive){
   });
   const snapshot={date,at:Date.now(),isLive:!!isLive,byKey,res:res||{}};
   __anikDaySnapshots.set(date,snapshot);
-  if(isLive)__fastStorageSet(__dashboardCacheKey(date),res||{});
+  if(isLive&&res&&Array.isArray(res.unitSummary))__fastStorageSet(__dashboardCacheKey(date),res||{});
   return snapshot;
 }
 function __safeResultFromSnapshot(snapshot,staffId,shift){
@@ -529,7 +521,7 @@ async function __preloadDayEntriesSafe(date,force=false){
     if(cached&&cached.value)__safeBuildSnapshot(date,cached.value,false);
   }
 
-  const p=jsonp('getDashboard',{date}).then(res=>__safeBuildSnapshot(date,res,true)).finally(()=>{
+  const p=jsonp('getDayEntries',{date,force:force?'1':''}).then(res=>__safeBuildSnapshot(date,res,true)).finally(()=>{
     __anikDayPreloadPromises.delete(date);
   });
   __anikDayPreloadPromises.set(date,p);
@@ -730,7 +722,7 @@ async function init(){
   const adminTrigger=$('adminTrigger');
   if(adminTrigger){adminTrigger.onclick=()=>{$('adminPanel').classList.toggle('hidden')}}
   $('todayText').textContent=new Date().toLocaleDateString('mr-IN',{timeZone:REPORT_TIME_CONFIG.timeZone,weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  ['entryDate','dashDate','accDate'].forEach(id=>$(id).value=todayISO());
+  ['entryDate','dashDate'].forEach(id=>{if($(id))$(id).value=todayISO()});
   if(!REPORT_TIME_CONFIG.allowNonTodayEntry){$('entryDate').min=todayISO();$('entryDate').max=todayISO()}
   renderReportTimeHint();
   $('entryBranch').onchange=onEntryBranchChange;
@@ -743,9 +735,6 @@ async function init(){
   $('resetBtn').onclick=renderDynamicForm;
   $('refreshDash').onclick=()=>loadDashboard(true);
   $('copyShare').onclick=copyShareText;
-  $('loadAccStaff').onclick=loadAccountStaffBulk;
-  $('saveAccBulk').onclick=saveAccountStaffBulk;
-  $('clearAccBlank').onclick=clearBlankAccountRows;
   await loadMasters(false);
   setInterval(()=>{if(getSelectedStaff())applyReportTimeLock()},30000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&getSelectedStaff())applyReportTimeLock()});
@@ -758,8 +747,7 @@ function openPage(page){
   $('page-'+page).classList.remove('hidden');
   const titles={
     entry:['📝 स्टाफ नोंदणी','दैनंदिन नियोजन आणि प्रत्यक्ष कामगिरी'],
-    account:['🏦 खाते टीम','Unit-wise system target आणि achievement'],
-    dashboard:['📊 डॅशबोर्ड','Management Power View'],
+    dashboard:['📊 डॅशबोर्ड','Staff Plan / Actual Completion View'],
     share:['📤 शेअर टेक्स्ट','WhatsApp / report-ready text']
   };
   $('pageTitle').textContent=titles[page][0];
@@ -767,13 +755,12 @@ function openPage(page){
   if(page==='dashboard')loadDashboard(false);
 }
 async function testConnection(){showLoader(true);try{const res=await jsonp('ping');toast('Connection successful: '+(res.message||'OK'))}catch(e){toast(e.message)}showLoader(false)}
-async function loadMasters(show=true){if(show)showLoader(true);try{const res=await jsonp('getMasterData');staffMaster=res.staff||[];allQuestions=res.questions||[];renderEntryBranches();renderStaffDropdown();renderFilters();renderAccountBranches();if(!staffMaster.length)toast('StaffMaster मधून data आलेला नाही.')}catch(e){toast(e.message)}if(show)showLoader(false)}
+async function loadMasters(show=true){if(show)showLoader(true);try{const res=await jsonp('getMasterData');staffMaster=res.staff||[];allQuestions=res.questions||[];renderEntryBranches();renderStaffDropdown();renderFilters();if(!staffMaster.length)toast('StaffMaster मधून data आलेला नाही.')}catch(e){toast(e.message)}if(show)showLoader(false)}
 function renderEntryBranches(){const br=branches();$('entryBranch').innerHTML='<option value="">प्रथम शाखा निवडा</option>'+br.map(b=>`<option>${esc(b)}</option>`).join('')}
 function onEntryBranchChange(){savedEntryLocked=false;timeEntryLocked=false;syncEntryLockState();$('staffSelect').value='';if($('leaveToday'))$('leaveToday').value='नाही';renderStaffDropdown();$('staffInfo').textContent='';$('dynamicForm').innerHTML='<p class="danger">👤 कृपया कर्मचारी निवडा.</p>';$('morningPreviewCard').style.display='none';$('submitBtn').disabled=true;$('lockMsg').classList.add('hidden');setEntryStatusTag('✅ तयार')}
 function renderStaffDropdown(){const br=safe($('entryBranch')?$('entryBranch').value:'');let list=staffMaster.filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम');if(br)list=list.filter(s=>safe(s.branch)===br);$('staffSelect').innerHTML=(br?'<option value="">कर्मचारी निवडा</option>':'<option value="">आधी शाखा निवडा</option>')+list.map(s=>`<option value="${esc(s.staffId)}">${esc(s.staffName)} — ${esc(s.role)}</option>`).join('')}
 function branches(){return [...new Set(staffMaster.map(s=>safe(s.branch)).filter(Boolean))].sort()}
 function renderFilters(){const br=branches(),roles=[...new Set(staffMaster.map(s=>safe(s.role)).filter(Boolean))].sort();$('branchFilter').innerHTML='<option value="">All Branches</option>'+br.map(b=>`<option>${esc(b)}</option>`).join('');$('roleFilter').innerHTML='<option value="">All Roles</option>'+roles.map(r=>`<option>${esc(r)}</option>`).join('')}
-function renderAccountBranches(){$('accBranch').innerHTML='<option value="">Unit निवडा</option>'+branches().map(b=>`<option>${esc(b)}</option>`).join('')}
 function getSelectedStaff(){return staffMaster.find(s=>safe(s.staffId)===safe($('staffSelect').value))}
 function getQuestions(role,shift){return allQuestions.filter(q=>safe(q.role)===safe(role)&&safe(q.shift)===safe(shift)&&String(q.active).toLowerCase()!=='no').sort((a,b)=>Number(a.order||0)-Number(b.order||0))}
 function isLeavePayload(payload){return safe(payload&&payload.leaveToday)==='होय'||safe(payload&&payload.leaveStatus).includes('रजा')}
@@ -848,23 +835,10 @@ async function submitEntry(){
 }
 function buildShareText(st,shift,currentQs,currentPayload,morningEntry){const date=$('entryDate').value;let msg=`📌 दैनंदिन नियोजन व प्रत्यक्ष कार्य\n\n👤 कर्मचारी: ${st.staffName}\n📌 पद: ${st.role}\n🏦 शाखा: ${st.branch}\n📅 दिनांक: ${date}\n\n`;if(isLeavePayload(currentPayload)){msg+='🏖️ आज रजा आहे\n• या कर्मचाऱ्याला आज रजा असल्यामुळे Plan / Actual भरणे आवश्यक नाही.\n'}else if(shift==='evening'){msg+='🎯 सकाळचे नियोजन\n';const morningQs=getQuestions(st.role,'morning'),morningPayload=parsePayload(morningEntry);if(morningEntry){if(isLeavePayload(morningPayload))msg+='• सकाळच्या Plan मध्ये आज रजा आहे अशी नोंद आहे.\n';else morningQs.forEach(q=>msg+=`• ${q.label}: ${morningPayload[q.key]||'-'}\n`)}else msg+='• सकाळचे नियोजन उपलब्ध नाही\n';msg+='\n✅ सायंकाळची प्रत्यक्ष कामगिरी\n';currentQs.forEach(q=>msg+=`• ${q.label}: ${currentPayload[q.key]||'-'}\n`)}else{msg+='🎯 आजचे नियोजन\n';currentQs.forEach(q=>msg+=`• ${q.label}: ${currentPayload[q.key]||'-'}\n`);msg+='\n🔒 हा plan आता system मध्ये lock झाला आहे.\n'}msg+='\n— Anik Daily Staff Work System';$('shareText').value=msg;$('waShare').href='https://wa.me/?text='+encodeURIComponent(msg)}
 async function copyShareText(){const text=$('shareText').value;if(!text){toast('Share text उपलब्ध नाही.');return}await navigator.clipboard.writeText(text);toast('Text copied.')}
-let accountStaffRowsCache=[];
-let accountStaffSystemCache=[];
 function metricScore(achieved,target){
   const t=Number(target||0), a=Number(achieved||0);
   if(!t || t<=0) return null;
   return Math.max(0, Math.min(100, Math.round((a/t)*100)));
-}
-function calculateStaffWorkScore(r){
-  const metrics=[
-    {score:metricScore(r.odAchieved,r.odTarget),weight:25},
-    {score:metricScore(r.collectionAchieved,r.collectionTarget),weight:35},
-    {score:metricScore(r.disbursementAchieved,r.disbursementTarget),weight:25},
-    {score:metricScore(r.newCustomerAchieved,r.newCustomerTarget),weight:15}
-  ].filter(m=>m.score!==null);
-  if(!metrics.length) return '';
-  const w=metrics.reduce((s,m)=>s+m.weight,0);
-  return Math.round(metrics.reduce((s,m)=>s+(m.score*m.weight),0)/w);
 }
 function qualityVerdictText(score){
   score=Number(score||0);
@@ -874,110 +848,48 @@ function qualityVerdictText(score){
   if(score>0) return 'Review Needed';
   return 'Score Pending';
 }
-function effectiveWorkQuality(obj){
-  if(!obj) return 0;
-  const existing=Number(obj.workQuality||0);
-  if(existing>0) return Math.min(100,Math.max(0,Math.round(existing)));
-  const calc=calculateStaffWorkScore(obj);
-  return calc===''?0:Number(calc);
-}
 function cleanRemark(v){
   const t=safe(v);
   if(!t || t==='0' || t.toLowerCase()==='null' || t.toLowerCase()==='undefined') return '';
   return t;
 }
-function autoCalculateAllScores(){
-  accountStaffRowsCache.forEach(r=>{r.workQuality=calculateStaffWorkScore(r)});
-}
-function accountRowInput(row,i,key,type='number'){
-  if(key==='workQuality'){
-    const val=calculateStaffWorkScore(row);
-    row.workQuality=val;
-    return `<input type="number" readonly data-i="${i}" data-key="${key}" value="${esc(val)}" title="Auto calculated from Target vs Achieved">`;
-  }
-  const val=row&&row[key]?row[key]:'';
-  return `<input ${type==='number'?'type="number" step="1" min="0"':'type="text"'} data-i="${i}" data-key="${key}" value="${esc(val)}" class="${key==='remark'?'remark':''}">`;
-}
-async function loadAccountStaffBulk(){
-  if(!$('accBranch').value){toast('Unit निवडा.');return}
-  showLoader(true);
+async function loadDashboard(show=true){
+  if(show)showLoader(true);
   try{
-    const res=await jsonp('getAccountStaffBulk',{date:$('accDate').value,branch:$('accBranch').value});
-    accountStaffRowsCache=res.rows||[];
-    renderAccountStaffTable(accountStaffRowsCache,res.unit);
-    toast(accountStaffRowsCache.length+' staff rows loaded.');
+    const res=await jsonp('getDashboard',{date:$('dashDate').value});
+    entriesCache=res.entries||[];
+    unitSummaryCache=res.unitSummary||[];
+    buildDashboardRows();
+    renderDashboard(res.managementSummary||{});
+    $('staffDetail').classList.add('hidden');
   }catch(e){toast(e.message)}
-  showLoader(false);
+  if(show)showLoader(false);
 }
-function renderAccountStaffTable(rows,unit){
-  if(!rows.length){$('accStaffBody').innerHTML='<tr><td colspan="12">या unit मध्ये active staff नाहीत.</td></tr>';updateAccountBulkSummary(unit);return}
-  $('accStaffBody').innerHTML=rows.map((r,i)=>`<tr>
-    <td><b>${esc(r.staffName)}</b><br><small>${esc(r.staffId)}</small></td>
-    <td>${esc(r.role)}</td>
-    <td>${accountRowInput(r,i,'odTarget')}</td><td>${accountRowInput(r,i,'odAchieved')}</td>
-    <td>${accountRowInput(r,i,'collectionTarget')}</td><td>${accountRowInput(r,i,'collectionAchieved')}</td>
-    <td>${accountRowInput(r,i,'disbursementTarget')}</td><td>${accountRowInput(r,i,'disbursementAchieved')}</td>
-    <td>${accountRowInput(r,i,'newCustomerTarget')}</td><td>${accountRowInput(r,i,'newCustomerAchieved')}</td>
-    <td>${accountRowInput(r,i,'workQuality')}</td><td>${accountRowInput(r,i,'remark','text')}</td>
-  </tr>`).join('');
-  document.querySelectorAll('#accStaffBody input').forEach(inp=>inp.addEventListener('input',()=>{
-    const i=Number(inp.dataset.i),key=inp.dataset.key;
-    accountStaffRowsCache[i][key]=inp.value;
-    if(key!=='workQuality'){
-      const score=calculateStaffWorkScore(accountStaffRowsCache[i]);
-      accountStaffRowsCache[i].workQuality=score;
-      const scoreInput=document.querySelector(`#accStaffBody input[data-i="${i}"][data-key="workQuality"]`);
-      if(scoreInput) scoreInput.value=score;
-    }
-    updateAccountBulkSummary(calcLocalUnitTotal());
-  }));
-  autoCalculateAllScores();
-  updateAccountBulkSummary(unit||calcLocalUnitTotal());
+function buildDashboardRows(){
+  const bf=$('branchFilter').value,rf=$('roleFilter').value;
+  const activeStaff=staffMaster
+    .filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम')
+    .filter(s=>!bf||safe(s.branch)===safe(bf))
+    .filter(s=>!rf||safe(s.role)===safe(rf));
+  const map={};
+  entriesCache.forEach(e=>map[safe(e.staffId)+'_'+safe(e.shift).toLowerCase()]=e);
+  dashboardRowsCache=activeStaff.map(s=>{
+    const m=map[safe(s.staffId)+'_morning']||null;
+    const ev=map[safe(s.staffId)+'_evening']||null;
+    const leave=isLeavePayload(parsePayload(m))||isLeavePayload(parsePayload(ev));
+    let status='Pending',cls='pending';
+    if(leave){status='Leave';cls='check'}
+    else if(m&&ev){status='Complete';cls='done'}
+    else if(!m&&!ev){status='Missing';cls='missing'}
+    else if(!m&&ev){status='Check';cls='check'}
+    return{staff:s,morning:m,evening:ev,leave,status,cls};
+  });
 }
-function calcLocalUnitTotal(){
-  autoCalculateAllScores();
-  const total={odTarget:0,odAchieved:0,collectionTarget:0,collectionAchieved:0,disbursementTarget:0,disbursementAchieved:0,newCustomerTarget:0,newCustomerAchieved:0,workQuality:0};
-  let qSum=0,qCount=0;
-  accountStaffRowsCache.forEach(r=>{['odTarget','odAchieved','collectionTarget','collectionAchieved','disbursementTarget','disbursementAchieved','newCustomerTarget','newCustomerAchieved'].forEach(k=>total[k]+=Number(r[k]||0));const q=Number(r.workQuality||0);if(q>0){qSum+=Math.min(100,Math.max(0,q));qCount++;}});
-  total.workQuality=qCount?Math.round(qSum/qCount):0;
-  total.qualityVerdict=qualityVerdictText(total.workQuality);
-  function per(a,t){return t?Math.round((a/t)*100):0}
-  total.odPercent=per(total.odAchieved,total.odTarget);total.collectionPercent=per(total.collectionAchieved,total.collectionTarget);total.disbursementPercent=per(total.disbursementAchieved,total.disbursementTarget);total.newCustomerPercent=per(total.newCustomerAchieved,total.newCustomerTarget);
-  const arr=[total.odPercent,total.collectionPercent,total.disbursementPercent,total.newCustomerPercent].filter(x=>x>0);total.overallPercent=Math.round(arr.reduce((a,b)=>a+b,0)/Math.max(1,arr.length));
-  total.verdict=total.overallPercent>=100?'Target पूर्ण / अधिक — Strong Performance':total.overallPercent>=85?'Target जवळपास पूर्ण — Good Control':total.overallPercent>=60?'Partial Achievement — Follow-up Required':total.overallPercent>0?'Low Achievement — Management Attention Needed':'System figures pending';
-  return total;
+function rowRemark(r){
+  const mp=parsePayload(r.morning),ep=parsePayload(r.evening);
+  if(isLeavePayload(mp)||isLeavePayload(ep))return '🏖️ आज रजा आहे';
+  return cleanRemark(ep.remark)||cleanRemark(ep.important_note)||'-';
 }
-function updateAccountBulkSummary(u){
-  u=u||{};
-  $('accBulkSummary').innerHTML=`<div class="bulk-total"><div><b>OD</b><span>${num(u.odAchieved)}/${num(u.odTarget)} (${pct(u.odPercent||0)})</span></div><div><b>Collection</b><span>${num(u.collectionAchieved)}/${num(u.collectionTarget)} (${pct(u.collectionPercent||0)})</span></div><div><b>Disbursement</b><span>${num(u.disbursementAchieved)}/${num(u.disbursementTarget)} (${pct(u.disbursementPercent||0)})</span></div><div><b>New Customer</b><span>${num(u.newCustomerAchieved)}/${num(u.newCustomerTarget)} (${pct(u.newCustomerPercent||0)})</span></div><div><b>Auto Score</b><span>${num(u.workQuality)}/100</span></div></div><p class="verdict" style="margin-bottom:0">${esc((u.qualityVerdict?u.qualityVerdict+' | ':'')+(u.verdict||'Staff-wise figures भरल्यावर total इथे दिसेल.'))}</p>`;
-}
-async function saveAccountStaffBulk(){
-  if(!$('accBranch').value){toast('Unit निवडा.');return}
-  if(!accountStaffRowsCache.length){toast('आधी Load Staff Table करा.');return}
-  document.querySelectorAll('#accStaffBody input').forEach(inp=>{const i=Number(inp.dataset.i),key=inp.dataset.key;accountStaffRowsCache[i][key]=inp.value});
-  autoCalculateAllScores();
-  showLoader(true);
-  try{
-    const rows=accountStaffRowsCache.map(r=>({staffId:r.staffId,staffName:r.staffName,role:r.role,odTarget:r.odTarget,odAchieved:r.odAchieved,collectionTarget:r.collectionTarget,collectionAchieved:r.collectionAchieved,disbursementTarget:r.disbursementTarget,disbursementAchieved:r.disbursementAchieved,newCustomerTarget:r.newCustomerTarget,newCustomerAchieved:r.newCustomerAchieved,workQuality:r.workQuality,remark:r.remark}));
-    const res=await jsonp('saveAccountStaffBulk',{date:$('accDate').value,branch:$('accBranch').value,rowsJson:JSON.stringify(rows)});
-    accountStaffRowsCache=res.rows||accountStaffRowsCache;
-    renderAccountStaffTable(accountStaffRowsCache,res.unit);
-    buildAccountBulkShare(res.unit,accountStaffRowsCache);
-    toast(res.message||'All staff rows saved.');
-  }catch(e){toast(e.message)}
-  showLoader(false);
-}
-function clearBlankAccountRows(){
-  accountStaffRowsCache.forEach(r=>{['odTarget','odAchieved','collectionTarget','collectionAchieved','disbursementTarget','disbursementAchieved','newCustomerTarget','newCustomerAchieved','workQuality','remark'].forEach(k=>r[k]='')});
-  renderAccountStaffTable(accountStaffRowsCache,calcLocalUnitTotal());
-}
-function buildAccountBulkShare(unit,rows){
-  let msg=`🏦 खाते टीम Staff-wise System Figures\nUnit: ${$('accBranch').value}\nDate: ${$('accDate').value}\n\nUnit Total:\nOD: ${num(unit.odAchieved)} / ${num(unit.odTarget)} (${unit.odPercent}%)\nCollection: ${num(unit.collectionAchieved)} / ${num(unit.collectionTarget)} (${unit.collectionPercent}%)\nDisbursement: ${num(unit.disbursementAchieved)} / ${num(unit.disbursementTarget)} (${unit.disbursementPercent}%)\nNew Customer: ${num(unit.newCustomerAchieved)} / ${num(unit.newCustomerTarget)} (${unit.newCustomerPercent}%)\nWork Quality: ${num(unit.workQuality)}/100\n\nSystem Verdict: ${unit.verdict}\n\nStaff Rows Updated: ${rows.length}\n\n— Anik Daily Staff Work System`;
-  $('shareText').value=msg;$('waShare').href='https://wa.me/?text='+encodeURIComponent(msg);
-}
-async function loadDashboard(show=true){if(show)showLoader(true);try{const res=await jsonp('getDashboard',{date:$('dashDate').value});entriesCache=res.entries||[];unitSummaryCache=res.unitSummary||[];accountStaffSystemCache=res.accountStaffSystem||[];buildDashboardRows();renderDashboard(res.managementSummary||{});$('staffDetail').classList.add('hidden')}catch(e){toast(e.message)}if(show)showLoader(false)}
-function buildDashboardRows(){const bf=$('branchFilter').value,rf=$('roleFilter').value,activeStaff=staffMaster.filter(s=>String(s.active).toLowerCase()!=='no'&&safe(s.role)!=='अकाउंट टीम').filter(s=>!bf||safe(s.branch)===safe(bf)).filter(s=>!rf||safe(s.role)===safe(rf)),map={},accMap={};entriesCache.forEach(e=>map[safe(e.staffId)+'_'+safe(e.shift).toLowerCase()]=e);accountStaffSystemCache.forEach(r=>accMap[safe(r.staffId)]=r);dashboardRowsCache=activeStaff.map(s=>{const m=map[safe(s.staffId)+'_morning'],ev=map[safe(s.staffId)+'_evening'],acc=accMap[safe(s.staffId)]||{};let status='Pending',cls='pending';if(m&&ev){status='Complete';cls='done'}else if(!m&&!ev){status='Missing';cls='missing'}else if(!m&&ev){status='Check';cls='check'}return{staff:s,morning:m,evening:ev,account:acc,status,cls}})}
-function rowRemark(r){const mp=parsePayload(r.morning),ep=parsePayload(r.evening);if(isLeavePayload(mp)||isLeavePayload(ep))return '🏖️ आज रजा आहे';return cleanRemark(r.account&&r.account.remark)||cleanRemark(ep.remark)||cleanRemark(ep.important_note)||'-'}
 
 function firstNumFromPayload(payload, keys){
   for(const k of keys){
@@ -1000,16 +912,38 @@ function calculateEntryWorkScore(row){
   return Math.round(metrics.reduce((s,m)=>s+(m.score*m.weight),0)/w);
 }
 
-function rowQuality(r){return effectiveWorkQuality(r.account)||calculateEntryWorkScore(r)}
+function rowQuality(r){return calculateEntryWorkScore(r)}
 function renderDashboard(mgmt){
-  const rows=dashboardRowsCache,units=unitSummaryCache.filter(u=>!$('branchFilter').value||safe(u.branch)===safe($('branchFilter').value));
-  $('stTotal').textContent=rows.length;$('stMorning').textContent=rows.filter(r=>r.morning).length;$('stEvening').textContent=rows.filter(r=>r.evening).length;$('stAvgSys').textContent=pct(mgmt.averageSystemAchievement||0);
-  $('mgmtSummary').innerHTML=`<div class="grid g4"><div><b>Total Units</b><br>${mgmt.totalUnits||0}</div><div><b>Strong Units</b><br>${mgmt.strongUnits||0}</div><div><b>Attention Units</b><br>${mgmt.attentionUnits||0}</div><div><b>Average</b><br>${pct(mgmt.averageSystemAchievement||0)}</div></div><p class="verdict">${esc(mgmt.message||'Dashboard refresh करा.')}</p>`;
-  $('statusTable').innerHTML=rows.map((r,i)=>{const q=rowQuality(r);const qCls=q>=75?'done':(q>0?'pending':'missing');return `<tr><td><button class="staff-link" onclick="showStaffDetail(${i})">${esc(r.staff.staffName)}</button></td><td>${esc(r.staff.role)}</td><td>${esc(r.staff.branch)}</td><td><span class="status ${r.morning?'done':'pending'}">${r.morning?'Done':'Pending'}</span></td><td><span class="status ${r.evening?'done':'pending'}">${r.evening?'Done':'Pending'}</span></td><td><span class="status ${r.cls}">${r.status}</span></td><td><span class="status ${qCls}">${q?q+'/100':'-'}</span></td><td>${esc(rowRemark(r))}</td><td><button class="btn btn-soft" onclick="showStaffDetail(${i})">Open</button></td></tr>`}).join('');
-  $('unitTable').innerHTML=units.map(u=>{const s=u.system||{};const cls=(s.overallPercent||0)>=85?'ok':'attention';const q=effectiveWorkQuality(s);const qCls=q>=75?'ok':(q>0?'attention':'missing');const qText=q?q+'/100':'-';const qVerdict=qualityVerdictText(q);return `<tr><td>${esc(u.branch)}</td><td>${u.complete}/${u.staffTotal} (${u.entryPercent||0}%)</td><td>${num(s.odAchieved)}/${num(s.odTarget)}<br><b>${pct(s.odPercent||0)}</b></td><td>${num(s.collectionAchieved)}/${num(s.collectionTarget)}<br><b>${pct(s.collectionPercent||0)}</b></td><td>${num(s.disbursementAchieved)}/${num(s.disbursementTarget)}<br><b>${pct(s.disbursementPercent||0)}</b></td><td>${num(s.newCustomerAchieved)}/${num(s.newCustomerTarget)}<br><b>${pct(s.newCustomerPercent||0)}</b></td><td><span class="verdict ${qCls}">${qText}</span><br><small>${esc(qVerdict)}</small></td><td class="verdict ${cls}">${esc(u.verdict)}</td></tr>`}).join('')||'<tr><td colspan="8">No unit data.</td></tr>';
-  setTimeout(()=>renderCharts(rows,units),50)
+  const rows=dashboardRowsCache;
+  const selectedBranch=$('branchFilter').value;
+  const units=unitSummaryCache.filter(u=>!selectedBranch||safe(u.branch)===safe(selectedBranch));
+  const visibleComplete=rows.filter(r=>r.leave||(r.morning&&r.evening)).length;
+  const visibleAvg=rows.length?Math.round((visibleComplete/rows.length)*100):0;
+  $('stTotal').textContent=rows.length;
+  $('stMorning').textContent=rows.filter(r=>r.morning||r.leave).length;
+  $('stEvening').textContent=rows.filter(r=>r.evening||r.leave).length;
+  $('stAvgSys').textContent=pct((selectedBranch||$('roleFilter').value)?visibleAvg:(mgmt.averageCompletion||0));
+  $('mgmtSummary').innerHTML=`<div class="grid g4"><div><b>Total Units</b><br>${mgmt.totalUnits||0}</div><div><b>Completed Staff</b><br>${mgmt.completedStaff||0}/${mgmt.totalStaff||0}</div><div><b>आज रजेवर</b><br>${mgmt.leaveStaff||0}</div><div><b>Average Completion</b><br>${pct(mgmt.averageCompletion||0)}</div></div><p class="verdict">${esc(mgmt.message||'Dashboard refresh करा.')}</p>`;
+  $('statusTable').innerHTML=rows.map((r,i)=>{
+    const q=rowQuality(r),qCls=q>=75?'done':(q>0?'pending':'missing');
+    const planDone=r.morning||r.leave,actualDone=r.evening||r.leave;
+    return `<tr><td><button class="staff-link" onclick="showStaffDetail(${i})">${esc(r.staff.staffName)}</button></td><td>${esc(r.staff.role)}</td><td>${esc(r.staff.branch)}</td><td><span class="status ${planDone?'done':'pending'}">${r.leave?'Leave':(r.morning?'Done':'Pending')}</span></td><td><span class="status ${actualDone?'done':'pending'}">${r.leave?'Leave':(r.evening?'Done':'Pending')}</span></td><td><span class="status ${r.cls}">${r.status}</span></td><td><span class="status ${qCls}">${q?q+'/100':'-'}</span></td><td>${esc(rowRemark(r))}</td><td><button class="btn btn-soft" onclick="showStaffDetail(${i})">Open</button></td></tr>`;
+  }).join('');
+  $('unitTable').innerHTML=units.map(u=>{
+    const cls=(u.entryPercent||0)>=85?'ok':((u.entryPercent||0)>=60?'attention':'missing');
+    return `<tr><td>${esc(u.branch)}</td><td>${u.staffTotal||0}</td><td>${u.morningDone||0}</td><td>${u.eveningDone||0}</td><td>${u.complete||0}</td><td><b>${pct(u.entryPercent||0)}</b></td><td><span class="verdict ${cls}">${esc(u.verdict||'-')}</span></td></tr>`;
+  }).join('')||'<tr><td colspan="7">या दिनांकासाठी unit data उपलब्ध नाही.</td></tr>';
+  setTimeout(()=>renderCharts(rows,units),50);
 }
-function renderCharts(rows,units){if(!window.Chart)return;const branchData={};rows.forEach(r=>{const b=safe(r.staff.branch)||'Other';branchData[b]||={complete:0,pending:0};if(r.morning&&r.evening)branchData[b].complete++;else branchData[b].pending++});if(branchChart)branchChart.destroy();branchChart=new Chart($('branchChart'),{type:'bar',data:{labels:Object.keys(branchData),datasets:[{label:'Complete',data:Object.values(branchData).map(x=>x.complete),borderRadius:10},{label:'Pending',data:Object.values(branchData).map(x=>x.pending),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});if(systemChart)systemChart.destroy();systemChart=new Chart($('systemChart'),{type:'bar',data:{labels:units.map(u=>u.branch),datasets:[{label:'Overall %',data:units.map(u=>u.system?u.system.overallPercent:0),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:120}}}})}
+function renderCharts(rows,units){
+  if(!window.Chart)return;
+  const branchData={};
+  rows.forEach(r=>{const b=safe(r.staff.branch)||'Other';branchData[b]||={complete:0,pending:0};if(r.leave||(r.morning&&r.evening))branchData[b].complete++;else branchData[b].pending++});
+  if(branchChart)branchChart.destroy();
+  branchChart=new Chart($('branchChart'),{type:'bar',data:{labels:Object.keys(branchData),datasets:[{label:'Complete / Leave',data:Object.values(branchData).map(x=>x.complete),borderRadius:10},{label:'Pending',data:Object.values(branchData).map(x=>x.pending),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+  if(systemChart)systemChart.destroy();
+  systemChart=new Chart($('systemChart'),{type:'bar',data:{labels:units.map(u=>u.branch),datasets:[{label:'Completion %',data:units.map(u=>u.entryPercent||0),borderRadius:10}]},options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}});
+}
 function showStaffDetail(index){const row=dashboardRowsCache[index];if(!row)return;const st=row.staff,mp=parsePayload(row.morning),ep=parsePayload(row.evening),mQs=getQuestions(st.role,'morning'),eQs=getQuestions(st.role,'evening');$('staffDetail').classList.remove('hidden');$('detailTitle').textContent=`${st.staffName} — ${st.role} — ${st.branch}`;$('detailTag').textContent=$('dashDate').value;const mLeave=isLeavePayload(mp),eLeave=isLeavePayload(ep);const mFilled=mLeave?mQs.length:mQs.filter(q=>safe(mp[q.key])).length,eFilled=eLeave?eQs.length:eQs.filter(q=>safe(ep[q.key])).length,score=rowQuality(row);$('detailPlanCount').textContent=mLeave?'रजा':(mFilled+'/'+mQs.length);$('detailActualCount').textContent=eLeave?'रजा':(eFilled+'/'+eQs.length);$('detailScore').textContent=score?score+'/100':'-';$('planList').innerHTML=row.morning?(mLeave?'<div class="mini"><h4>🏖️ आज रजा आहे</h4><p class="muted">सकाळच्या Plan मध्ये या कर्मचाऱ्याची रजा नोंद save आहे. Plan भरण्याची गरज नाही.</p></div>':mQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(mp[q.key]||'-')}</span></div>`).join('')):'<p class="danger">सकाळचे planning भरलेले नाही.</p>';$('actualList').innerHTML=row.evening?(eLeave?'<div class="mini"><h4>🏖️ आज रजा आहे</h4><p class="muted">सायंकाळच्या Actual मध्ये या कर्मचाऱ्याची रजा नोंद save आहे. Actual भरण्याची गरज नाही.</p></div>':eQs.map(q=>`<div class="kv"><b>${esc(q.label)}</b><span>${esc(ep[q.key]||'-')}</span></div>`).join('')):'<p class="danger">सायंकाळचे actual भरलेले नाही.</p>';$('staffDetail').scrollIntoView({behavior:'smooth',block:'start'})}
 
 /* ================================================================
@@ -1019,15 +953,13 @@ function showStaffDetail(index){const row=dashboardRowsCache[index];if(!row)retu
    - evening requests in parallel
    - delayed loader (no flash)
    - Chart.js lazy load
-   - account summary render throttling
    ================================================================ */
 const __ANIK_FAST = {
   masterTTL: 24 * 60 * 60 * 1000,
   dashboardTTL: 15 * 60 * 1000,
-  accountTTL: 10 * 60 * 1000,
   entryTTL: 2 * 60 * 1000,
   refreshAfter: 60 * 1000,
-  requestTimeout: 18000
+  requestTimeout: 16000
 };
 const __anikInflight = new Map();
 let __anikLoaderCount = 0;
@@ -1035,7 +967,6 @@ let __anikLoaderTimer = null;
 let __anikLastManagement = {};
 let __anikChartPromise = null;
 let __anikShiftToken = 0;
-let __anikAccountSummaryFrame = 0;
 
 function __fastStorageGet(key, maxAge){
   try{
@@ -1070,16 +1001,9 @@ function __entryCacheKey(date,staffId,shift){
 function __dashboardCacheKey(date){
   return 'ANIK_DASH_FAST_'+safe(date);
 }
-function __accountCacheKey(date,branch){
-  return 'ANIK_ACCOUNT_FAST_'+safe(date)+'_'+safe(branch);
-}
 function __invalidateFastCaches(action,params){
   if(action==='saveEntry'){
     __fastStorageRemovePrefix('ANIK_ENTRY_FAST_'+safe(params.date)+'_'+safe(params.staffId)+'_');
-    localStorage.removeItem(__dashboardCacheKey(params.date));
-  }
-  if(action==='saveAccountStaffBulk'){
-    localStorage.removeItem(__accountCacheKey(params.date,params.branch));
     localStorage.removeItem(__dashboardCacheKey(params.date));
   }
 }
@@ -1103,50 +1027,97 @@ function showLoader(v=true){
   }
 }
 
-function jsonp(action,params={}){
-  const isWrite=/^(save|delete|update|create)/i.test(action);
-  const requestKey=action+'?'+__fastStableParams(params);
-  if(!isWrite && __anikInflight.has(requestKey)) return __anikInflight.get(requestKey);
-
-  const promise=new Promise((resolve,reject)=>{
+function __anikSleep(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+function __anikWaitForOnline(maxWait=15000){
+  if(navigator.onLine!==false)return Promise.resolve();
+  return new Promise(resolve=>{
+    let done=false;
+    const finish=()=>{if(done)return;done=true;window.removeEventListener('online',finish);resolve()};
+    window.addEventListener('online',finish,{once:true});
+    setTimeout(finish,maxWait);
+  });
+}
+function __anikRequestId(action){
+  const rand=(window.crypto&&crypto.getRandomValues)?Array.from(crypto.getRandomValues(new Uint32Array(2))).join(''):Math.random().toString(36).slice(2);
+  return safe(action)+'_'+Date.now().toString(36)+'_'+rand;
+}
+function __jsonpOnce(action,params,timeoutMs,attempt){
+  return new Promise((resolve,reject)=>{
     if(!API_URL){reject(new Error('API URL code मध्ये set केलेला नाही.'));return}
     const cb='cb_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2);
     const tag=document.createElement('script');
     const url=new URL(API_URL);
     let finished=false;
-    const timer=setTimeout(()=>finish(new Error('Server response उशिरा येत आहे. पुन्हा Refresh करा.')),__ANIK_FAST.requestTimeout);
+    const timer=setTimeout(()=>{
+      const err=new Error('TIMEOUT');err.isNetworkError=true;finish(err);
+    },timeoutMs);
 
     function finish(err,data){
-      if(finished) return;
+      if(finished)return;
       finished=true;
       clearTimeout(timer);
       try{delete window[cb]}catch(e){window[cb]=undefined}
-      if(tag.parentNode) tag.parentNode.removeChild(tag);
-      if(err) reject(err);
-      else if(data && data.success===false) reject(new Error(data.message||'Request failed'));
-      else{
-        if(isWrite) __invalidateFastCaches(action,params);
-        resolve(data);
+      if(tag.parentNode)tag.parentNode.removeChild(tag);
+      if(err){reject(err);return}
+      if(data&&data.success===false){
+        const serverErr=new Error(data.message||'Request failed');
+        serverErr.response=data;
+        serverErr.isServerResponse=true;
+        reject(serverErr);
+        return;
       }
+      resolve(data);
     }
 
     url.searchParams.set('action',action);
     url.searchParams.set('callback',cb);
     url.searchParams.set('_ts',Date.now());
-    Object.entries(params||{}).forEach(([k,v])=>url.searchParams.set(k,v));
+    url.searchParams.set('_attempt',attempt);
+    Object.entries(params||{}).forEach(([k,v])=>url.searchParams.set(k,v==null?'':v));
     window[cb]=data=>finish(null,data);
-    tag.onerror=()=>finish(new Error('API connection failed.'));
+    tag.onerror=()=>{const err=new Error('CONNECTION');err.isNetworkError=true;finish(err)};
     tag.src=url.toString();
     tag.async=true;
     document.head.appendChild(tag);
   });
+}
+function jsonp(action,params={}){
+  const isWrite=/^(save|delete|update|create)/i.test(action);
+  const requestParams=Object.assign({},params||{});
+  if(isWrite&&!requestParams.requestId)requestParams.requestId=__anikRequestId(action);
+  const requestKey=action+'?'+__fastStableParams(requestParams);
+  if(!isWrite&&__anikInflight.has(requestKey))return __anikInflight.get(requestKey);
+
+  const promise=(async()=>{
+    const maxAttempts=isWrite?2:3;
+    let lastError=null;
+    for(let attempt=1;attempt<=maxAttempts;attempt++){
+      await __anikWaitForOnline(12000);
+      const timeoutMs=__ANIK_FAST.requestTimeout+((attempt-1)*12000);
+      try{
+        const data=await __jsonpOnce(action,requestParams,timeoutMs,attempt);
+        if(isWrite)__invalidateFastCaches(action,requestParams);
+        return data;
+      }catch(e){
+        lastError=e;
+        if(e&&e.isServerResponse)throw e;
+        if(attempt<maxAttempts){
+          if(attempt===1)toast('नेटवर्क मंद आहे — सिस्टम आपोआप पुन्हा प्रयत्न करत आहे. Refresh करू नका.');
+          await __anikSleep(700*attempt);
+        }
+      }
+    }
+    const msg=navigator.onLine===false
+      ?'इंटरनेट कनेक्शन उपलब्ध नाही. इंटरनेट सुरू झाल्यावर सिस्टम पुन्हा चालेल.'
+      :'नेटवर्क खूप मंद आहे. सिस्टमने आपोआप अनेकदा प्रयत्न केले; “Reload Entry” एकदा दाबा.';
+    const finalError=new Error(msg);
+    finalError.cause=lastError;
+    throw finalError;
+  })();
 
   if(!isWrite){
     __anikInflight.set(requestKey,promise);
-    promise.then(
-      ()=>__anikInflight.delete(requestKey),
-      ()=>__anikInflight.delete(requestKey)
-    );
+    promise.finally(()=>__anikInflight.delete(requestKey)).catch(()=>{});
   }
   return promise;
 }
@@ -1157,8 +1128,7 @@ function __applyMasterData(res){
     entryBranch:$('entryBranch')?$('entryBranch').value:'',
     staffSelect:$('staffSelect')?$('staffSelect').value:'',
     branchFilter:$('branchFilter')?$('branchFilter').value:'',
-    roleFilter:$('roleFilter')?$('roleFilter').value:'',
-    accBranch:$('accBranch')?$('accBranch').value:''
+    roleFilter:$('roleFilter')?$('roleFilter').value:''
   };
   staffMaster=res.staff||[];
   allQuestions=res.questions||[];
@@ -1169,8 +1139,6 @@ function __applyMasterData(res){
   renderFilters();
   if($('branchFilter'))$('branchFilter').value=keep.branchFilter;
   if($('roleFilter'))$('roleFilter').value=keep.roleFilter;
-  renderAccountBranches();
-  if($('accBranch'))$('accBranch').value=keep.accBranch;
 }
 async function loadMasters(show=true,force=false){
   const key='ANIK_MASTER_FAST_V2';
@@ -1184,7 +1152,7 @@ async function loadMasters(show=true,force=false){
   }
   if(show)showLoader(true);
   try{
-    const res=await jsonp('getMasterData');
+    const res=await jsonp('getMasterData',{force:force?'1':''});
     __applyMasterData(res);
     __fastStorageSet(key,res);
     if(!staffMaster.length)toast('StaffMaster मधून data आलेला नाही.');
@@ -1273,84 +1241,15 @@ async function onShiftChange(){
   }
 }
 
-function __applyAccountBulk(res){
-  accountStaffRowsCache=(res&&res.rows)||[];
-  renderAccountStaffTable(accountStaffRowsCache,res&&res.unit);
-}
-async function loadAccountStaffBulk(show=true,force=false){
-  const branch=$('accBranch').value;
-  const date=$('accDate').value;
-  if(!branch){toast('Unit निवडा.');return}
-  const key=__accountCacheKey(date,branch);
-  const cached=!force?__fastStorageGet(key,__ANIK_FAST.accountTTL):null;
-  if(cached){
-    __applyAccountBulk(cached.value);
-    toast(accountStaffRowsCache.length+' staff rows ready.');
-    return cached.value;
-  }
-  if(show)showLoader(true);
-  try{
-    const res=await jsonp('getAccountStaffBulk',{date,branch});
-    __fastStorageSet(key,res);
-    __applyAccountBulk(res);
-    toast(accountStaffRowsCache.length+' staff rows loaded.');
-    return res;
-  }catch(e){toast(e.message)}
-  finally{if(show)showLoader(false)}
-}
-
-function __scheduleAccountSummary(){
-  if(__anikAccountSummaryFrame)cancelAnimationFrame(__anikAccountSummaryFrame);
-  __anikAccountSummaryFrame=requestAnimationFrame(()=>{
-    __anikAccountSummaryFrame=0;
-    updateAccountBulkSummary(calcLocalUnitTotal());
-  });
-}
-function renderAccountStaffTable(rows,unit){
-  const body=$('accStaffBody');
-  if(!rows.length){
-    body.innerHTML='<tr><td colspan="12">या unit मध्ये active staff नाहीत.</td></tr>';
-    updateAccountBulkSummary(unit);
-    return;
-  }
-  body.innerHTML=rows.map((r,i)=>`<tr>
-    <td><b>${esc(r.staffName)}</b><br><small>${esc(r.staffId)}</small></td>
-    <td>${esc(r.role)}</td>
-    <td>${accountRowInput(r,i,'odTarget')}</td><td>${accountRowInput(r,i,'odAchieved')}</td>
-    <td>${accountRowInput(r,i,'collectionTarget')}</td><td>${accountRowInput(r,i,'collectionAchieved')}</td>
-    <td>${accountRowInput(r,i,'disbursementTarget')}</td><td>${accountRowInput(r,i,'disbursementAchieved')}</td>
-    <td>${accountRowInput(r,i,'newCustomerTarget')}</td><td>${accountRowInput(r,i,'newCustomerAchieved')}</td>
-    <td>${accountRowInput(r,i,'workQuality')}</td><td>${accountRowInput(r,i,'remark','text')}</td>
-  </tr>`).join('');
-
-  body.oninput=ev=>{
-    const inp=ev.target.closest('input[data-i][data-key]');
-    if(!inp)return;
-    const i=Number(inp.dataset.i),key=inp.dataset.key;
-    if(!accountStaffRowsCache[i])return;
-    accountStaffRowsCache[i][key]=inp.value;
-    if(key!=='workQuality'){
-      const score=calculateStaffWorkScore(accountStaffRowsCache[i]);
-      accountStaffRowsCache[i].workQuality=score;
-      const scoreInput=body.querySelector(`input[data-i="${i}"][data-key="workQuality"]`);
-      if(scoreInput)scoreInput.value=score;
-    }
-    __scheduleAccountSummary();
-  };
-  autoCalculateAllScores();
-  updateAccountBulkSummary(unit||calcLocalUnitTotal());
-}
-
 function __applyDashboardData(res){
   entriesCache=(res&&res.entries)||[];
   unitSummaryCache=(res&&res.unitSummary)||[];
-  accountStaffSystemCache=(res&&res.accountStaffSystem)||[];
   __anikLastManagement=(res&&res.managementSummary)||{};
   buildDashboardRows();
   renderDashboard(__anikLastManagement);
   $('staffDetail').classList.add('hidden');
 }
-async function __refreshDashboard(show,key){
+async function __refreshDashboard(show,key,force=false){
   if(show)showLoader(true);
   try{
     const res=await jsonp('getDashboard',{date:$('dashDate').value});
@@ -1371,7 +1270,7 @@ async function loadDashboard(show=true,force=false){
     }
     return cached.value;
   }
-  return __refreshDashboard(show,key);
+  return __refreshDashboard(show,key,force);
 }
 
 function __renderDashboardLocal(){
@@ -1400,14 +1299,14 @@ function __drawChartsFast(rows,units){
   rows.forEach(r=>{
     const b=safe(r.staff.branch)||'Other';
     branchData[b]||={complete:0,pending:0};
-    if(r.morning&&r.evening)branchData[b].complete++;
+    if(r.leave||(r.morning&&r.evening))branchData[b].complete++;
     else branchData[b].pending++;
   });
   if(branchChart)branchChart.destroy();
   branchChart=new Chart($('branchChart'),{
     type:'bar',
     data:{labels:Object.keys(branchData),datasets:[
-      {label:'Complete',data:Object.values(branchData).map(x=>x.complete),borderRadius:10},
+      {label:'Complete / Leave',data:Object.values(branchData).map(x=>x.complete),borderRadius:10},
       {label:'Pending',data:Object.values(branchData).map(x=>x.pending),borderRadius:10}
     ]},
     options:{responsive:true,animation:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}
@@ -1415,8 +1314,8 @@ function __drawChartsFast(rows,units){
   if(systemChart)systemChart.destroy();
   systemChart=new Chart($('systemChart'),{
     type:'bar',
-    data:{labels:units.map(u=>u.branch),datasets:[{label:'Overall %',data:units.map(u=>u.system?u.system.overallPercent:0),borderRadius:10}]},
-    options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:120}}}
+    data:{labels:units.map(u=>u.branch),datasets:[{label:'Completion %',data:units.map(u=>u.entryPercent||0),borderRadius:10}]},
+    options:{responsive:true,animation:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:100}}}
   });
 }
 function renderCharts(rows,units){
@@ -1437,7 +1336,7 @@ async function init(){
   $('todayText').textContent=new Date().toLocaleDateString('mr-IN',{
     timeZone:REPORT_TIME_CONFIG.timeZone,weekday:'long',year:'numeric',month:'long',day:'numeric'
   });
-  ['entryDate','dashDate','accDate'].forEach(id=>$(id).value=todayISO());
+  ['entryDate','dashDate'].forEach(id=>{if($(id))$(id).value=todayISO()});
   if(!REPORT_TIME_CONFIG.allowNonTodayEntry){
     $('entryDate').min=todayISO();
     $('entryDate').max=todayISO();
@@ -1454,15 +1353,10 @@ async function init(){
   $('resetBtn').onclick=renderDynamicForm;
   $('refreshDash').onclick=()=>loadDashboard(true,true);
   $('copyShare').onclick=copyShareText;
-  $('loadAccStaff').onclick=()=>loadAccountStaffBulk(true,false);
-  $('saveAccBulk').onclick=saveAccountStaffBulk;
-  $('clearAccBlank').onclick=clearBlankAccountRows;
 
   $('branchFilter').onchange=__renderDashboardLocal;
   $('roleFilter').onchange=__renderDashboardLocal;
   $('dashDate').onchange=()=>loadDashboard(true,false);
-  $('accDate').onchange=()=>{accountStaffRowsCache=[];$('accStaffBody').innerHTML='<tr><td colspan="12">Load Staff Table करा.</td></tr>'};
-  $('accBranch').onchange=()=>{accountStaffRowsCache=[];$('accStaffBody').innerHTML='<tr><td colspan="12">Load Staff Table करा.</td></tr>'};
 
   try{await loadMasters(true,false)}catch(e){}
   setInterval(()=>{if(getSelectedStaff())applyReportTimeLock()},30000);
@@ -1562,19 +1456,22 @@ onEntryBranchChange=function(){
   setTimeout(()=>__preloadDayEntriesSafe(date,false).catch(()=>{}),10);
 };
 
-// Final active save function. Cache is never trusted for final reporting.
+// Final active save function — direct current-date save, no pre-save dashboard verification.
 submitEntry=async function(){
   const ctx=__safeEntryContext();
   if(!ctx){toast('कर्मचारी निवडा.');return}
+
+  const today=todayISO();
+  if(ctx.date!==today){
+    $('entryDate').value=today;
+    toast('फक्त आजच्या तारखेचा report save करता येईल.');
+    return;
+  }
+
   const timeStatus=getEntryTimeStatus(ctx.st,ctx.shift,ctx.date);
   if(!timeStatus.allowed){applyReportTimeLock(ctx.st,ctx.shift,ctx.date);toast(timeStatus.message);return}
   if(currentEntryLocked){
     toast(savedEntryLocked?'Morning plan आधीच lock आहे. पुन्हा save करता येणार नाही.':'रिपोर्टची वेळ संपली आहे. नोंद save करता येणार नाही.');
-    return;
-  }
-  if(__anikVerifiedEntry.key!==ctx.key){
-    toast('Server verification पूर्ण होत आहे. कृपया Save पुन्हा करा.');
-    __safeShowVerifying(ctx,'Reporting सुरक्षित ठेवण्यासाठी server verification पूर्ण झाल्यावरच Save सुरू होईल.');
     return;
   }
 
@@ -1589,66 +1486,71 @@ submitEntry=async function(){
     }
   }
 
-  showLoader(true);
+  const saveParams={
+    date:today,staffId:ctx.st.staffId,staffName:ctx.st.staffName,
+    role:ctx.st.role,branch:ctx.st.branch,shift:ctx.shift,
+    payloadJson:JSON.stringify(payload),fast:'1'
+  };
+
+  const btn=$('submitBtn');
+  const oldText=btn.textContent;
+  btn.disabled=true;
+  btn.textContent='⏳ Save होत आहे...';
+  const started=Date.now();
+
   try{
-    // Fresh server conflict/duplicate check immediately before every save.
-    const fresh=await jsonp('getEntry',{date:ctx.date,staffId:ctx.st.staffId,shift:ctx.shift});
-    if(ctx.shift==='morning' && fresh&&fresh.entry){
-      __safeApplyDisplay(ctx,fresh,null,true);
-      toast('Morning plan server वर आधीच save आहे. Duplicate reporting थांबवली.');
-      return;
-    }
-    if(ctx.shift==='evening'){
-      const loadedSig=__safePayloadSignature(__anikVerifiedEntry.current&&__anikVerifiedEntry.current.entry);
-      const freshSig=__safePayloadSignature(fresh&&fresh.entry);
-      if(freshSig && loadedSig!==freshSig){
-        __safeApplyDisplay(ctx,fresh,__anikVerifiedEntry.morning,true);
-        toast('Entry दुसरीकडे update झाली आहे. नवीन server data दाखवला आहे; तपासून पुन्हा Save करा.');
-        return;
-      }
-    }
-
-    const res=await jsonp('saveEntry',{
-      date:ctx.date,staffId:ctx.st.staffId,staffName:ctx.st.staffName,
-      role:ctx.st.role,branch:ctx.st.branch,shift:ctx.shift,
-      payloadJson:JSON.stringify(payload)
-    });
-
+    // One atomic request only. Backend reads TodayEntries, never full historical data.
+    const res=await jsonp('saveEntry',saveParams);
     const confirmed=__safeStoreConfirmedEntry(ctx,payload);
-    let morningEntryForShare=morningEntryCache;
-    if(ctx.shift==='evening'&&!morningEntryForShare){
-      morningEntryForShare=(__anikVerifiedEntry.morning&&__anikVerifiedEntry.morning.entry)||null;
-    }
+    const morningEntryForShare=morningEntryCache||((__anikVerifiedEntry.morning&&__anikVerifiedEntry.morning.entry)||null);
     buildShareText(ctx.st,ctx.shift,qs,payload,morningEntryForShare);
-    toast(res.message||'Entry server वर सुरक्षित save झाली.');
+
+    const ms=Number(res&&res.saveMs)||Date.now()-started;
+    toast((res.message||'Entry server वर सुरक्षित save झाली.')+(ms?` (${(ms/1000).toFixed(1)} sec)`:''));
 
     if(ctx.shift==='morning'){
       savedEntryLocked=true;
       syncEntryLockState();
-      __safeApplyDisplay(ctx,confirmed,null,true);
+      __safeApplyDisplay(ctx,res&&res.entry?{entry:res.entry}:confirmed,null,true);
+    }else{
+      __safeMarkVerified(ctx,res&&res.entry?{entry:res.entry}:confirmed,__anikVerifiedEntry.morning);
     }
     dashboardRowsCache=[];
     entriesCache=[];
     openPage('share');
   }catch(e){
-    toast('Save झालेली नाही: '+(e.message||e));
-  }finally{showLoader(false)}
+    if(e&&e.response&&e.response.code==='CONFLICT'){
+      const live={entry:e.response.entry||null};
+      __safeApplyDisplay(ctx,live,__anikVerifiedEntry.morning,true);
+      toast(e.response.message||'Entry दुसरीकडे update झाली आहे. नवीन data दाखवला आहे.');
+    }else{
+      toast('Save झालेली नाही: '+(e.message||e));
+    }
+  }finally{
+    btn.textContent=oldText;
+    if(!currentEntryLocked)btn.disabled=false;
+  }
 };
 
-// Start the all-staff date preload at the same time as master loading.
+// Load today's small snapshot while master data loads.
 const __anikFinalInitBase=init;
 init=async function(){
   const initialDate=todayISO();
   const preloadPromise=__preloadDayEntriesSafe(initialDate,false).catch(()=>null);
   await __anikFinalInitBase();
 
-  // Ensure handlers point to the final active functions.
+  // Entry save is intentionally restricted to current date for speed and safety.
+  const entryDate=$('entryDate');
+  entryDate.value=initialDate;
+  entryDate.min=initialDate;
+  entryDate.max=initialDate;
+  entryDate.readOnly=true;
+
   $('entryBranch').onchange=onEntryBranchChange;
   $('staffSelect').onchange=onStaffChange;
   $('shift').onchange=()=>onShiftChange(false);
-  $('entryDate').onchange=()=>{
-    const d=$('entryDate').value||todayISO();
-    __preloadDayEntriesSafe(d,true).catch(()=>{});
+  entryDate.onchange=()=>{
+    entryDate.value=todayISO();
     onShiftChange(true);
   };
   $('reloadEntry').onclick=()=>onShiftChange(true);
